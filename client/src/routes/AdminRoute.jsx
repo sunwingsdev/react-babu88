@@ -18,7 +18,6 @@ const AdminRoute = ({ children }) => {
     }
   }, [token, user, navigate]);
 
-  
   if (!token || !user || user?.role !== "admin") {
     return null;
   }
