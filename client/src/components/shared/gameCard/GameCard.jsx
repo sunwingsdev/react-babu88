@@ -6,6 +6,7 @@ const GameCard = ({
   gameHeading,
   gameText,
   headingCenter,
+  demoId,
 }) => {
   return (
     <div className="">
@@ -16,13 +17,24 @@ const GameCard = ({
           alt=""
         />
         <div className="absolute w-full h-full top-0 left-0 bg-white opacity-0 z-10 transition-opacity duration-300 group-hover:opacity-70 rounded-[20px] lg:rounded-xl"></div>
-        <Link className="hidden sm:block">
-          <img
-            className="filter-none grayscale hover:filter absolute top-1/4 left-1/2 transform -translate-x-1/2 translate-y-16 opacity-0 transition-transform duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-20"
-            src={"https://www.babu88.app/static/svg/play_btn.svg"}
-            alt=""
-          />
-        </Link>
+
+        <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2 translate-y-16 opacity-0 transition-transform duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-20">
+          <Link className="hidden sm:block">
+            <img
+              className="filter-none grayscale hover:filter "
+              src={"https://www.babu88.app/static/svg/play_btn.svg"}
+              alt=""
+            />
+          </Link>
+          {demoId && (
+            <Link
+              to={`/demogame/${demoId}`}
+              className="text-white px-2 py-1 rounded-full bg-slate-900 mt-2"
+            >
+              Demo
+            </Link>
+          )}
+        </div>
         <img className="absolute top-1 right-1 w-10" src={gameHot} alt="" />
       </div>
       <div className="hidden md:block">

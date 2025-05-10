@@ -6,8 +6,16 @@ import {
 } from "@/components/ui/carousel";
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import Marquee from "react-fast-marquee";
+import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
 
 const BannerSlider = () => {
+  const { data: homeControls } = useGetHomeControlsQuery();
+  const sliders = homeControls?.filter(
+    (control) => control.category === "slider" && control.isSelected
+  );
+  const notice = homeControls?.find(
+    (control) => control.category === "notice" && control.isSelected
+  );
   const bannerImages = [
     {
       id: 1,
@@ -73,10 +81,13 @@ const BannerSlider = () => {
   return (
     <Carousel className="w-full" setApi={setApi}>
       <CarouselContent>
-        {bannerImages.map((image) => (
+        {sliders?.map((image) => (
           <CarouselItem key={image.id}>
-            <div className="h-36 sm:h-60 md:h-72 lg:h-full w-full object-center">
-              <img className="w-full h-full" src={image.image} />
+            <div className="h-36 sm:h-60 md:h-72 lg:h-[500px] w-full object-center">
+              <img
+                className="w-full h-full"
+                src={`${import.meta.env.VITE_BASE_API_URL}${image?.image}`}
+              />
             </div>
           </CarouselItem>
         ))}
@@ -84,7 +95,7 @@ const BannerSlider = () => {
 
       {/* Slide Select Buttons */}
       <div className="absolute bottom-8 md:bottom-16 right-4 md:right-[5.5rem] flex space-x-2">
-        {bannerImages.map((_, index) => (
+        {sliders?.map((_, index) => (
           <button
             key={index}
             onClick={() => scrollTo(index)}
@@ -99,11 +110,7 @@ const BannerSlider = () => {
         {/* <Container> */}
         <div className="flex items-center gap-4">
           <HiMiniSpeakerWave className="text-xl md:text-3xl" />
-          <Marquee className="text-xs md:text-sm">
-            প্রিয় গ্রাহক, আপনার bajilive.net এ ভিসিট করতে সমস্যা হলে, অনুগ্রহ
-            করে 112233bj.com,2211133bj.com ব্যবহার করুন, এটি আমাদের ব্যাকআপ
-            ওয়েবসাইট লিংক।
-          </Marquee>
+          <Marquee className="text-xs md:text-sm">{notice?.title}</Marquee>
         </div>
         {/* </Container> */}
       </div>

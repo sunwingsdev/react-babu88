@@ -3,6 +3,7 @@ import BannerSlider from "../../../components/home/bannerSlider/BannerSlider";
 import SecondaryBanner from "../../../components/home/secondaryBanner/SecondaryBanner";
 import GameCard from "../../../components/shared/gameCard/GameCard";
 import HomeMobileButton from "@/components/home/homeMobilButton/HomeMobileButton";
+import aviatorImg from "@/assets/images/aviator.png";
 
 const Home = () => {
   const buttons = [
@@ -65,6 +66,13 @@ const Home = () => {
           হট গেমস
         </h2>
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
+          <GameCard
+            gameCardImg={aviatorImg}
+            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
+            gameHeading={"Aviator"}
+            gameText={"EVOLUTION GAMING"}
+            demoId={1}
+          />
           <GameCard
             gameCardImg={
               "https://luckmedia.link/evo_lightning_storm/thumb.webp"
