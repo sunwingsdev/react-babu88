@@ -22,6 +22,12 @@ import Deposit from "@/components/dashboard/profile/deposit/Deposit";
 import Withdrawal from "@/components/dashboard/profile/deposit/Withdrawal";
 import Voucher from "@/components/dashboard/profile/deposit/Voucher";
 import Rewards from "@/components/dashboard/profile/rewards/Rewards";
+import PrivateRoute from "./PrivateRoute";
+import DemoGame from "@/pages/home/DemoGame/DemoGame";
+import DashboardLayout from "@/layout/DashboardLayout";
+import DashboardHome from "@/pages/dashboard/DashboardHome";
+import HomeControl from "@/pages/dashboard/HomeControl";
+import AdminRoute from "./AdminRoute";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +37,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <Home />,
+      },
+      {
+        path: "/demogame/:id",
+        element: <DemoGame />,
       },
       {
         path: "/login",
@@ -90,7 +100,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <Profile />,
+        element: (
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        ),
         children: [
           {
             path: "",
@@ -118,6 +132,21 @@ const router = createBrowserRouter([
           },
         ],
       },
+    ],
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <AdminRoute>
+        <DashboardLayout />
+      </AdminRoute>
+    ),
+    children: [
+      {
+        path: "",
+        element: <DashboardHome />,
+      },
+      { path: "home-control", element: <HomeControl /> },
     ],
   },
 ]);

@@ -1,6 +1,8 @@
 import { CiShare2, CiUser } from "react-icons/ci";
+import { useSelector } from "react-redux";
 
 const ProfileSidbar = () => {
+  const { user } = useSelector((state) => state.auth);
   return (
     <div className="p-4 bg-white rounded-lg space-y-2">
       <p className="text-lg font-semibold">স্বাগতম!</p>
@@ -8,7 +10,7 @@ const ProfileSidbar = () => {
         <div className="p-2 bg-white rounded-full">
           <CiUser />
         </div>
-        <p className="text-base font-semibold text-blue-600">vismo</p>
+        <p className="text-base font-semibold text-blue-600">{user?.username}</p>
       </div>
 
       <div className="p-3 bg-slate-100 space-y-2 rounded-lg">

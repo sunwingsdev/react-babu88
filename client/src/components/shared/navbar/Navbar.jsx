@@ -16,8 +16,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { RiLogoutCircleRFill } from "react-icons/ri";
 import { useToasts } from "react-toast-notifications";
 import { logout } from "@/redux/slices/authSlice";
+import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
 
 const Navbar = () => {
+  const { data: homeControls } = useGetHomeControlsQuery();
   const { user, token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -258,6 +260,10 @@ const Navbar = () => {
     setIsModalOpen(false);
   };
 
+  const logo = homeControls?.find(
+    (control) => control.category === "logo" && control.isSelected
+  );
+
   return (
     <div className="z-20">
       {/* Start top navbar */}
@@ -279,9 +285,9 @@ const Navbar = () => {
                   <div className="w-40">
                     <Link to={"/"}>
                       <img
-                        src={
-                          "https://www.babu88.app/static/svg/bb88_logo_animation2.gif"
-                        }
+                        src={`${import.meta.env.VITE_BASE_API_URL}${
+                          logo?.image
+                        }`}
                         alt=""
                       />
                     </Link>
@@ -454,9 +460,7 @@ const Navbar = () => {
           <div className="w-52 sm:w-56 md:w-72">
             <Link to={"/"}>
               <img
-                src={
-                  "https://www.babu88.app/static/svg/bb88_logo_animation2.gif"
-                }
+                src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
                 alt=""
               />
             </Link>

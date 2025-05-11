@@ -13,7 +13,7 @@ const Login = () => {
   const [getUser] = useLazyGetAuthenticatedUserQuery();
   const dispatch = useDispatch();
   const { addToast } = useToasts();
-  const { navigate } = useNavigate();
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -41,6 +41,7 @@ const Login = () => {
       });
       setFormData({ username: "", password: "" });
       navigate("/");
+      console.log("navigated");
     } else {
       addToast("Something went wrong", {
         appearance: "error",

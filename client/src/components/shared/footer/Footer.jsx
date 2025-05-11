@@ -1,6 +1,12 @@
+import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const { data: homeControls } = useGetHomeControlsQuery();
+  const logo = homeControls?.find(
+    (control) => control.category === "logo" && control.isSelected
+  );
+
   return (
     <div className="bg-[#ebebeb] md:bg-[#333] pt-8 md:pt-14">
       <div className="container mx-auto px-4 sm:px-10 lg:px-24">
@@ -75,9 +81,7 @@ const Footer = () => {
             <Link to={"/"} target="_blank">
               <img
                 className="w-40 md:w-44 lg:w-52"
-                src={
-                  "https://www.babu88.app/static/image/footer/babu88-official.png"
-                }
+                src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
                 alt=""
               />
             </Link>
