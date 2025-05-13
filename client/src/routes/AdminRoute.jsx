@@ -14,7 +14,7 @@ const AdminRoute = ({ children }) => {
       //   appearance: "error",
       //   autoDismiss: true,
       // });
-      navigate("/login");
+      navigate("/admin");
     }
   }, [token, user, navigate]);
 

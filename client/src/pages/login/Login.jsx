@@ -2,7 +2,7 @@ import {
   useLazyGetAuthenticatedUserQuery,
   useLoginUserMutation,
 } from "@/redux/features/allApis/usersApi/usersApi";
-import { setCredentials } from "@/redux/slices/authSlice";
+import { logout, setCredentials } from "@/redux/slices/authSlice";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,6 +34,16 @@ const Login = () => {
     const { data: loginData } = await loginUser(formData);
     if (loginData.token) {
       const { data: userData } = await getUser(loginData.token);
+
+      if (userData?.role !== "user") {
+        dispatch(logout());
+        localStorage.removeItem("token");
+        addToast("Please check your username and password", {
+          appearance: "error",
+          autoDismiss: true,
+        });
+        return;
+      }
       dispatch(setCredentials({ token: loginData.token, user: userData }));
       addToast("Login successful", {
         appearance: "success",
