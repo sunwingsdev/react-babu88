@@ -28,6 +28,8 @@ import DashboardLayout from "@/layout/DashboardLayout";
 import DashboardHome from "@/pages/dashboard/DashboardHome";
 import HomeControl from "@/pages/dashboard/HomeControl";
 import AdminRoute from "./AdminRoute";
+import AddDepositMethods from "@/components/dashboard/Dashboard-Page/Add-Deposit-Methods/AddDepositMethods";
+import DepositPromotion from "@/components/dashboard/Dashboard-Page/DepositPromotion/DepositPromotion";
 
 const router = createBrowserRouter([
   {
@@ -147,6 +149,14 @@ const router = createBrowserRouter([
         element: <DashboardHome />,
       },
       { path: "home-control", element: <HomeControl /> },
+      {
+        path: "depositmethod",
+        element: <AddDepositMethods />, // Add the new route
+      },
+      {
+        path: "depositPromotion",
+        element: <DepositPromotion />, // Add the new route
+      },
     ],
   },
 ]);

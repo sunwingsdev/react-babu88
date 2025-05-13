@@ -18,6 +18,9 @@ const kycApi = require("./apis/kycApi/kycApi");
 const pagesApi = require("./apis/pagesApi/pagesApi");
 const paymentNumberApi = require("./apis/paymentNumberApi/paymentNumberApi");
 const paymentMethodApi = require("./apis/paymentMethodApi/paymentMethodApi");
+const depositPaymentMethodsApi = require("./apis/depositPaymentMethodsApi/depositPaymentMethodsApi");
+const depositPromotionsApi = require("./apis/depositPromotionApi/depositPromotionApi");
+const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi"); // New router
 
 const corsConfig = {
   origin: [
@@ -40,16 +43,14 @@ const corsConfig = {
   methods: ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
 };
 
-//middlewares
+// Middlewares
 app.use(cors(corsConfig));
 app.options("", cors(corsConfig));
 app.use(express.json());
-
-// mongodb start
-
+// Parse FormData
+app.use(express.urlencoded({ extended: true }));
+// MongoDB setup
 const uri = process.env.DB_URI;
-
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -58,8 +59,8 @@ const client = new MongoClient(uri, {
   },
 });
 
-// Serve static files from the "uploads" directory
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// Serve static files from the "Uploads" directory
+app.use("/uploads", express.static(path.join(__dirname, "Uploads")));
 
 // Routes for image upload and delete
 app.post("/upload", upload.single("image"), (req, res) => {
@@ -74,11 +75,9 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
 app.delete("/delete", async (req, res) => {
   const { filePath } = req.body;
-
   if (!filePath) {
     return res.status(400).json({ error: "File path not provided" });
   }
-
   try {
     await deleteFile(filePath);
     res.status(200).json({ message: "File deleted successfully" });
@@ -90,35 +89,28 @@ app.delete("/delete", async (req, res) => {
 
 async function run() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
+    // Connect the client to the server
     await client.connect();
 
-    //collections start
+    // Collections
     const usersCollection = client.db("babu88").collection("users");
     const depositsCollection = client.db("babu88").collection("deposits");
     const withdrawsCollection = client.db("babu88").collection("withdraws");
     const promotionCollection = client.db("babu88").collection("promotions");
     const categoriesCollection = client.db("babu88").collection("categories");
     const pagesCollection = client.db("babu88").collection("pages");
-    const homeControlsCollection = client
-      .db("babu88")
-      .collection("homeControls");
+    const homeControlsCollection = client.db("babu88").collection("homeControls");
     const kycCollection = client.db("babu88").collection("kyc");
-    const paymentNumberCollection = client
-      .db("babu88")
-      .collection("payment-numbers");
-    const paymentMethodCollection = client
-      .db("babu88")
-      .collection("payment-methods");
-    //collections end
+    const paymentNumberCollection = client.db("babu88").collection("payment-numbers");
+    const paymentMethodCollection = client.db("babu88").collection("payment-methods");
+    const depositPaymentMethodCollection = client.db("babu88").collection("deposit-payment-methods");
+    const depositPromotionsCollection = client.db("babu88").collection("depositPromotions");
+    const depositTransactionsCollection = client.db("babu88").collection("depositTransactions"); // New collection
 
-    // APIs start
+    // APIs
     app.use("/users", usersApi(usersCollection, homeControlsCollection));
     app.use("/users", affiliatesApi(usersCollection, homeControlsCollection));
-    app.use(
-      "/deposits",
-      depositsApi(depositsCollection, usersCollection, promotionCollection)
-    );
+    app.use("/deposits", depositsApi(depositsCollection, usersCollection, promotionCollection));
     app.use("/withdraws", withdrawsApi(withdrawsCollection, usersCollection));
     app.use("/home-controls", homeControlApi(homeControlsCollection));
     app.use("/promotions", promotionApi(promotionCollection));
@@ -127,8 +119,9 @@ async function run() {
     app.use("/pages", pagesApi(pagesCollection));
     app.use("/paymentnumber", paymentNumberApi(paymentNumberCollection));
     app.use("/paymentmethod", paymentMethodApi(paymentMethodCollection));
-
-    // APIs end
+    app.use("/depositPaymentMethod", depositPaymentMethodsApi(depositPaymentMethodCollection));
+    app.use("/depositPromotions", depositPromotionsApi(depositPromotionsCollection, depositPaymentMethodCollection));
+    app.use("/depositTransactions", depositTransactionsApi(depositTransactionsCollection, usersCollection, depositPaymentMethodCollection, depositPromotionsCollection)); // New router
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -140,8 +133,7 @@ async function run() {
 }
 run().catch(console.dir);
 
-// mongodb end
-
+// Default route
 app.get("/", (req, res) => {
   res.send("server is running");
 });

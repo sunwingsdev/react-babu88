@@ -1,34 +1,191 @@
 import { FaQuestionCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import RightItem from "./RightItem";
-import walletNumber from "../../../../assets/walletNumber.png";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const Deposit = () => {
-  // Options data
-  const options = [
-    { id: 1, label: "স্পোর্টস 100% প্রথম ডিপোজিট বোনাস - 100.00%" },
-    { id: 2, label: "100% স্লট প্রথম ডিপোজিট বোনাস - 100.00%" },
-    { id: 3, label: "ক্র্যাশ গেম 50% প্রথম ডিপোজিট বোনাস - 50.00%" },
-    { id: 4, label: "50% লাইভ ক্যাসিনো প্রথম আমানত বোনাস - 50.00%" },
-    {
-      id: 5,
-      label: "সক্রিয় জুয়া খেলার ঘর থেকে সাপ্তাহিক ২০% আমানত বোনাস - 20.00%",
-    },
-    { id: 6, label: "সাপ্তাহিক স্লট ২০% আমানত বোনাস - 20.00%" },
-    { id: 7, label: "আনলিমিটেড 5% রিলোড বোনাস (স্লট) - 5.00%" },
-    { id: 8, label: "আনলিমিটেড 5% রিলোড বোনাস (ক্র্যাশ) - 3.00%" },
-  ];
-
-  const [selectedOption, setSelectedOption] = useState("");
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [promotions, setPromotions] = useState([]);
+  const [selectedOption, setSelectedOption] = useState(""); // Selected promotion
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState(null); // Selected payment method
+  const [selectedChannel, setSelectedChannel] = useState(null); // Selected channel
+  const [amount, setAmount] = useState(""); // Deposit amount
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [timer, setTimer] = useState(1200); // 20 minutes in seconds
+  const [userInputs, setUserInputs] = useState({}); // Store user input values
 
-  const handleChange = (event) => {
+  const { user } = useSelector((state) => state.auth);
+
+  // Fetch data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const paymentMethodsRes = await axios.get("http://localhost:5000/depositPaymentMethod/deposit-methods");
+        setPaymentMethods(paymentMethodsRes.data.data);
+
+        const promotionsRes = await axios.get("http://localhost:5000/depositPromotions/deposit-promotions");
+        setPromotions(promotionsRes.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (modalIsOpen && timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [modalIsOpen, timer]);
+
+  // Format timer as MM:SS
+  const formatTimer = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
+
+  const handlePromotionChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const openModal = () => setModalIsOpen(true);
-  const closeModal = () => setModalIsOpen(false);
+  const handlePaymentMethodSelect = (method) => {
+    setSelectedPaymentMethod(method);
+    setSelectedChannel(null);
+    setUserInputs({}); // Reset user inputs
+  };
+
+  const handleChannelSelect = (channel) => {
+    setSelectedChannel(channel);
+  };
+
+  const handleAmountChange = (e) => {
+    const value = e.target.value;
+    if (value === "" || !isNaN(value)) {
+      setAmount(value);
+    }
+  };
+
+  const handleQuickAmountSelect = (value) => {
+    setAmount(value);
+  };
+
+  const handleInputChange = (name, value) => {
+    setUserInputs((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileChange = (name, file) => {
+    setUserInputs((prev) => ({ ...prev, [name]: file }));
+  };
+
+  const openModal = () => {
+    if (selectedPaymentMethod && selectedChannel && amount && parseFloat(amount) >= 200) {
+      setModalIsOpen(true);
+      setTimer(1200);
+    } else {
+      alert("Please select a payment method, channel, and enter an amount of at least 200.");
+    }
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setTimer(1200);
+    setUserInputs({});
+  };
+
+  const handleSubmit = async () => {
+    try {
+      // Step 1: Validate required inputs
+      const requiredInputs = selectedPaymentMethod.userInputs.filter(
+        (input) => input.isRequired === "true"
+      );
+      const missingInputs = requiredInputs.filter(
+        (input) => !userInputs[input.name] || userInputs[input.name].toString().trim() === ""
+      );
+
+      if (missingInputs.length > 0) {
+        const missingFields = missingInputs.map((input) => input.labelBD).join(", ");
+        alert(`Please fill in all required fields: ${missingFields}`);
+        return;
+      }
+
+      // Step 2: Create FormData
+      const formData = new FormData();
+      formData.append("userId", user?._id);
+      formData.append("paymentMethodId", selectedPaymentMethod._id);
+      formData.append("amount", amount);
+      if (selectedOption) {
+        const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
+        formData.append("promotionId", selectedPromo._id);
+      }
+
+      // Append userInputs dynamically
+      for (const [name, value] of Object.entries(userInputs)) {
+        formData.append(`userInputs[${name}]`, value);
+      }
+
+      // Debug: Log FormData contents
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
+
+      // Step 3: Send request to backend
+      const response = await fetch("http://localhost:5000/depositTransactions/create", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to create deposit transaction");
+      }
+
+      alert("Deposit transaction created successfully!");
+      closeModal();
+    } catch (error) {
+      console.error("Error creating deposit transaction:", error);
+      alert("Failed to create deposit transaction: " + error.message);
+    }
+  };
+
+  // Get bonus label for a payment method based on selected promotion
+  const getBonusLabel = (methodId) => {
+    if (!selectedOption) return null;
+    const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
+    if (!selectedPromo) return null;
+
+    const bonus = selectedPromo.promotion_bonuses.find(
+      (b) => b.payment_method._id.toString() === methodId.toString()
+    );
+    if (!bonus) return null;
+
+    return bonus.bonus_type === "Fix" ? `+${bonus.bonus}TK` : `+${bonus.bonus}%`;
+  };
+
+  // Filter payment methods based on selected promotion
+  const filteredPaymentMethods = selectedOption
+    ? paymentMethods.filter((method) => {
+        const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
+        return selectedPromo?.promotion_bonuses.some(
+          (bonus) => bonus.payment_method._id.toString() === method._id.toString()
+        );
+      })
+    : paymentMethods;
+
+  // Get gateways for the selected payment method
+  const gateways = selectedPaymentMethod ? selectedPaymentMethod.gateway : [];
+
+  // Check if the deposit button should be enabled
+  const isDepositButtonEnabled =
+    selectedPaymentMethod && selectedChannel && amount && parseFloat(amount) >= 200;
+
   return (
     <div className="flex gap-4">
       <div className="w-full p-3 sm:p-4 lg:p-6 bg-white rounded-lg space-y-4">
@@ -40,9 +197,7 @@ const Deposit = () => {
             </div>
           </Link>
           <Link to={"/profile/withdrawal"}>
-            <div className="w-full p-2 text-yellow-300 text-center">
-              উত্তোলন
-            </div>
+            <div className="w-full p-2 text-yellow-300 text-center">উত্তোলন</div>
           </Link>
         </div>
 
@@ -51,39 +206,28 @@ const Deposit = () => {
             আমানত বিকল্প <span className="text-red-500">*</span>
           </h2>
           <div className="flex gap-4">
-            <Link className="relative">
-              <div className="p-4 px-4 w-full sm:w-24 h-16 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-2xl border-2 border-yellow-400">
-                <img
-                  src="https://www.babu88h.com/static/svg/deposit-ewallet-nagad.svg"
-                  alt=""
-                />
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="p-4 w-full sm:w-24 h-16 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-2xl border-2 border-gray-300">
-                <img
-                  src="https://www.babu88h.com/static/svg/deposit-ewallet-bkash.svg"
-                  alt=""
-                />
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="p-4 w-20 sm:w-24 h-16 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-2xl border-2 border-gray-300">
-                <img
-                  src="https://www.babu88h.com/static/svg/deposit-ewallet-upay.svg"
-                  alt=""
-                />
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
+            {filteredPaymentMethods.map((method) => (
+              <button
+                key={method._id}
+                onClick={() => handlePaymentMethodSelect(method)}
+                className="relative"
+              >
+                <div
+                  className={`p-4 w-full sm:w-24 h-16 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-2xl border-2 ${
+                    selectedPaymentMethod?._id === method._id
+                      ? "border-yellow-400"
+                      : "border-gray-300"
+                  }`}
+                >
+                  <img src={`http://localhost:5000${method.methodImage}`} alt={method.methodNameBD} />
+                </div>
+                {getBonusLabel(method._id) && (
+                  <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
+                    {getBonusLabel(method._id)}
+                  </div>
+                )}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -92,21 +236,21 @@ const Deposit = () => {
             আমানত চ্যানেল <span className="text-red-500">*</span>
           </h2>
           <div className="flex flex-wrap gap-2 sm:gap-4">
-            <Link>
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg border-2 border-yellow-400">
-                SPEEDPAY
-              </div>
-            </Link>
-            <Link>
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg border-2 border-gray-400">
-                PAYTAKA
-              </div>
-            </Link>
-            <Link>
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg border-2 border-gray-400">
-                DPAY
-              </div>
-            </Link>
+            {gateways.map((gateway, index) => (
+              <button
+                key={index}
+                onClick={() => handleChannelSelect(gateway)}
+                className={selectedPaymentMethod ? "" : "pointer-events-none opacity-50"}
+              >
+                <div
+                  className={`py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg border-2 ${
+                    selectedChannel === gateway ? "border-yellow-400" : "border-gray-400"
+                  }`}
+                >
+                  {gateway}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -117,84 +261,73 @@ const Deposit = () => {
             </h2>
             <FaQuestionCircle />
           </div>
-          <form action="">
+          <form>
             <input
               type="text"
               className="w-full sm:w-80 py-1.5 px-4 border-2 border-gray-300 outline-none rounded-xl"
               placeholder="200"
+              value={amount}
+              onChange={handleAmountChange}
+              disabled={!selectedChannel}
             />
           </form>
           <p className="text-xs font-mibold">
             ৳ 400.00 এর নিচে ডিপজিটে কোন বোনাস পাবেন না
           </p>
           <div className="grid grid-cols-3 gap-2 sm:gap-4">
-            <Link>
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg border-2 border-yellow-400">
-                200
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg bg-gray-200">
-                500
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg bg-gray-200">
-                2000
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg bg-gray-200">
-                5000
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg bg-gray-200">
-                10000
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
-            <Link className="relative">
-              <div className="py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg bg-gray-200">
-                20000
-              </div>
-              <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                +3%
-              </div>
-            </Link>
+            {["200", "500", "2000", "5000", "10000", "20000"].map((value) => (
+              <button
+                key={value}
+                onClick={() => handleQuickAmountSelect(value)}
+                className={selectedChannel ? "" : "pointer-events-none opacity-50"}
+              >
+                <div className="relative">
+                  <div
+                    className={`py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg ${
+                      amount === value ? "border-2 border-yellow-400" : "bg-gray-200"
+                    }`}
+                  >
+                    {value}
+                  </div>
+                  {parseInt(value) >= 500 && selectedOption && (
+                    <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
+                      {promotions
+                        .find((promo) => promo.title_bd === selectedOption)
+                        ?.promotion_bonuses.some((bonus) => bonus.bonus_type === "Percentage")
+                        ? "+3%"
+                        : "+3TK"}
+                    </div>
+                  )}
+                </div>
+              </button>
+            ))}
           </div>
           <h2 className="text-base">
-            আমানত বিকল্প <span className="text-red-500">*</span>
+            আমানত বোনাস <span className="text-red-500">*</span>
           </h2>
           <div className="space-y-4 w-full sm:w-80">
             <select
               id="options"
               value={selectedOption}
-              onChange={handleChange}
+              onChange={handlePromotionChange}
               className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-400"
             >
               <option value="">নো বোনাস সিলেক্ট করুন</option>
-              {options.map((option) => (
-                <option key={option.id} value={option.label}>
-                  {option.label}
+              {promotions.map((promo) => (
+                <option key={promo._id} value={promo.title_bd}>
+                  {promo.title_bd}
                 </option>
               ))}
             </select>
           </div>
           <button
             onClick={openModal}
-            className="py-3 px-10 w-full sm:w-80 text-sm text-white bg-blue-500 hover:bg-blue-600 duration-300 rounded-full border"
+            className={`py-3 px-10 w-full sm:w-80 text-sm text-white rounded-full border duration-300 ${
+              isDepositButtonEnabled
+                ? "bg-blue-500 hover:bg-blue-600"
+                : "bg-gray-400 cursor-not-allowed"
+            }`}
+            disabled={!isDepositButtonEnabled}
           >
             আমানত
           </button>
@@ -203,114 +336,102 @@ const Deposit = () => {
       <RightItem />
 
       {/* Modal */}
-      {modalIsOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 overflow-y-auto">
-          <div className="bg-white px-4 py-6 md:p-6 rounded-lg shadow-lg w-[90%] md:w-[80%] lg:w-[60%] xl:w-[54%] relative max-h-[90vh] overflow-y-auto">
+      {modalIsOpen && selectedPaymentMethod && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 transition-opacity duration-300">
+          <div
+            className="p-6 md:p-8 rounded-2xl shadow-2xl w-[95%] md:w-[85%] lg:w-[70%] max-h-[90vh] overflow-y-auto transform transition-transform duration-300 scale-100 hover:scale-100"
+            style={{ backgroundColor: selectedPaymentMethod.backgroundColor }}
+          >
             {/* Close Button */}
             <button
               onClick={closeModal}
-              className="absolute top-2 right-4 text-gray-500 hover:text-gray-700"
+              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
             >
               ✕
             </button>
 
-            <div className="flex gap-2 items-center pb-4 text-xl font-bold border-b-2 border-gray-300">
-              <img
-                className="w-12 h-12"
-                src="https://ialb.pg23bkk12123.com/images/thirdparty/bankType_2048.png"
-                alt=""
-              />
-              <p>bKash Payment</p>
-            </div>
-
-            <div className="xl:flex justify-between items-center gap-2 py-2 text-2xl xl:text-base text-gray-500 border-b-2 border-gray-300">
-              <p>Transaction ID: D735617982</p>
-              <p>Transaction Create Time: 2025/01/29 13:38:04 (GMT+6)</p>
-            </div>
-
-            <div className="text-base text-gray-500 text-center m-auto w-full lg:w-[80%]">
-              <p className="mt-4">
-                Please ensure amount to deposit is the same as transferred
-                amount. We will not be liable for missing funds due to incorrect
-                information.
-              </p>
-
-              <p>
-                Please use phone number registered on our site for cash out,
-                deposits with 3rd party phone numbers are restricted.
-              </p>
-
-              <p className="font-semibold border-b-2 border-gray-300">
-                Please cash out to the account below within 06 :
-              </p>
-              <p className="font-semibold">
-                minutes after submitting the deposit form
-              </p>
-            </div>
-
-            <div className="w-full xl:w-[86%] m-auto mt-5 flex justify-evenly items-center flex-col xl:flex-row gap-3 p-4 pb-6 bg-gray-200 rounded-xl">
-              <img className="w-60 h-60" src={walletNumber} alt="" />
-              <div className="w-full xl:w-[50%]">
-                <p className="text-4xl text-center text-red-500">1886999229</p>
-                <p className="text-lg text-center">
-                  Amount :{" "}
-                  <span className="text-red-500 font-bold">2000.00</span>
-                </p>
-                <label htmlFor="" className="text-red-500 mt-3">
-                  Phone Number / Cash Out No.
-                </label>
-
-                <div className="flex flex-col xl:flex-row gap-2 mb-2">
-                  <div className="w-full xl:w-1/2">
-                    <select
-                      id="options"
-                      value={selectedOption}
-                      onChange={handleChange}
-                      className="block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-0"
-                    >
-                      <option value=""></option>
-                      {options.map((option) => (
-                        <option key={option.id} value={option.label}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="w-full xl:w-1/2">
-                    <input
-                      type="text"
-                      className="w-full py-1.5 px-3 outline-none rounded-sm uppercase"
-                      placeholder="Please input data"
-                    />
-                  </div>
+            <div className="flex flex-col lg:flex-row gap-6">
+              {/* Left Side: Agent Info and User Inputs */}
+              <div className="w-full lg:w-1/2 space-y-6">
+                <div className="border-b-2 border-gray-200 pb-4">
+                  <p className="text-xl md:text-2xl font-semibold text-gray-800">
+                    {selectedPaymentMethod.agentWalletText}
+                  </p>
+                  <p className="text-3xl md:text-4xl text-red-500 font-bold mt-2">
+                    {selectedPaymentMethod.agentWalletNumber}
+                  </p>
                 </div>
-
-                <div className="flex flex-col">
-                  <label htmlFor="" className="text-black mb-2">
-                    Upload receipt{" "}
-                    <button className="px-1 border border-red-500 text-red-500 rounded-md">
-                      Reset Receipt
-                    </button>
-                  </label>
-                  <input
-                    type="file"
-                    className="py-1 px-2 bg-white rounded-sm"
-                  />
-                </div>
-
-                <p className="pt-10 pb-4 text-2xl font-semibold text-center">
-                  Drop file here
+                <p className="text-lg md:text-xl">
+                  Amount: <span className="text-red-500 font-bold">{amount || "2000.00"}</span>
                 </p>
-
-                <div className="w-full sm:w-60 m-auto">
+                <div className="space-y-4">
+                  {selectedPaymentMethod.userInputs.map((input, index) => (
+                    <div key={index} className="flex flex-col">
+                      <label
+                        htmlFor={input.name}
+                        className="text-lg text-red-500 font-medium mb-2"
+                      >
+                        {input.labelBD} {input.isRequired === "true" && <span className="text-red-500">*</span>}
+                      </label>
+                      {input.type === "file" ? (
+                        <input
+                          type="file"
+                          id={input.name}
+                          className="w-full py-2 px-3 bg-white rounded-lg border border-gray-300 text-gray-700"
+                          onChange={(e) => handleFileChange(input.name, e.target.files[0])}
+                        />
+                      ) : (
+                        <input
+                          type={input.type}
+                          id={input.name}
+                          name={input.name}
+                          className="w-full py-2 px-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-700"
+                          placeholder={input.fieldInstructionBD}
+                          required={input.isRequired === "true"}
+                          value={userInputs[input.name] || ""}
+                          onChange={(e) => handleInputChange(input.name, e.target.value)}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="w-full sm:w-64 mt-6">
                   <button
-                    onClick={closeModal}
-                    className="mt-6 w-full p-2 text-base font-semibold bg-yellow-400 text-black rounded-lg hover:bg-yellow-500"
+                    onClick={handleSubmit}
+                    className="w-full py-3 text-lg font-semibold rounded-lg shadow-md hover:brightness-110 transition-all duration-200"
+                    style={{
+                      backgroundColor: selectedPaymentMethod.buttonColor,
+                      color: selectedPaymentMethod.color,
+                    }}
                   >
                     Submit
                   </button>
                 </div>
               </div>
+
+              {/* Right Side: Timer and Payment Page Image */}
+              <div className="w-full lg:w-1/2 space-y-6">
+                <div className="text-center bg-gray-100 rounded-lg py-4 shadow-inner">
+                  <p className="text-xl md:text-2xl font-semibold text-gray-800">Time Remaining</p>
+                  <p className="text-4xl md:text-5xl text-red-500 font-bold mt-2">{formatTimer(timer)}</p>
+                </div>
+                <img
+                  className="w-full h-48 md:h-64 object-contain rounded-lg border border-gray-200"
+                  src={`http://localhost:5000${selectedPaymentMethod.paymentPageImage}`}
+                  alt={selectedPaymentMethod.methodNameBD}
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 text-base md:text-lg text-gray-600 text-center">
+              <p>
+                Please ensure amount to deposit is the same as transferred amount. We will not be liable for
+                missing funds due to incorrect information.
+              </p>
+              <p>
+                Please use phone number registered on our site for cash out, deposits with 3rd party phone
+                numbers are restricted.
+              </p>
             </div>
           </div>
         </div>
