@@ -30,6 +30,7 @@ import HomeControl from "@/pages/dashboard/HomeControl";
 import AdminRoute from "./AdminRoute";
 import AddDepositMethods from "@/components/dashboard/Dashboard-Page/Add-Deposit-Methods/AddDepositMethods";
 import DepositPromotion from "@/components/dashboard/Dashboard-Page/DepositPromotion/DepositPromotion";
+import AdminLogin from "@/pages/AdminLogin";
 
 const router = createBrowserRouter([
   {
@@ -158,6 +159,10 @@ const router = createBrowserRouter([
         element: <DepositPromotion />, // Add the new route
       },
     ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLogin />,
   },
 ]);
 
