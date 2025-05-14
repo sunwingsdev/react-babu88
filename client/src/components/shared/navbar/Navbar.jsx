@@ -3,7 +3,7 @@ import { FaCaretDown, FaPlus, FaUser } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { IoHome, IoMenuOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../modal/Modal";
 import {
   Sheet,
@@ -17,6 +17,7 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import { useToasts } from "react-toast-notifications";
 import { logout } from "@/redux/slices/authSlice";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
+import {  useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
 
 const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
@@ -264,6 +265,31 @@ const Navbar = () => {
     (control) => control.category === "logo" && control.isSelected
   );
 
+
+const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetUserByIdQuery();
+
+
+
+  const getUserDataAgain = (props) => {
+
+    if (props) {
+      triggerGetUserById(props);
+    }
+
+  };
+
+
+
+  useEffect(() => {
+    
+    if (user) {
+      triggerGetUserById(user._id);
+    }
+  }, [user]);
+
+
+
+
   return (
     <div className="z-20">
       {/* Start top navbar */}
@@ -499,9 +525,9 @@ const Navbar = () => {
                 </div>
                 <div className="flex gap-2 items-center pl-4 rounded-full bg-gray-200">
                   <Link>
-                    <div className="flex items-center text-xl lg:text-2xl">
+                    <div className="flex items-center text-xl lg:text-2xl" onClick={() => user && getUserDataAgain(user._id) } >
                       <TbCurrencyTaka />
-                      <p>*.**</p>
+                      <p>{userData?.balance ? userData?.balance : user?.balance }</p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>

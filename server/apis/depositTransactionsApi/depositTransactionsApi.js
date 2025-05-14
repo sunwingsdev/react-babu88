@@ -1,27 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb");
-const { upload } = require("../../utils");
 
 module.exports = (depositTransactionsCollection, usersCollection, depositPaymentMethodCollection, depositPromotionsCollection) => {
- // Create a new deposit transaction
-  router.post("/create", upload.fields([{ name: "userInputs[file]", maxCount: 1 }]), async (req, res) => {
+  // Create a new deposit transaction
+  router.post("/create", async (req, res) => {
     try {
-      // req.body থেকে টেক্সট ডেটা এবং req.files থেকে ফাইল ডেটা নেওয়া হচ্ছে
-      const { userId, paymentMethodId, amount, promotionId } = req.body;
+      // req.body থেকে টেক্সট ডেটা নেওয়া হচ্ছে
+      const { userId, paymentMethodId, amount, promotionId , gateways } = req.body;
       let userInputs = {};
 
       console.log("this is roni -> ", req.body);
 
       // userInputs পার্স করা
       if (req.body.userInputs && typeof req.body.userInputs === "object") {
-        userInputs = { ...req.body.userInputs }; // নেস্টেড userInputs অবজেক্ট কপি করা
-      }
-
-      // ফাইল যোগ করা (যদি থাকে)
-      if (req.files && req.files["userInputs[file]"]) {
-        const file = req.files["userInputs[file]"][0];
-        userInputs["file"] = `/uploads/images/${file.filename}`;
+        for (const [key, value] of Object.entries(req.body.userInputs)) {
+          try {
+            userInputs[key] = JSON.parse(value); // JSON স্ট্রিং পার্স করা
+          } catch (error) {
+            userInputs[key] = value; // যদি JSON না হয়, তাহলে সরাসরি ভ্যালু সেট করা
+          }
+        }
       }
 
       // Validate inputs
@@ -57,37 +56,36 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
 
       // Prepare transaction document
       const transaction = {
+        id: new ObjectId().toString(), // নতুন ID জেনারেট করা
         userId: new ObjectId(userId),
         paymentMethod: {
-          _id: paymentMethod._id,
+          id: paymentMethod._id.toString(),
           methodNameBD: paymentMethod.methodNameBD,
           agentWalletNumber: paymentMethod.agentWalletNumber,
-          gateway: paymentMethod.gateway,
+          gateways: paymentMethod.gateway, // gateway কে gateways হিসেবে সেট করা
           userInputs: paymentMethod.userInputs,
         },
+        gateways: gateways,
         promotion: promotion
           ? {
-              _id: promotion._id,
-              title_bd: promotion.title_bd,
-              bonus_type:
-                promotion.promotion_bonuses?.find(
-                  (bonus) =>
-                    bonus.payment_method &&
-                    bonus.payment_method.toString() === paymentMethodId
-                )?.bonus_type || null,
-              bonus:
-                promotion.promotion_bonuses?.find(
-                  (bonus) =>
-                    bonus.payment_method &&
-                    bonus.payment_method.toString() === paymentMethodId
-                )?.bonus || null,
+              id: promotion._id.toString(),
+              titleBD: promotion.title_bd,
+              bonusType: promotion.promotion_bonuses?.find(
+                (bonus) =>
+                  bonus.payment_method &&
+                  bonus.payment_method.toString() === paymentMethodId
+              )?.bonus_type || null,
+              bonus: promotion.promotion_bonuses?.find(
+                (bonus) =>
+                  bonus.payment_method &&
+                  bonus.payment_method.toString() === paymentMethodId
+              )?.bonus || null,
             }
           : null,
         amount: parseFloat(amount),
-        transactionId,
-        userInputs: userInputs || {},
+        userInputs,
         status: "pending",
-        createdAt: new Date(),
+        createdAt: new Date().toISOString(),
       };
 
       // Insert transaction into depositTransactions collection
@@ -98,7 +96,7 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
       res.status(201).json({
         message: "Deposit transaction created successfully",
         data: {
-          _id: result.insertedId,
+          id: transaction.id,
           transactionId,
           amount,
           status: "pending",
@@ -110,5 +108,10 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
       res.status(500).json({ error: "Internal server error" });
     }
   });
+
+
+
+  
+
   return router;
 };

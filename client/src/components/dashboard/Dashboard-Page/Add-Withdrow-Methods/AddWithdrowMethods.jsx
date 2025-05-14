@@ -1,6 +1,4 @@
-
-import  { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaEdit, FaSpinner, FaTimes } from "react-icons/fa";
 import ReactQuill from "react-quill";
@@ -15,7 +13,9 @@ const InputField = ({ label, name, value, onChange, required, type = "text" }) =
       name={name}
       value={value}
       onChange={onChange}
-      className={`mt-1 p-3 w-full border ${value || !required ? "border-gray-300" : "border-red-500"} rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm`}
+      className={`mt-1 p-3 w-full border ${
+        value || !required ? "border-gray-300" : "border-red-500"
+      } rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm`}
       required={required}
     />
     {required && !value && (
@@ -33,7 +33,9 @@ const ColorPicker = ({ label, name, value, onChange, required }) => (
       name={name}
       value={value}
       onChange={onChange}
-      className={`mt-1 p-2 w-20 h-10 border ${value || !required ? "border-gray-300" : "border-red-500"} rounded-lg shadow-sm`}
+      className={`mt-1 p-2 w-20 h-10 border ${
+        value || !required ? "border-gray-300" : "border-red-500"
+      } rounded-lg shadow-sm`}
       required={required}
     />
   </div>
@@ -77,16 +79,7 @@ const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5
           ["clean"],
         ],
       }}
-      formats={[
-        "header",
-        "bold",
-        "italic",
-        "underline",
-        "strike",
-        "list",
-        "bullet",
-        "link",
-      ]}
+      formats={["header", "bold", "italic", "underline", "strike", "list", "bullet", "link"]}
     />
     <p className="mt-1 text-xs text-gray-500">
       {charCount}/{maxLength} characters
@@ -97,23 +90,20 @@ const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5
   </div>
 );
 
-const AddDepositMethods = () => {
-  const navigate = useNavigate();
-  const [depositMethods, setDepositMethods] = useState([]);
+const AddWithdrawMethods = () => {
+  const [withdrawMethods, setWithdrawMethods] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState({
-    methodNameEN: "",
+    methodName: "",
     methodNameBD: "",
-    agentWalletNumber: "",
-    agentWalletText: "",
     methodImage: "",
     gateway: [],
     color: "#000000",
     userInputs: [],
     paymentPageImage: "",
-    instructionEN: "",
+    instruction: "",
     instructionBD: "",
     status: "active",
     backgroundColor: "#ffffff",
@@ -134,25 +124,25 @@ const AddDepositMethods = () => {
   const [showUserInputModal, setShowUserInputModal] = useState(false);
 
   // Calculate character counts for instructions
-  const instructionENCharCount = formData.instructionEN.replace(/<[^>]+>/g, "").length;
+  const instructionCharCount = formData.instruction.replace(/<[^>]+>/g, "").length;
   const instructionBDCharCount = formData.instructionBD.replace(/<[^>]+>/g, "").length;
   const maxLength = 5000;
 
-  // Fetch all deposit methods
+  // Fetch all withdraw methods
   useEffect(() => {
-    const fetchDepositMethods = async () => {
+    const fetchWithdrawMethods = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-methods`);
-        if (!response.ok) throw new Error("Failed to fetch deposit methods");
+        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod`);
+        if (!response.ok) throw new Error("Failed to fetch withdraw methods");
         const data = await response.json();
-        setDepositMethods(data.data);
+        setWithdrawMethods(data);
         setLoading(false);
       } catch (error) {
-        toast.error("Failed to load deposit methods.", { position: "top-right" });
+        toast.error("Failed to load withdraw methods.", { position: "top-right" });
         setLoading(false);
       }
     };
-    fetchDepositMethods();
+    fetchWithdrawMethods();
   }, []);
 
   // Handle text input changes for formData
@@ -209,8 +199,12 @@ const AddDepositMethods = () => {
       return;
     }
 
+    if (!["text", "number", "file"].includes(newUserInput.type)) {
+      toast.error("Invalid user input type.", { position: "top-right" });
+      return;
+    }
+
     if (editUserInputIndex !== null) {
-      // Update existing user input
       setFormData({
         ...formData,
         userInputs: formData.userInputs.map((input, index) =>
@@ -218,14 +212,12 @@ const AddDepositMethods = () => {
         ),
       });
     } else {
-      // Add new user input
       setFormData({
         ...formData,
         userInputs: [...formData.userInputs, newUserInput],
       });
     }
 
-    // Reset user input form
     setNewUserInput({
       type: "text",
       isRequired: "true",
@@ -236,6 +228,7 @@ const AddDepositMethods = () => {
       name: "",
     });
     setEditUserInputIndex(null);
+    setShowUserInputModal(false);
   };
 
   // Handle editing a user input
@@ -265,14 +258,14 @@ const AddDepositMethods = () => {
   // Handle form submission (Create or Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (instructionENCharCount > maxLength || instructionBDCharCount > maxLength) {
+    if (instructionCharCount > maxLength || instructionBDCharCount > maxLength) {
       toast.error("Instructions exceed character limit.", { position: "top-right" });
       return;
     }
     try {
       const url = isEditMode
-        ? `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${editId}`
-        : `${import.meta.env.VITE_BASE_API_URL}depositPaymentMethod/deposit-method`;
+        ? `${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${editId}`
+        : `${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod`;
       const method = isEditMode ? "PUT" : "POST";
 
       const response = await fetch(url, {
@@ -281,17 +274,17 @@ const AddDepositMethods = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error(`Failed to ${isEditMode ? "update" : "create"} deposit method`);
+      if (!response.ok) throw new Error(`Failed to ${isEditMode ? "update" : "create"} withdraw method`);
       const data = await response.json();
 
       if (isEditMode) {
-        setDepositMethods(
-          depositMethods.map((method) =>
-            method._id === editId ? { _id: editId, ...data.data } : method
+        setWithdrawMethods(
+          withdrawMethods.map((method) =>
+            method._id === editId ? { _id: editId, ...formData } : method
           )
         );
       } else {
-        setDepositMethods([...depositMethods, data.data]);
+        setWithdrawMethods([...withdrawMethods, { _id: data.data.insertedId, ...formData }]);
       }
 
       toast.success(data.message, { position: "top-right" });
@@ -299,42 +292,39 @@ const AddDepositMethods = () => {
       setShowForm(false);
     } catch (error) {
       toast.error(
-        isEditMode ? "Failed to update deposit method." : "Failed to create deposit method.",
+        isEditMode ? "Failed to update withdraw method." : "Failed to create withdraw method.",
         { position: "top-right" }
       );
     }
   };
 
-  // Handle edit deposit method
+  // Handle edit withdraw method
   const handleEdit = async (id) => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${id}`
-      );
-      if (!response.ok) throw new Error("Failed to fetch deposit method");
+      const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${id}`);
+      if (!response.ok) throw new Error("Failed to fetch withdraw method");
       const data = await response.json();
-      setFormData(data.data);
+      setFormData(data);
       setEditId(id);
       setIsEditMode(true);
       setShowForm(true);
     } catch (error) {
-      toast.error("Failed to load deposit method.", { position: "top-right" });
+      toast.error("Failed to load withdraw method.", { position: "top-right" });
     }
   };
 
-  // Handle delete deposit method
+  // Handle delete withdraw method
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this deposit method?")) {
+    if (window.confirm("Are you sure you want to delete this withdraw method?")) {
       try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${id}`,
-          { method: "DELETE" }
-        );
-        if (!response.ok) throw new Error("Failed to delete deposit method");
-        setDepositMethods(depositMethods.filter((method) => method._id !== id));
-        toast.success("Deposit method deleted successfully.", { position: "top-right" });
+        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${id}`, {
+          method: "DELETE",
+        });
+        if (!response.ok) throw new Error("Failed to delete withdraw method");
+        setWithdrawMethods(withdrawMethods.filter((method) => method._id !== id));
+        toast.success("Withdraw method deleted successfully.", { position: "top-right" });
       } catch (error) {
-        toast.error("Failed to delete deposit method.", { position: "top-right" });
+        toast.error("Failed to delete withdraw method.", { position: "top-right" });
       }
     }
   };
@@ -342,16 +332,14 @@ const AddDepositMethods = () => {
   // Reset form and modal
   const resetForm = () => {
     setFormData({
-      methodNameEN: "",
+      methodName: "",
       methodNameBD: "",
-      agentWalletNumber: "",
-      agentWalletText: "",
       methodImage: "",
       gateway: [],
       color: "#000000",
       userInputs: [],
       paymentPageImage: "",
-      instructionEN: "",
+      instruction: "",
       instructionBD: "",
       status: "active",
       backgroundColor: "#ffffff",
@@ -393,7 +381,7 @@ const AddDepositMethods = () => {
     <div className="p-6 max-w-7xl mx-auto bg-gray-100 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Deposit Payment Methods</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Withdraw Payment Methods</h1>
         <button
           onClick={() => {
             resetForm();
@@ -405,17 +393,17 @@ const AddDepositMethods = () => {
         </button>
       </div>
 
-      {/* Deposit Methods Table */}
+      {/* Withdraw Methods Table */}
       <div className="bg-white shadow-md rounded-xl overflow-hidden mb-8">
-        {depositMethods.length === 0 ? (
-          <p className="p-6 text-gray-600 text-center">No deposit methods found.</p>
+        {withdrawMethods.length === 0 ? (
+          <p className="p-6 text-gray-600 text-center">No withdraw methods found.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                    Method Name (EN)
+                    Method Name
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                     Method Name (BD)
@@ -429,10 +417,10 @@ const AddDepositMethods = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {depositMethods.map((method) => (
+                {withdrawMethods.map((method) => (
                   <tr key={method._id} className="hover:bg-gray-50 transition duration-150">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {method.methodNameEN}
+                      {method.methodName}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {method.methodNameBD}
@@ -472,19 +460,19 @@ const AddDepositMethods = () => {
         )}
       </div>
 
-      {/* Form for Creating/Editing Deposit Method */}
+      {/* Form for Creating/Editing Withdraw Method */}
       {showForm && (
         <div className="bg-white shadow-md rounded-xl p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            {isEditMode ? "Edit Deposit Payment Method" : "Add Deposit Payment Method"}
+            {isEditMode ? "Edit Withdraw Payment Method" : "Add Withdraw Payment Method"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* Method Name (EN) */}
+              {/* Method Name */}
               <InputField
-                label="Method Name (EN)"
-                name="methodNameEN"
-                value={formData.methodNameEN}
+                label="Method Name"
+                name="methodName"
+                value={formData.methodName}
                 onChange={handleInputChange}
                 required
               />
@@ -494,24 +482,6 @@ const AddDepositMethods = () => {
                 label="Method Name (BD)"
                 name="methodNameBD"
                 value={formData.methodNameBD}
-                onChange={handleInputChange}
-                required
-              />
-
-              {/* Agent Wallet Number */}
-              <InputField
-                label="Agent Wallet Number"
-                name="agentWalletNumber"
-                value={formData.agentWalletNumber}
-                onChange={handleInputChange}
-                required
-              />
-
-              {/* Agent Wallet Text */}
-              <InputField
-                label="Agent Wallet Text"
-                name="agentWalletText"
-                value={formData.agentWalletText}
                 onChange={handleInputChange}
                 required
               />
@@ -576,6 +546,7 @@ const AddDepositMethods = () => {
                 name="color"
                 value={formData.color}
                 onChange={handleInputChange}
+                required
               />
 
               {/* Background Color */}
@@ -611,13 +582,13 @@ const AddDepositMethods = () => {
               </div>
             </div>
 
-            {/* Instruction (EN) */}
+            {/* Instruction */}
             <RichTextEditor
-              label="Instruction (EN)"
-              name="instructionEN"
-              value={formData.instructionEN}
+              label="Instruction"
+              name="instruction"
+              value={formData.instruction}
               onChange={handleInputChange}
-              charCount={instructionENCharCount}
+              charCount={instructionCharCount}
               maxLength={maxLength}
             />
 
@@ -665,7 +636,7 @@ const AddDepositMethods = () => {
                         <p className="text-sm text-gray-600">
                           Required: {input.isRequired === "true" ? "Yes" : "No"}
                         </p>
-                        <p className="text-sm text-gray-600">Label (EN): {input.label || "N/A"}</p>
+                        <p className="text-sm text-gray-600">Label: {input.label || "N/A"}</p>
                         <p className="text-sm text-gray-600">Label (BD): {input.labelBD || "N/A"}</p>
                       </div>
                       <div className="flex space-x-2">
@@ -708,7 +679,7 @@ const AddDepositMethods = () => {
                 type="submit"
                 className="flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg hover:from-green-700 hover:to-green-600 transition duration-200 shadow-sm"
               >
-                <FaPlus className="mr-2" /> {isEditMode ? "Update" : "Create"} Deposit Method
+                <FaPlus className="mr-2" /> {isEditMode ? "Update" : "Create"} Withdraw Method
               </button>
             </div>
           </form>
@@ -759,9 +730,9 @@ const AddDepositMethods = () => {
                 </select>
               </div>
 
-              {/* Label (EN) */}
+              {/* Label */}
               <InputField
-                label="Label (EN)"
+                label="Label"
                 name="label"
                 value={newUserInput.label}
                 onChange={handleUserInputChange}
@@ -775,9 +746,9 @@ const AddDepositMethods = () => {
                 onChange={handleUserInputChange}
               />
 
-              {/* Field Instruction (EN) */}
+              {/* Field Instruction */}
               <InputField
-                label="Field Instruction (EN)"
+                label="Field Instruction"
                 name="fieldInstruction"
                 value={newUserInput.fieldInstruction}
                 onChange={handleUserInputChange}
@@ -835,4 +806,4 @@ const AddDepositMethods = () => {
   );
 };
 
-export default AddDepositMethods;
+export default AddWithdrawMethods;

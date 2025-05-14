@@ -4,6 +4,9 @@ import { useState, useEffect } from "react";
 import RightItem from "./RightItem";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useToasts } from "react-toast-notifications";
+
+
 
 const Deposit = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -15,6 +18,8 @@ const Deposit = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [timer, setTimer] = useState(1200); // 20 minutes in seconds
   const [userInputs, setUserInputs] = useState({}); // Store user input values
+const { addToast } = useToasts();
+
 
   const { user } = useSelector((state) => state.auth);
 
@@ -22,10 +27,10 @@ const Deposit = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const paymentMethodsRes = await axios.get("http://localhost:5000/depositPaymentMethod/deposit-methods");
+        const paymentMethodsRes = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-methods`);
         setPaymentMethods(paymentMethodsRes.data.data);
 
-        const promotionsRes = await axios.get("http://localhost:5000/depositPromotions/deposit-promotions");
+        const promotionsRes = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotions`);
         setPromotions(promotionsRes.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -99,61 +104,116 @@ const Deposit = () => {
     setUserInputs({});
   };
 
-  const handleSubmit = async () => {
-    try {
-      // Step 1: Validate required inputs
-      const requiredInputs = selectedPaymentMethod.userInputs.filter(
-        (input) => input.isRequired === "true"
-      );
-      const missingInputs = requiredInputs.filter(
-        (input) => !userInputs[input.name] || userInputs[input.name].toString().trim() === ""
-      );
+const handleSubmit = async () => {
+  try {
+    // Step 1: Validate required inputs
+    const requiredInputs = selectedPaymentMethod.userInputs.filter(
+      (input) => input.isRequired === "true"
+    );
+    const missingInputs = requiredInputs.filter(
+      (input) => !userInputs[input.name] || userInputs[input.name].toString().trim() === ""
+    );
 
-      if (missingInputs.length > 0) {
-        const missingFields = missingInputs.map((input) => input.labelBD).join(", ");
-        alert(`Please fill in all required fields: ${missingFields}`);
-        return;
-      }
-
-      // Step 2: Create FormData
-      const formData = new FormData();
-      formData.append("userId", user?._id);
-      formData.append("paymentMethodId", selectedPaymentMethod._id);
-      formData.append("amount", amount);
-      if (selectedOption) {
-        const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
-        formData.append("promotionId", selectedPromo._id);
-      }
-
-      // Append userInputs dynamically
-      for (const [name, value] of Object.entries(userInputs)) {
-        formData.append(`userInputs[${name}]`, value);
-      }
-
-      // Debug: Log FormData contents
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
-      // Step 3: Send request to backend
-      const response = await fetch("http://localhost:5000/depositTransactions/create", {
-        method: "POST",
-        body: formData,
+    if (missingInputs.length > 0) {
+      const missingFields = missingInputs.map((input) => input.labelBD).join(", ");
+   addToast(`Please fill in all required fields: ${missingFields}`, {
+        appearance: "error",
+        autoDismiss: true,
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to create deposit transaction");
-      }
-
-      alert("Deposit transaction created successfully!");
-      closeModal();
-    } catch (error) {
-      console.error("Error creating deposit transaction:", error);
-      alert("Failed to create deposit transaction: " + error.message);
+      return;
     }
-  };
+
+    // Step 2: Prepare userInputs
+    const updatedUserInputs = { ...userInputs };
+    for (const [name, value] of Object.entries(userInputs)) {
+      const inputConfig = selectedPaymentMethod.userInputs.find((input) => input.name === name);
+      if (!inputConfig) continue;
+
+      if (value instanceof File) {
+        // Handle file upload
+        const fileFormData = new FormData();
+        fileFormData.append("image", value);
+        const uploadResponse = await fetch(`${import.meta.env.VITE_BASE_API_URL}/upload`, {
+          method: "POST",
+          body: fileFormData,
+        });
+        const uploadResult = await uploadResponse.json();
+        if (!uploadResponse.ok) {
+          throw new Error(uploadResult.error || "Failed to upload file");
+        }
+        updatedUserInputs[name] = {
+          level: "user",
+          type: inputConfig.type,
+          data: uploadResult.filePath,
+        };
+      } else {
+        // Handle text/number inputs
+        updatedUserInputs[name] = {
+          level: inputConfig.labelBD.toLowerCase().replace(/\s+/g, "_"), // যেমন, "Phone Number" -> "phone_number"
+          type: inputConfig.type,
+          data: value,
+        };
+      }
+    }
+
+    // Step 3: Create FormData for transaction
+    const formData = new FormData();
+    formData.append("userId", user?._id);
+    formData.append("paymentMethodId", selectedPaymentMethod._id);
+    formData.append("amount", amount);
+    if (selectedOption) {
+      const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
+      formData.append("promotionId", selectedPromo._id);
+    }
+
+    // Append userInputs dynamically
+    for (const [name, value] of Object.entries(updatedUserInputs)) {
+      formData.append(`userInputs[${name}]`, JSON.stringify(value));
+    }
+
+    // Debug: Log FormData contents
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}: ${value}`);
+    }
+
+    // Step 4: Send request to backend
+    const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/depositTransactions/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: user?._id,
+        paymentMethodId: selectedPaymentMethod._id,
+        amount,
+        promotionId: selectedOption ? promotions.find((promo) => promo.title_bd === selectedOption)?._id : null,
+        userInputs: updatedUserInputs,
+        gateways: selectedChannel,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      addToast(`Failed to create deposit transaction: ${result.error || "Unknown error"}`, {
+        appearance: "error",
+        autoDismiss: true,
+      });
+     
+    }
+    addToast("Deposit transaction created successfully!", {
+      appearance: "success",
+      autoDismiss: true,
+    });
+
+   
+    closeModal();
+  } catch (error) {
+    console.error("Error creating deposit transaction:", error);
+ addToast(`Failed to create deposit transaction: ${error.message}`, {
+      appearance: "error",
+      autoDismiss: true,
+    });
+  }
+};
 
   // Get bonus label for a payment method based on selected promotion
   const getBonusLabel = (methodId) => {
@@ -219,7 +279,12 @@ const Deposit = () => {
                       : "border-gray-300"
                   }`}
                 >
-                  <img src={`http://localhost:5000${method.methodImage}`} alt={method.methodNameBD} />
+                  <img
+                    src={`${import.meta.env.VITE_BASE_API_URL}${method.methodImage}`}
+                    alt={method.methodNameBD}
+                    className="w-full h-auto"
+                    style={{ objectFit: "contain",    width: "60px" }}
+                  />
                 </div>
                 {getBonusLabel(method._id) && (
                   <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
@@ -271,9 +336,13 @@ const Deposit = () => {
               disabled={!selectedChannel}
             />
           </form>
-          <p className="text-xs font-mibold">
-            ৳ 400.00 এর নিচে ডিপজিটে কোন বোনাস পাবেন না
-          </p>
+        {
+          
+        // <p className="text-xs font-mibold">
+        //   ৳ 400.00 এর নিচে ডিপজিটে কোন বোনাস পাবেন না
+        // </p>
+        
+        }
           <div className="grid grid-cols-3 gap-2 sm:gap-4">
             {["200", "500", "2000", "5000", "10000", "20000"].map((value) => (
               <button
@@ -416,8 +485,8 @@ const Deposit = () => {
                   <p className="text-4xl md:text-5xl text-red-500 font-bold mt-2">{formatTimer(timer)}</p>
                 </div>
                 <img
-                  className="w-full h-48 md:h-64 object-contain rounded-lg border border-gray-200"
-                  src={`http://localhost:5000${selectedPaymentMethod.paymentPageImage}`}
+                  className="w-full h-48 md:h-64 object-contain rounded-lg "
+                  src={`${import.meta.env.VITE_BASE_API_URL}${selectedPaymentMethod.paymentPageImage}`}
                   alt={selectedPaymentMethod.methodNameBD}
                 />
               </div>
@@ -425,12 +494,9 @@ const Deposit = () => {
 
             <div className="mt-6 text-base md:text-lg text-gray-600 text-center">
               <p>
-                Please ensure amount to deposit is the same as transferred amount. We will not be liable for
-                missing funds due to incorrect information.
-              </p>
-              <p>
-                Please use phone number registered on our site for cash out, deposits with 3rd party phone
-                numbers are restricted.
+               {
+                <div dangerouslySetInnerHTML={{ __html: selectedPaymentMethod?.instructionBD }} />
+               }
               </p>
             </div>
           </div>

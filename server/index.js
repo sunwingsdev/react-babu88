@@ -21,6 +21,8 @@ const paymentMethodApi = require("./apis/paymentMethodApi/paymentMethodApi");
 const depositPaymentMethodsApi = require("./apis/depositPaymentMethodsApi/depositPaymentMethodsApi");
 const depositPromotionsApi = require("./apis/depositPromotionApi/depositPromotionApi");
 const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi"); // New router
+const adminDepositTransactionsApi = require("./apis/adminDepositTransactionsApi/adminDepositTransactionsApi");
+const withdrawPaymentMethodApi = require("./apis/withdrawPaymentMethodApi/withdrawPaymentMethodApi");
 
 const corsConfig = {
   origin: [
@@ -106,6 +108,7 @@ async function run() {
     const depositPaymentMethodCollection = client.db("babu88").collection("deposit-payment-methods");
     const depositPromotionsCollection = client.db("babu88").collection("depositPromotions");
     const depositTransactionsCollection = client.db("babu88").collection("depositTransactions"); // New collection
+    const withdrawPaymentMethodCollection = client.db("babu88").collection("withdraw-payment-methods");
 
     // APIs
     app.use("/users", usersApi(usersCollection, homeControlsCollection));
@@ -122,6 +125,18 @@ async function run() {
     app.use("/depositPaymentMethod", depositPaymentMethodsApi(depositPaymentMethodCollection));
     app.use("/depositPromotions", depositPromotionsApi(depositPromotionsCollection, depositPaymentMethodCollection));
     app.use("/depositTransactions", depositTransactionsApi(depositTransactionsCollection, usersCollection, depositPaymentMethodCollection, depositPromotionsCollection)); // New router
+  app.use(
+      "/admin/depositTransactions",
+      adminDepositTransactionsApi(
+        depositTransactionsCollection,
+        usersCollection,
+        depositPaymentMethodCollection,
+        depositPromotionsCollection
+      )
+    ); // আপডেটেড রাউট
+
+app.use("/withdrawPaymentMethod", withdrawPaymentMethodApi(withdrawPaymentMethodCollection));
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
