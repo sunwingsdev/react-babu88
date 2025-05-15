@@ -6,6 +6,7 @@ import { IoHomeOutline } from "react-icons/io5";
 import { MdOutlineLocalPlay } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
 import { useSelector } from "react-redux";
+import AppStrength from "@/components/home/AppStrength/AppStrength";
 
 // নেভিগেশন ডেটা
 const navItems = [
@@ -45,6 +46,7 @@ const MainLayout = () => {
   const { user, token } = useSelector((state) => state.auth);
   return (
     <div>
+      <AppStrength />
       <Navbar />
       <Outlet />
       <Footer />
