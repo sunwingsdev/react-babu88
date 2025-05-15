@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaEdit, FaSpinner, FaTimes } from "react-icons/fa";
 import ReactQuill from "react-quill";
@@ -35,7 +35,7 @@ const FileInput = ({ label, onChange, image }) => (
     />
     {image && (
       <img
-        src={`http://localhost:5000${image}`}
+        src={`${import.meta.env.VITE_BASE_API_URL}${image}`}
         alt={`${label} Preview`}
         className="mt-3 h-24 w-auto rounded-lg shadow-sm"
       />
@@ -73,7 +73,7 @@ const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5
 );
 
 const DepositPromotion = () => {
-  const navigate = useNavigate();
+
   const [promotions, setPromotions] = useState([]);
   const [depositMethods, setDepositMethods] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -109,7 +109,7 @@ const DepositPromotion = () => {
     for (let i = 0; i < retries; i++) {
       try {
         setMethodsLoading(true);
-        const response = await fetch("http://localhost:5000/depositPaymentMethod/deposit-methods");
+        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-methods`);
         if (!response.ok) {
           throw new Error(`HTTP error: ${response.status} ${response.statusText}`);
         }
@@ -140,7 +140,7 @@ const DepositPromotion = () => {
     const fetchData = async () => {
       try {
         const [promotionsRes, methods] = await Promise.all([
-          fetch("http://localhost:5000/depositPromotions/deposit-promotions"),
+          fetch(`${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotions`),
           fetchDepositMethods(),
         ]);
 
@@ -175,7 +175,7 @@ const DepositPromotion = () => {
     uploadFormData.append("image", file);
 
     try {
-      const response = await fetch("http://localhost:5000/upload", {
+      const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/upload`, {
         method: "POST",
         body: uploadFormData,
       });
@@ -271,8 +271,8 @@ const DepositPromotion = () => {
 
     try {
       const url = isEditMode
-        ? `http://localhost:5000/depositPromotions/deposit-promotion/${editId}`
-        : "http://localhost:5000/depositPromotions/deposit-promotion";
+        ? `${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotion/${editId}`
+        : `${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotion`;
       const method = isEditMode ? "PUT" : "POST";
 
       // Create FormData for submission
@@ -326,7 +326,7 @@ const DepositPromotion = () => {
   const handleEdit = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/depositPromotions/deposit-promotion/${id}`
+        `${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotion/${id}`
       );
       if (!response.ok) throw new Error(`Failed to fetch promotion: ${response.statusText}`);
       const data = await response.json();
@@ -345,7 +345,7 @@ const DepositPromotion = () => {
     if (window.confirm("Are you sure you want to delete this promotion?")) {
       try {
         const response = await fetch(
-          `http://localhost:5000/depositPromotions/deposit-promotion/${id}`,
+          `${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotion/${id}`,
           { method: "DELETE" }
         );
         if (!response.ok) throw new Error(`Failed to delete promotion: ${response.statusText}`);

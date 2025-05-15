@@ -20,7 +20,11 @@ const paymentNumberApi = require("./apis/paymentNumberApi/paymentNumberApi");
 const paymentMethodApi = require("./apis/paymentMethodApi/paymentMethodApi");
 const depositPaymentMethodsApi = require("./apis/depositPaymentMethodsApi/depositPaymentMethodsApi");
 const depositPromotionsApi = require("./apis/depositPromotionApi/depositPromotionApi");
-const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi");
+const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi"); // New router
+const adminDepositTransactionsApi = require("./apis/adminDepositTransactionsApi/adminDepositTransactionsApi");
+const withdrawPaymentMethodApi = require("./apis/withdrawPaymentMethodApi/withdrawPaymentMethodApi");
+const withdrawTransactionsApi = require("./apis/withdrawTransactionsApi/withdrawTransactionsApi");
+
 const gameApi = require("./apis/gameApi/gameApi");
 
 const corsConfig = {
@@ -99,6 +103,12 @@ async function run() {
       .db("babu88")
       .collection("homeControls");
     const kycCollection = client.db("babu88").collection("kyc");
+   
+
+  
+
+    const withdrawPaymentMethodCollection = client.db("babu88").collection("withdraw-payment-methods");
+    const withdrawTransactionsCollection = client.db("babu88").collection("withdrawTransactions");
     const paymentNumberCollection = client
       .db("babu88")
       .collection("payment-numbers");
@@ -117,7 +127,7 @@ async function run() {
     const gamesCollection = client.db("babu88").collection("games");
 
     // APIs
-    app.use("/users", usersApi(usersCollection, homeControlsCollection));
+    app.use("/users", usersApi(usersCollection, homeControlsCollection,withdrawTransactionsCollection));
     app.use("/users", affiliatesApi(usersCollection, homeControlsCollection));
     app.use(
       "/deposits",
@@ -131,10 +141,15 @@ async function run() {
     app.use("/pages", pagesApi(pagesCollection));
     app.use("/paymentnumber", paymentNumberApi(paymentNumberCollection));
     app.use("/paymentmethod", paymentMethodApi(paymentMethodCollection));
-    app.use(
+
+  app.use(
+      "/admin/depositTransactions",
+      adminDepositTransactionsApi(depositTransactionsCollection, usersCollection, depositPaymentMethodCollection, depositPromotionsCollection));
+
+
+     app.use(
       "/depositPaymentMethod",
-      depositPaymentMethodsApi(depositPaymentMethodCollection)
-    );
+      depositPaymentMethodsApi(depositPaymentMethodCollection));
     app.use(
       "/depositPromotions",
       depositPromotionsApi(
@@ -145,12 +160,21 @@ async function run() {
     app.use(
       "/depositTransactions",
       depositTransactionsApi(
+
         depositTransactionsCollection,
         usersCollection,
         depositPaymentMethodCollection,
         depositPromotionsCollection
       )
+    ); // আপডেটেড রাউট
+
+app.use("/withdrawPaymentMethod", withdrawPaymentMethodApi(withdrawPaymentMethodCollection));
+app.use(
+      "/withdrawTransactions",
+      withdrawTransactionsApi(withdrawTransactionsCollection, usersCollection, withdrawPaymentMethodCollection)
     );
+
+ 
     app.use("/games", gameApi(gamesCollection));
 
     // Send a ping to confirm a successful connection

@@ -126,15 +126,15 @@ const DashboardLayout = () => {
       submenu: [
         { name: "Deposit Promotion", path: "/dashboard/depositPromotion"}, 
         { name: "Deposit Method", path: "/dashboard/depositmethod"},
-        { name: "Deposit History", path: "/dashboard/deposits" },
+        { name: "Deposit History", path: "/dashboard/DepositHistory" },
       ],
     },
     {
       name: "Banking Withdraw",
       icon: <BsBank />,
       submenu: [
-        { name: "Withdraw Method" },
-        { name: "Withdraw History", path: "/dashboard/withdraws" },
+        { name: "Withdraw Method", path: "/dashboard/withdrawMethods" },
+        { name: "Withdraw History", path: "/dashboard/WithdrawalHistory" },
       ],
     },
     {
