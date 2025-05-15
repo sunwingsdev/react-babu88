@@ -31,6 +31,8 @@ import AdminRoute from "./AdminRoute";
 import AddDepositMethods from "@/components/dashboard/Dashboard-Page/Add-Deposit-Methods/AddDepositMethods";
 import DepositPromotion from "@/components/dashboard/Dashboard-Page/DepositPromotion/DepositPromotion";
 import AdminLogin from "@/pages/AdminLogin";
+import AddCategories from "@/pages/dashboard/AddCategories";
+import AddGame from "@/pages/dashboard/AddGame";
 
 const router = createBrowserRouter([
   {
@@ -150,6 +152,8 @@ const router = createBrowserRouter([
         element: <DashboardHome />,
       },
       { path: "home-control", element: <HomeControl /> },
+      { path: "add-category", element: <AddCategories /> },
+      { path: "add-game", element: <AddGame /> },
       {
         path: "depositmethod",
         element: <AddDepositMethods />, // Add the new route

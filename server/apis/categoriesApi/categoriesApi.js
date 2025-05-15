@@ -8,7 +8,6 @@ const categoriesApi = (categoriesCollection) => {
   router.post("/", async (req, res) => {
     const categoryInfo = req.body;
     categoryInfo.createdAt = new Date();
-    categoryInfo.isSelected = false;
     const result = await categoriesCollection.insertOne(categoryInfo);
     res.send(result);
   });

@@ -20,7 +20,8 @@ const paymentNumberApi = require("./apis/paymentNumberApi/paymentNumberApi");
 const paymentMethodApi = require("./apis/paymentMethodApi/paymentMethodApi");
 const depositPaymentMethodsApi = require("./apis/depositPaymentMethodsApi/depositPaymentMethodsApi");
 const depositPromotionsApi = require("./apis/depositPromotionApi/depositPromotionApi");
-const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi"); // New router
+const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi");
+const gameApi = require("./apis/gameApi/gameApi");
 
 const corsConfig = {
   origin: [
@@ -94,18 +95,34 @@ async function run() {
     const promotionCollection = client.db("babu88").collection("promotions");
     const categoriesCollection = client.db("babu88").collection("categories");
     const pagesCollection = client.db("babu88").collection("pages");
-    const homeControlsCollection = client.db("babu88").collection("homeControls");
+    const homeControlsCollection = client
+      .db("babu88")
+      .collection("homeControls");
     const kycCollection = client.db("babu88").collection("kyc");
-    const paymentNumberCollection = client.db("babu88").collection("payment-numbers");
-    const paymentMethodCollection = client.db("babu88").collection("payment-methods");
-    const depositPaymentMethodCollection = client.db("babu88").collection("deposit-payment-methods");
-    const depositPromotionsCollection = client.db("babu88").collection("depositPromotions");
-    const depositTransactionsCollection = client.db("babu88").collection("depositTransactions"); // New collection
+    const paymentNumberCollection = client
+      .db("babu88")
+      .collection("payment-numbers");
+    const paymentMethodCollection = client
+      .db("babu88")
+      .collection("payment-methods");
+    const depositPaymentMethodCollection = client
+      .db("babu88")
+      .collection("deposit-payment-methods");
+    const depositPromotionsCollection = client
+      .db("babu88")
+      .collection("depositPromotions");
+    const depositTransactionsCollection = client
+      .db("babu88")
+      .collection("depositTransactions");
+    const gamesCollection = client.db("babu88").collection("games");
 
     // APIs
     app.use("/users", usersApi(usersCollection, homeControlsCollection));
     app.use("/users", affiliatesApi(usersCollection, homeControlsCollection));
-    app.use("/deposits", depositsApi(depositsCollection, usersCollection, promotionCollection));
+    app.use(
+      "/deposits",
+      depositsApi(depositsCollection, usersCollection, promotionCollection)
+    );
     app.use("/withdraws", withdrawsApi(withdrawsCollection, usersCollection));
     app.use("/home-controls", homeControlApi(homeControlsCollection));
     app.use("/promotions", promotionApi(promotionCollection));
@@ -114,9 +131,27 @@ async function run() {
     app.use("/pages", pagesApi(pagesCollection));
     app.use("/paymentnumber", paymentNumberApi(paymentNumberCollection));
     app.use("/paymentmethod", paymentMethodApi(paymentMethodCollection));
-    app.use("/depositPaymentMethod", depositPaymentMethodsApi(depositPaymentMethodCollection));
-    app.use("/depositPromotions", depositPromotionsApi(depositPromotionsCollection, depositPaymentMethodCollection));
-    app.use("/depositTransactions", depositTransactionsApi(depositTransactionsCollection, usersCollection, depositPaymentMethodCollection, depositPromotionsCollection)); // New router
+    app.use(
+      "/depositPaymentMethod",
+      depositPaymentMethodsApi(depositPaymentMethodCollection)
+    );
+    app.use(
+      "/depositPromotions",
+      depositPromotionsApi(
+        depositPromotionsCollection,
+        depositPaymentMethodCollection
+      )
+    );
+    app.use(
+      "/depositTransactions",
+      depositTransactionsApi(
+        depositTransactionsCollection,
+        usersCollection,
+        depositPaymentMethodCollection,
+        depositPromotionsCollection
+      )
+    );
+    app.use("/games", gameApi(gamesCollection));
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
