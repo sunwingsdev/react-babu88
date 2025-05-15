@@ -14,11 +14,10 @@ const AdminRoute = ({ children }) => {
       //   appearance: "error",
       //   autoDismiss: true,
       // });
-      navigate("/login");
+      navigate("/admin");
     }
   }, [token, user, navigate]);
 
-  
   if (!token || !user || user?.role !== "admin") {
     return null;
   }

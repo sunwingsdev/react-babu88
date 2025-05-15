@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaEdit, FaSpinner, FaTimes } from "react-icons/fa";
 import ReactQuill from "react-quill";
@@ -73,7 +73,7 @@ const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5
 );
 
 const DepositPromotion = () => {
-  const navigate = useNavigate();
+
   const [promotions, setPromotions] = useState([]);
   const [depositMethods, setDepositMethods] = useState([]);
   const [loading, setLoading] = useState(true);

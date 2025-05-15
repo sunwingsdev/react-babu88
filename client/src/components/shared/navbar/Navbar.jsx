@@ -18,6 +18,111 @@ import { useToasts } from "react-toast-notifications";
 import { logout } from "@/redux/slices/authSlice";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
 import {  useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
+import hotIcon from "@/assets/images/hot-icon.png";
+
+const data = [
+  {
+    id: 1,
+    image: "https://www.babu88.app/static/svg/mobileMenu/promotion.svg",
+    title: "প্রমোশন",
+    route: "/promotion",
+    badge: "",
+  },
+  {
+    id: 2,
+    image: "https://www.babu88.app/static/svg/mobileMenu/rewards.svg",
+    title: "পুরস্কার",
+    route: "/profile/rewards",
+    badge: "new",
+  },
+  {
+    id: 3,
+    image: "https://www.babu88.app/static/svg/mobileMenu/referAndEarn.svg",
+    title: "রেফারেল প্রোগ্রাম",
+    route: "/profile/rewards",
+    badge: "hot",
+  },
+  {
+    id: 4,
+    image: "https://www.babu88.app/static/svg/mobileMenu/bettingPass.svg",
+    title: "বেটিং পাস",
+    route: "/profile/rewards",
+    badge: "hot",
+  },
+  {
+    id: 5,
+    image: "https://www.babu88.app/static/svg/mobileMenu/bpass_ipl_icon.svg",
+    title: "IPL 2025 বেটিং পাস",
+    route: "/profile/rewards",
+    badge: "hot",
+  },
+  {
+    id: 6,
+    image: "https://www.babu88.app/static/svg/mobileMenu/agentAff.svg",
+    title: "অ্যাফিলিয়েট",
+    route: "/profile/rewards",
+    badge: "",
+  },
+];
+
+const gamesData = [
+  {
+    id: 1,
+    image: "https://www.babu88.app/static/svg/mobileMenu/cricket.svg",
+    title: " ক্রিকেট",
+    route: "/cricket",
+    badge: "",
+  },
+  {
+    id: 2,
+    image: "https://www.babu88.app/static/svg/mobileMenu/ld.svg",
+    title: " ক্যাসিনো",
+    route: "/cricket",
+    badge: "",
+  },
+  {
+    id: 3,
+    image: "https://www.babu88.app/static/svg/mobileMenu/rng.svg",
+    title: " স্লট গেম",
+    route: "/cricket",
+    badge: "",
+  },
+  {
+    id: 4,
+    image: "https://www.babu88.app/static/svg/mobileMenu/table.svg",
+    title: " টেবিল গেম",
+    route: "/cricket",
+    badge: "",
+  },
+  {
+    id: 5,
+    image: "https://www.babu88.app/static/svg/mobileMenu/sb.svg",
+    title: "খেলার বই",
+    route: "/cricket",
+    badge: "",
+  },
+  {
+    id: 6,
+    image: "https://www.babu88.app/static/svg/mobileMenu/fishing.svg",
+    title: "মাছ ধরা",
+    route: "/cricket",
+    badge: "",
+  },
+  {
+    id: 7,
+    image: "https://www.babu88.app/static/svg/mobileMenu/crash.svg",
+    title: "ক্র্যাশ",
+    route: "/cricket",
+    badge: "new",
+  },
+  {
+    id: 8,
+    image: "https://www.babu88.app/static/svg/mobileMenu/fastgames.svg",
+    title: "দ্রুতগতির গেমস",
+    route: "/cricket",
+    badge: "",
+  },
+];
 
 const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
@@ -305,7 +410,7 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
               </SheetTrigger>
               <SheetContent
                 side="left"
-                className="p-4 bg-slate-50 text-gray-600 w-64"
+                className=" bg-slate-50 text-gray-600 w-64 p-2"
               >
                 <SheetClose asChild className="border-b-2 pb-2">
                   <div className="w-40">
@@ -319,121 +424,47 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
                     </Link>
                   </div>
                 </SheetClose>
-                <ul className="space-y-4 overflow-y-auto h-[92%]">
-                  <SheetClose asChild>
-                    <Link to={"/promotion"}>
-                      <li className="flex gap-4 mt-4 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/promotion.svg"
-                          alt=""
-                        />
-                        প্রমোশন
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/profile/rewards"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/rewards.svg"
-                          alt=""
-                        />
-                        পুরস্কার
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/betting-pass"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/bettingPass.svg"
-                          alt=""
-                        />
-                        বেটিং পাস
-                      </li>
-                    </Link>
-                  </SheetClose>
+                <ul className="space-y-6 overflow-y-auto h-[92%]">
+                  {data?.map((item) => (
+                    <SheetClose key={item.id} asChild>
+                      <Link to={item.route}>
+                        <li className="flex items-center justify-start gap-3 mt-4 text-xs font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
+                          <img className="w-6" src={item.image} alt="" />
+                          <p className="text-[#9b9b9b]">{item.title}</p>
+                          {item?.badge &&
+                            (item?.badge === "hot" ? (
+                              <div className="w-8 animate-pulse">
+                                <img className="w-full" src={hotIcon} alt="" />
+                              </div>
+                            ) : (
+                              <button className="animate-pulse rounded-full w-8 bg-[#04B22B] text-white">
+                                new
+                              </button>
+                            ))}
+                        </li>
+                      </Link>
+                    </SheetClose>
+                  ))}
+
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Games</p>
                   </div>
-                  <SheetClose asChild>
-                    <Link to={"/cricket"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/cricket.svg"
-                          alt=""
-                        />
-                        ক্রিকেট
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/casino"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/ld.svg"
-                          alt=""
-                        />
-                        ক্যাসিনো
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/slot"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/rng.svg"
-                          alt=""
-                        />
-                        স্লট গেম
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/table-games"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/table.svg"
-                          alt=""
-                        />
-                        টেবিল গেম
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/sports-book"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/sb.svg"
-                          alt=""
-                        />
-                        খেলার বই
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/fishing"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          src="https://www.babu88.app/static/svg/mobileMenu/fishing.svg"
-                          alt=""
-                        />
-                        মাছ ধরা
-                      </li>
-                    </Link>
-                  </SheetClose>
-                  <SheetClose asChild>
-                    <Link to={"/crash"}>
-                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/crash.svg"
-                          alt=""
-                        />
-                        ক্র্যাশ
-                      </li>
-                    </Link>
-                  </SheetClose>
+                  {gamesData?.map((item) => (
+                    <SheetClose key={item.id} asChild>
+                      <Link to={item.route}>
+                        <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
+                          <img className="w-6" src={item.image} alt="" />
+                          <p className="text-[#9b9b9b]">{item.title}</p>
+                          {item?.badge && (
+                            <button className="animate-pulse rounded-full w-10 py-1 bg-[#04B22B] text-white">
+                              new
+                            </button>
+                          )}
+                        </li>
+                      </Link>
+                    </SheetClose>
+                  ))}
+
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Others</p>
                   </div>
@@ -448,7 +479,7 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
                           src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
                           alt=""
                         />
-                        ভাষা
+                        <p className="text-[#9b9b9b]"> ভাষা</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -460,10 +491,26 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
                           src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
                           alt=""
                         />
-                        প্রায়শই জিজ্ঞাসিত প্রশ্নাবল
+                        <p className="text-[#9b9b9b]">
+                          {" "}
+                          প্রায়শই জিজ্ঞাসিত প্রশ্নাবল
+                        </p>
                       </li>
                     </Link>
                   </SheetClose>
+                  <SheetClose asChild>
+                    <Link to={"/faq"}>
+                      <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
+                        <img
+                          className="w-4"
+                          src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
+                          alt=""
+                        />
+                        <p className="text-[#9b9b9b]"> সরাসরি কথোপকথন</p>
+                      </li>
+                    </Link>
+                  </SheetClose>
+
                   <SheetClose asChild>
                     <Link to={"./babu88.apk"} target={"_blank"} download>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
@@ -472,7 +519,7 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
                           src="https://www.babu88.app/static/svg/mobileMenu/downloadApp.svg"
                           alt=""
                         />
-                        ডাউনলোড করুন
+                        <p className="text-[#9b9b9b]">ডাউনলোড করুন</p>
                       </li>
                     </Link>
                   </SheetClose>

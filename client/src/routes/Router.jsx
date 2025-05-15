@@ -30,8 +30,12 @@ import HomeControl from "@/pages/dashboard/HomeControl";
 import AdminRoute from "./AdminRoute";
 import AddDepositMethods from "@/components/dashboard/Dashboard-Page/Add-Deposit-Methods/AddDepositMethods";
 import DepositPromotion from "@/components/dashboard/Dashboard-Page/DepositPromotion/DepositPromotion";
+
 import DepositHistory from "@/components/dashboard/Dashboard-Page/Deposit-History/DepositHistory";
 import AddWithdrawMethods from "@/components/dashboard/Dashboard-Page/Add-Withdrow-Methods/AddWithdrowMethods";
+
+import AdminLogin from "@/pages/AdminLogin";
+
 
 const router = createBrowserRouter([
   {
@@ -169,6 +173,10 @@ const router = createBrowserRouter([
         element: <AddWithdrawMethods />, // Add the new route
       },
     ],
+  },
+  {
+    path: "/admin",
+    element: <AdminLogin />,
   },
 ]);
 
