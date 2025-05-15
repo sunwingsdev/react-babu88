@@ -3,9 +3,11 @@ import BannerSlider from "../../../components/home/bannerSlider/BannerSlider";
 import SecondaryBanner from "../../../components/home/secondaryBanner/SecondaryBanner";
 import GameCard from "../../../components/shared/gameCard/GameCard";
 import HomeMobileButton from "@/components/home/homeMobilButton/HomeMobileButton";
-import aviatorImg from "@/assets/images/aviator.png";
+import { useGetGamesQuery } from "@/redux/features/allApis/gameApi/gameApi";
 
 const Home = () => {
+  const { data: games } = useGetGamesQuery();
+
   const buttons = [
     {
       image: "https://www.babu88.app/static/svg/gameTabHolder/homepageHot.svg",
@@ -66,117 +68,16 @@ const Home = () => {
           হট গেমস
         </h2>
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-          <GameCard
-            gameCardImg={aviatorImg}
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Aviator"}
-            gameText={"EVOLUTION GAMING"}
-            demoId={1}
-          />
-          <GameCard
-            gameCardImg={
-              "https://luckmedia.link/evo_lightning_storm/thumb.webp"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Lightning Storm"}
-            gameText={"EVOLUTION GAMING"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://jiliwin.9terawolf.com/images/babu/game_icons/en/jili/134_0.jpg"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Mega Ace"}
-            gameText={"JILI"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://luckmedia.link/pgs_wild_bounty_showdown/thumb.webp"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Wild Bounty"}
-            gameText={"PG SOFT"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://luckmedia.link/hbn_laughing_buddha/thumb.webp"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Laughing Buddha"}
-            gameText={"HABANERO"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://luckmedia.link/hbn_mystic_fortune_deluxe/thumb.webp"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Mystic Fortune Deluxe"}
-            gameText={"HABANERO"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://jiliwin.9terawolf.com/images/babu/game_icons/en/jili/134_0.jpg"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Mega Ace"}
-            gameText={"JILI"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://jiliwin.9terawolf.com/cms/h8/image/669f794e9a160.png"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Money Coming Expand Bets"}
-            gameText={"JILI"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://jiliwin.9terawolf.com/images/babu/game_icons/en/jili/51_0.jpg"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Money Coming"}
-            gameText={"JILI"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://jiliwin.9terawolf.com/cms/h8/image/6683b58672ad5.png"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Super Ace Deluxe"}
-            gameText={"JILI"}
-          />
-          <GameCard
-            gameCardImg={
-              "https://jiliwin.9terawolf.com/cms/h8/image/64a539ee6739e.png"
-            }
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Fortune Gems 2"}
-            gameText={"JILI"}
-          />
-          <GameCard
-            gameCardImg={"https://luckmedia.link/evo_crazy_time/thumb.webp"}
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Crazy Time"}
-            gameText={"EVOLUTION GAMING"}
-          />
-          <GameCard
-            gameCardImg={"https://luckmedia.link/evo_funky_time/thumb.webp"}
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Evo Funky Time"}
-            gameText={"EVOLUTION GAMING"}
-          />
-          <GameCard
-            gameCardImg={"https://luckmedia.link/spb_aviator/thumb.webp"}
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"Aviator"}
-            gameText={"SPRIBE"}
-          />
-          <GameCard
-            gameCardImg={"https://luckmedia.link/avx_nft_aviatrix/thumb.webp"}
-            gameHot={"https://www.babu88.app/static/image/other/hot-icon.png"}
-            gameHeading={"NFT Aviatrix"}
-            gameText={"AVIATRIX"}
-          />
+          {games?.map((game) => (
+            <GameCard
+              key={game._id}
+              gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game?.image}`}
+              badge={game?.badge}
+              gameHeading={game?.title}
+              gameText={"EVOLUTION GAMING"}
+              demoId={game?._id}
+            />
+          ))}
         </div>
         <div className="pb-4 md:pb-0">
           <VideoSlider />

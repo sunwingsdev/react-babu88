@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
+import hotIcon from "@/assets/images/hot-icon.png";
+import newIcon from "@/assets/images/game-icon-new.svg";
 
 const GameCard = ({
   gameCardImg,
-  gameHot,
+  badge,
   gameHeading,
   gameText,
   headingCenter,
@@ -35,7 +37,11 @@ const GameCard = ({
             </Link>
           )}
         </div>
-        <img className="absolute top-1 right-1 w-10" src={gameHot} alt="" />
+        <img
+          className="absolute top-1 right-1 w-10"
+          src={badge === "new" ? newIcon : hotIcon}
+          alt=""
+        />
       </div>
       <div className="hidden md:block">
         <h2
