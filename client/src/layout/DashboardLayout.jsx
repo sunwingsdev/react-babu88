@@ -134,7 +134,7 @@ const DashboardLayout = () => {
       icon: <BsBank />,
       submenu: [
         { name: "Withdraw Method", path: "/dashboard/withdrawMethods" },
-        { name: "Withdraw History", path: "/dashboard/withdraws" },
+        { name: "Withdraw History", path: "/dashboard/WithdrawalHistory" },
       ],
     },
     {

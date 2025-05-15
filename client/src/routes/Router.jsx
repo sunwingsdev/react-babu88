@@ -35,6 +35,8 @@ import DepositHistory from "@/components/dashboard/Dashboard-Page/Deposit-Histor
 import AddWithdrawMethods from "@/components/dashboard/Dashboard-Page/Add-Withdrow-Methods/AddWithdrowMethods";
 
 import AdminLogin from "@/pages/AdminLogin";
+import WithdrawalHistory from "@/components/dashboard/Dashboard-Page/Withdrawal-History/WithdrawalHistory";
+import History from './../components/dashboard/profile/history/History';
 
 
 const router = createBrowserRouter([
@@ -138,6 +140,11 @@ const router = createBrowserRouter([
             path: "rewards",
             element: <Rewards />,
           },
+          {
+            path: "history",
+            element: <History />,
+
+          },
         ],
       },
     ],
@@ -171,6 +178,10 @@ const router = createBrowserRouter([
          {
         path: "withdrawMethods",
         element: <AddWithdrawMethods />, // Add the new route
+      },
+         {
+        path: "WithdrawalHistory",
+        element: <WithdrawalHistory />, // Add the new route
       },
     ],
   },

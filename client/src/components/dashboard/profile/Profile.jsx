@@ -8,7 +8,7 @@ const topbarData = [
   { label: "উত্তোলন", route: "/profile/withdrawal" },
   { label: "ভাউচার", route: "/profile/voucher" },
   { label: "বাজি ইতিহাস", route: "" },
-  { label: "ইতিহাস", route: "" },
+  { label: "ইতিহাস", route: "/profile/history" },
   { label: "টার্নওভার ইতিহাস", route: "" },
   { label: "আমার প্রোফাইল", route: "" },
   { label: "ব্যাংক বিবরণ", route: "" },

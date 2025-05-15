@@ -10,8 +10,7 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
       const { userId, paymentMethodId, amount, promotionId , gateways } = req.body;
       let userInputs = {};
 
-      console.log("this is roni -> ", req.body);
-
+   
       // userInputs পার্স করা
       if (req.body.userInputs && typeof req.body.userInputs === "object") {
         for (const [key, value] of Object.entries(req.body.userInputs)) {
@@ -49,8 +48,7 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
         }
       }
 
-      console.log("this is promotion -> ", promotion);
-
+   
       // Generate unique transaction ID
       const transactionId = `D${Date.now()}${Math.floor(Math.random() * 10000)}`;
 
@@ -91,8 +89,7 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
       // Insert transaction into depositTransactions collection
       const result = await depositTransactionsCollection.insertOne(transaction);
 
-      console.log("this is result -> ", result);
-
+      
       res.status(201).json({
         message: "Deposit transaction created successfully",
         data: {
@@ -110,8 +107,33 @@ module.exports = (depositTransactionsCollection, usersCollection, depositPayment
   });
 
 
+// Get all deposit transactions for a user
+  router.get("/user/:userId", async (req, res) => {
+    try {
+      const { userId } = req.params;
 
-  
+      console.log("this is user id ",userId);
+      
+
+      if (!ObjectId.isValid(userId)) {
+        return res.status(400).json({ error: "Invalid user ID" });
+      }
+      // if (req.user.id !== userId) {
+      //   return res.status(403).json({ error: "Forbidden: You can only access your own transactions" });
+      // }
+
+      const transactions = await depositTransactionsCollection
+        .find({ userId: new ObjectId(userId) })
+        .sort({ createdAt: -1 })
+        .toArray();
+
+      res.status(200).json(transactions);
+    } catch (err) {
+      console.error("Error in GET /depositTransactions/user/:userId:", err);
+      res.status(500).json({ error: err.message });
+    }
+  });
+
 
   return router;
 };

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 const sendEmail = require("../../emailService");
 
-const usersApi = (usersCollection, homeControlsCollection) => {
+const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsCollection) => {
   const router = express.Router();
   const jwtSecret = process.env.JWT_SECRET;
 
@@ -183,7 +183,21 @@ const usersApi = (usersCollection, homeControlsCollection) => {
         _id: new ObjectId(req.user.userId),
       });
       if (!user) return res.status(404).json({ error: "User not found" });
+
+     
+
+      const pendingTransactions = await withdrawTransactionsCollection
+        .find({ userId: new ObjectId(req.user.userId), status: "pending" })
+        .toArray();
+      const totalPendingAmount = pendingTransactions.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+      );
+   
+
       const { password: _, ...userInfo } = user;
+      userInfo.balance -= totalPendingAmount;
+      userInfo.withdraw += totalPendingAmount;
       res.status(200).json(userInfo);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch profile" });
@@ -327,11 +341,28 @@ const usersApi = (usersCollection, homeControlsCollection) => {
     if (!id) {
       return;
     }
+
+     const pendingTransactions = await withdrawTransactionsCollection
+        .find({ userId: new ObjectId(id), status: "pending" })
+        .toArray();
+      const totalPendingAmount = pendingTransactions.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+      );
+ 
+
     const result = await usersCollection.findOne(
       { _id: new ObjectId(id) },
       { projection: { password: 0 } }
     );
-    res.send(result);
+    if (result) {
+      const userInfo = { ...result };
+      userInfo.balance -= totalPendingAmount;
+      userInfo.withdraw += totalPendingAmount;
+      res.send(userInfo);
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
   });
 
   // get a agent by ID

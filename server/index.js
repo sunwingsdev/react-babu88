@@ -23,6 +23,9 @@ const depositPromotionsApi = require("./apis/depositPromotionApi/depositPromotio
 const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi"); // New router
 const adminDepositTransactionsApi = require("./apis/adminDepositTransactionsApi/adminDepositTransactionsApi");
 const withdrawPaymentMethodApi = require("./apis/withdrawPaymentMethodApi/withdrawPaymentMethodApi");
+const withdrawTransactionsApi = require("./apis/withdrawTransactionsApi/withdrawTransactionsApi");
+
+
 
 const corsConfig = {
   origin: [
@@ -104,9 +107,10 @@ async function run() {
     const depositPromotionsCollection = client.db("babu88").collection("depositPromotions");
     const depositTransactionsCollection = client.db("babu88").collection("depositTransactions"); // New collection
     const withdrawPaymentMethodCollection = client.db("babu88").collection("withdraw-payment-methods");
+    const withdrawTransactionsCollection = client.db("babu88").collection("withdrawTransactions");
 
     // APIs
-    app.use("/users", usersApi(usersCollection, homeControlsCollection));
+    app.use("/users", usersApi(usersCollection, homeControlsCollection,withdrawTransactionsCollection));
     app.use("/users", affiliatesApi(usersCollection, homeControlsCollection));
     app.use("/deposits", depositsApi(depositsCollection, usersCollection, promotionCollection));
     app.use("/withdraws", withdrawsApi(withdrawsCollection, usersCollection));
@@ -131,6 +135,10 @@ async function run() {
     ); // আপডেটেড রাউট
 
 app.use("/withdrawPaymentMethod", withdrawPaymentMethodApi(withdrawPaymentMethodCollection));
+app.use(
+      "/withdrawTransactions",
+      withdrawTransactionsApi(withdrawTransactionsCollection, usersCollection, withdrawPaymentMethodCollection)
+    );
 
 
     // Send a ping to confirm a successful connection
