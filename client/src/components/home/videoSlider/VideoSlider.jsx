@@ -129,7 +129,7 @@ const VideoSlider = () => {
               </div>
               {image.videoId && (
                 <iframe
-                  className="md:absolute w-full h-56 bottom-0 right-0 rounded-xl mt-4 md:mt-0"
+                  className="md:absolute w-full md:w-fit h-56 bottom-0 right-0 rounded-xl mt-4 md:mt-0"
                   src={getYouTubeEmbedUrl(image.videoId)}
                   title={`YouTube video ${extractYouTubeId(image.videoId)}`}
                   frameBorder="0"
