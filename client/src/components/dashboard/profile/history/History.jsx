@@ -57,7 +57,7 @@ const History = () => {
     };
 
     fetchTransactions();
-  }, [selectedTab, user]);
+  }, [selectedTab, user,addToast]);
 
   // Handle tab change
   const handleTabChange = (tab) => {

@@ -35,9 +35,14 @@ import DepositHistory from "@/components/dashboard/Dashboard-Page/Deposit-Histor
 import AddWithdrawMethods from "@/components/dashboard/Dashboard-Page/Add-Withdrow-Methods/AddWithdrowMethods";
 
 import AdminLogin from "@/pages/AdminLogin";
+<<<<<<< HEAD
 import WithdrawalHistory from "@/components/dashboard/Dashboard-Page/Withdrawal-History/WithdrawalHistory";
 import History from './../components/dashboard/profile/history/History';
 
+=======
+import AddCategories from "@/pages/dashboard/AddCategories";
+import AddGame from "@/pages/dashboard/AddGame";
+>>>>>>> 3b46d62d879b30592f9f67054702cc78296191c4
 
 const router = createBrowserRouter([
   {
@@ -162,6 +167,8 @@ const router = createBrowserRouter([
         element: <DashboardHome />,
       },
       { path: "home-control", element: <HomeControl /> },
+      { path: "add-category", element: <AddCategories /> },
+      { path: "add-game", element: <AddGame /> },
       {
         path: "depositmethod",
         element: <AddDepositMethods />, // Add the new route
