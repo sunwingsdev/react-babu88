@@ -505,6 +505,23 @@ const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsC
     }
   });
 
+
+    // GET /users - Fetch all users (for admin)
+  router.get("/admin/get-users", async (req, res) => {
+    try {
+      const users = await usersCollection.find().toArray();
+      // Remove password field for security
+      const sanitizedUsers = users.map((user) => {
+        const { password, ...rest } = user;
+        return rest;
+      });
+      res.status(200).json({ data: sanitizedUsers });
+    } catch (err) {
+      console.error("Error in GET /users:", err);
+      res.status(500).json({ error: err.message || "Server error" });
+    }
+  });
+
   return router;
 };
 

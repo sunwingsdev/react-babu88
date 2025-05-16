@@ -511,7 +511,7 @@ const AddWithdrawMethods = () => {
                     value={newGateway}
                     onChange={(e) => setNewGateway(e.target.value)}
                     className="p-3 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                    placeholder="Enter gateway (e.g., bKash)"
+                    placeholder="Enter gateway (e.g.,  সেন্ড মানি, AP-ক্যাশ আউট, EP-ক্যাশ আউট)"
                   />
                   <button
                     type="button"

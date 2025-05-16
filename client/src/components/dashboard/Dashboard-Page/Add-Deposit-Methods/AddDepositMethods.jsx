@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaEdit, FaSpinner, FaTimes } from "react-icons/fa";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { deleteImage } from "@/hooks/files";
 
 // Reusable Input Field Component
 const InputField = ({ label, name, value, onChange, required, type = "text" }) => (
@@ -264,22 +265,36 @@ const AddDepositMethods = () => {
 
   // Handle form submission (Create or Update)
   const handleSubmit = async (e) => {
+
+ 
+
     e.preventDefault();
     if (instructionENCharCount > maxLength || instructionBDCharCount > maxLength) {
       toast.error("Instructions exceed character limit.", { position: "top-right" });
       return;
     }
+
     try {
       const url = isEditMode
         ? `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${editId}`
-        : `${import.meta.env.VITE_BASE_API_URL}depositPaymentMethod/deposit-method`;
+        : `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method`;
       const method = isEditMode ? "PUT" : "POST";
 
-      const response = await fetch(url, {
+      
+      
+      let urlLink = url
+
+
+
+
+      const response = await fetch(urlLink, {
         method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
+
+
 
       if (!response.ok) throw new Error(`Failed to ${isEditMode ? "update" : "create"} deposit method`);
       const data = await response.json();
@@ -323,8 +338,21 @@ const AddDepositMethods = () => {
   };
 
   // Handle delete deposit method
-  const handleDelete = async (id) => {
+  const handleDelete = async ({id ,paymentPageImage,methodImage}) => {
     if (window.confirm("Are you sure you want to delete this deposit method?")) {
+
+         console.log("click delete ",paymentPageImage , methodImage , id);
+
+      if(paymentPageImage || methodImage) {
+
+        try {
+          paymentPageImage && await deleteImage(paymentPageImage.split('/').pop());
+          methodImage && await deleteImage(methodImage.split('/').pop());
+        } catch (err) {
+         
+        }
+      }
+
       try {
         const response = await fetch(
           `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${id}`,
@@ -398,6 +426,7 @@ const AddDepositMethods = () => {
           onClick={() => {
             resetForm();
             setShowForm(true);
+            setIsEditMode(false)
           }}
           className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition duration-200 shadow-md"
         >
@@ -457,7 +486,7 @@ const AddDepositMethods = () => {
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete(method._id)}
+                        onClick={() => handleDelete({id : method._id,methodImage:method.methodImage,paymentPageImage:method.paymentPageImage}) }
                         className="text-red-500 hover:text-red-700"
                         title="Delete Method"
                       >
@@ -541,7 +570,7 @@ const AddDepositMethods = () => {
                     value={newGateway}
                     onChange={(e) => setNewGateway(e.target.value)}
                     className="p-3 w-full border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm"
-                    placeholder="Enter gateway (e.g., bKash)"
+                    placeholder="Enter gateway (e.g., সেন্ড মানি, AP-ক্যাশ আউট, EP-ক্যাশ আউট)"
                   />
                   <button
                     type="button"

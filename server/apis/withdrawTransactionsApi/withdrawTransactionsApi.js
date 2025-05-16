@@ -226,9 +226,14 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
             error: "Insufficient balance to complete withdrawal",
           });
         }
+
+        console.log("0000000000000000000",user);
+        
+
         await usersCollection.updateOne(
           { _id: new ObjectId(transaction.userId) },
-          { $inc: { balance: -(transaction.amount), withdraw: user.withdraw + transaction.amount } }
+          { $inc: { balance: -(transaction.amount),
+             withdraw:  +parseFloat(transaction.amount) } }
         );
       }
 
@@ -260,6 +265,9 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
 
       // Prevent deletion if already completed
       if (transaction.status === "completed") {
+
+
+
         return res.status(400).json({ error: "Completed transaction cannot be deleted" });
       }
 
