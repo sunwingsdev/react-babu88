@@ -13,6 +13,12 @@ import tableImage from "@/assets/table.svg";
 import sbImage from "@/assets/sb.svg";
 import fishingImage from "@/assets/fishing.svg";
 import crashImage from "@/assets/crash.svg";
+import ImageVideoSlider from "@/components/home/ImageVideoSlider/ImageVideoSlider";
+import mobileBdtImage from "@/assets/mobile_BDT_bd.jpg";
+import referBannerImage from "@/assets/refer_banner.jpg";
+import mobileBannerImage from "@/assets/mobile.jpg";
+import desktopBannerImage from "@/assets/desktop.jpg";
+import bettingPassImage from "@/assets/betting-pass.jpg";
 
 const Home = () => {
   const { data: games } = useGetGamesQuery();
@@ -75,7 +81,7 @@ const Home = () => {
       <div className="container mx-auto mt-6 md:mt-0 px-4 sm:px-10 lg:px-24">
         <SecondaryBanner image="https://jiliwin.9terawolf.com/images/babu/banner/register_banner_home.jpg" />
 
-        {/* Mobile Filter Buttons */}
+        {/* Mobile Filter Buttons - Only shown on mobile */}
         <div className="md:hidden py-2 flex gap-3 overflow-x-auto">
           {buttons.map((button) => (
             <HomeMobileButton
@@ -88,14 +94,10 @@ const Home = () => {
           ))}
         </div>
 
-        {/* Section Title */}
-        <h2 className="hidden md:block py-2 text-[27px] font-medium">
-          {buttons.find((b) => b.value === activeFilter)?.title || "হট গেমস"}
-        </h2>
-
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-          {filteredGames?.map((game) => (
+          {/* Show filtered games on mobile, all games on desktop/tablet */}
+          {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
             <GameCard
               key={game._id}
               gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game?.image}`}
@@ -111,23 +113,23 @@ const Home = () => {
         <div className="pb-4 md:pb-0">
           <VideoSlider />
         </div>
+        {/* Video Slider */}
+        <div className="pb-4 md:pb-0">
+          <ImageVideoSlider />
+        </div>
 
         {/* Promotion Section */}
         <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
           প্রচার
         </h2>
-        <img
-          className="md:hidden rounded-2xl"
-          src="https://www.babu88.app/static/image/banner/referral/mobile_BDT_bd.jpg"
-          alt=""
-        />
+        <img className="md:hidden rounded-2xl" src={mobileBdtImage} alt="" />
 
         {/* Desktop Promotion Section */}
         <div className="hidden py-0 md:py-4 lg:py-8 md:flex flex-col lg:flex-row gap-6">
           <div className="relative">
             <img
               className="h-52 object-fill rounded-2xl overflow-hidden"
-              src="https://www.babu88.app/static/image/homepage/refer_banner.jpg"
+              src={referBannerImage}
               alt=""
             />
             <div className="text-white absolute top-0 p-4 space-y-3 max-w-96">
@@ -146,7 +148,7 @@ const Home = () => {
           </div>
           <img
             className="w-full lg:max-w-96 object-fill rounded-2xl overflow-hidden"
-            src="https://www.babu88.app/static/image/homepage/bb88_bp_1400_560.jpg"
+            src={bettingPassImage}
             alt=""
           />
         </div>
@@ -157,8 +159,8 @@ const Home = () => {
         </h2>
         <SecondaryBanner
           zipFile={"/babu88.apk"}
-          image="https://www.babu88.app/static/image/banner/downloadClient/bdt/bd_bb88_downloadnow_appbanner_desktop.jpg"
-          imageMobil="https://www.babu88.app/static/image/banner/downloadClient/bdt/bb88_downloadnow_appbanner_mobile.jpg"
+          image={desktopBannerImage}
+          imageMobil={mobileBannerImage}
         />
       </div>
     </div>

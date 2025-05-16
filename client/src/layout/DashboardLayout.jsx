@@ -23,17 +23,17 @@ const DashboardLayout = () => {
     {
       name: "Users",
       icon: <FaUsers />,
-      path: "/dashboard/all-user",
+      path: "",
     },
     {
       name: "Cash Agent",
       icon: <PiCashRegister />,
       submenu: [
-        { name: "All Agents", path: "/dashboard/cashagent" },
-        { name: "KYC", path: "/dashboard/kyc" },
+        { name: "All Agents", path: "" },
+        { name: "KYC", path: "" },
         {
           name: "Payment Requests",
-          path: "/dashboard/paymentmethodrequests",
+          path: "",
         },
       ],
     },
@@ -42,8 +42,8 @@ const DashboardLayout = () => {
       icon: <FaAffiliatetheme />,
 
       submenu: [
-        { name: "All Affiliates", path: "/dashboard/affiliators" },
-        { name: "All Affiliate Links", path: "/dashboard/allaffiliatelinks" },
+        { name: "All Affiliates", path: "" },
+        { name: "All Affiliate Links", path: "" },
       ],
     },
     {
@@ -52,39 +52,39 @@ const DashboardLayout = () => {
       submenu: [
         { name: "Add Categories", path: "/dashboard/add-category" },
         { name: "Add Game", path: "/dashboard/add-game" },
-        { name: "Active Games", path: "/dashboard/active-games" },
-        { name: "Inactive Games", path: "/dashboard/inactive-games" },
+        { name: "Active Games", path: "" },
+        { name: "Inactive Games" },
       ],
     },
     {
       name: "Games Api key",
       icon: <GiGamepadCross />,
       submenu: [
-        { name: "Sprots Live TV", path: "/dashboard/games-api/sports-live-tv" },
-        { name: "BetFair API", path: "/dashboard/games-api/betfair-api" },
+        { name: "Sprots Live TV", path: "" },
+        { name: "BetFair API", path: "" },
         {
           name: "Sports Radar API",
-          path: "/dashboard/games-api/sports-radar-api",
+          path: "",
         },
-        { name: "Odds Jam API", path: "/dashboard/games-api/odds-jam-api" },
+        { name: "Odds Jam API", path: "" },
         {
           name: "Bet Construct API",
-          path: "/dashboard/games-api/bet-construct-api",
+          path: "",
         },
-        { name: "Kambi API", path: "/dashboard/games-api/kambi-api" },
-        { name: "Pinnacle API", path: "/dashboard/games-api/pinnacle-api" },
-        { name: "SoftSwiss API", path: "/dashboard/games-api/softswiss-api" },
-        { name: "Betradar API", path: "/dashboard/games-api/betradar-api" },
-        { name: "Evolution API", path: "/dashboard/games-api/evolution-api" },
+        { name: "Kambi API", path: "" },
+        { name: "Pinnacle API", path: "" },
+        { name: "SoftSwiss API", path: "" },
+        { name: "Betradar API", path: "" },
+        { name: "Evolution API", path: "" },
         {
           name: "Pragmatic Play API",
-          path: "/dashboard/games-api/pragmatic-play-api",
+          path: "",
         },
-        { name: "Playtech API", path: "/dashboard/games-api/playtech-api" },
-        { name: "NetEnt API", path: "/dashboard/games-api/netent-api" },
+        { name: "Playtech API", path: "" },
+        { name: "NetEnt API", path: "" },
         {
           name: "Betsoft Gaming API",
-          path: "/dashboard/games-api/betsoft-gaming-api",
+          path: "",
         },
       ],
     },
@@ -92,7 +92,7 @@ const DashboardLayout = () => {
       name: "Bonuses",
       icon: <GiRibbonMedal />,
       submenu: [
-        { name: "Happy Hours", path: "/dashboard/games" },
+        { name: "Happy Hours" },
         { name: "Deposit Bonuses" },
         { name: "Refer Bonuses" },
         { name: "Welcome Bonuses" },
@@ -114,8 +114,8 @@ const DashboardLayout = () => {
       icon: <BsFront />,
       submenu: [
         { name: "Home Control", path: "/dashboard/home-control" },
-        { name: "Promotions", path: "/dashboard/promotion-offer" },
-        { name: "Pages", path: "/dashboard/manage-pages" },
+        { name: "Promotions" },
+        { name: "Pages" },
         { name: "FAQ" },
         { name: "Sponsorship" },
         { name: "Brand Ambassador" },
