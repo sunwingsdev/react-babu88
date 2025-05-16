@@ -6,8 +6,6 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useToasts } from "react-toast-notifications";
 
-
-
 const Deposit = () => {
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [promotions, setPromotions] = useState([]);
@@ -18,8 +16,7 @@ const Deposit = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [timer, setTimer] = useState(1200); // 20 minutes in seconds
   const [userInputs, setUserInputs] = useState({}); // Store user input values
-const { addToast } = useToasts();
-
+  const { addToast } = useToasts();
 
   const { user } = useSelector((state) => state.auth);
 
@@ -27,10 +24,18 @@ const { addToast } = useToasts();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const paymentMethodsRes = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-methods`);
+        const paymentMethodsRes = await axios.get(
+          `${
+            import.meta.env.VITE_BASE_API_URL
+          }/depositPaymentMethod/deposit-methods`
+        );
         setPaymentMethods(paymentMethodsRes.data.data);
 
-        const promotionsRes = await axios.get(`${import.meta.env.VITE_BASE_API_URL}/depositPromotions/deposit-promotions`);
+        const promotionsRes = await axios.get(
+          `${
+            import.meta.env.VITE_BASE_API_URL
+          }/depositPromotions/deposit-promotions`
+        );
         setPromotions(promotionsRes.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -53,7 +58,9 @@ const { addToast } = useToasts();
   const formatTimer = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+    return `${minutes.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const handlePromotionChange = (event) => {
@@ -90,11 +97,18 @@ const { addToast } = useToasts();
   };
 
   const openModal = () => {
-    if (selectedPaymentMethod && selectedChannel && amount && parseFloat(amount) >= 200) {
+    if (
+      selectedPaymentMethod &&
+      selectedChannel &&
+      amount &&
+      parseFloat(amount) >= 200
+    ) {
       setModalIsOpen(true);
       setTimer(1200);
     } else {
-      alert("Please select a payment method, channel, and enter an amount of at least 200.");
+      alert(
+        "Please select a payment method, channel, and enter an amount of at least 200."
+      );
     }
   };
 
@@ -104,121 +118,143 @@ const { addToast } = useToasts();
     setUserInputs({});
   };
 
-const handleSubmit = async () => {
-  try {
-    // Step 1: Validate required inputs
-    const requiredInputs = selectedPaymentMethod.userInputs.filter(
-      (input) => input.isRequired === "true"
-    );
-    const missingInputs = requiredInputs.filter(
-      (input) => !userInputs[input.name] || userInputs[input.name].toString().trim() === ""
-    );
+  const handleSubmit = async () => {
+    try {
+      // Step 1: Validate required inputs
+      const requiredInputs = selectedPaymentMethod.userInputs.filter(
+        (input) => input.isRequired === "true"
+      );
+      const missingInputs = requiredInputs.filter(
+        (input) =>
+          !userInputs[input.name] ||
+          userInputs[input.name].toString().trim() === ""
+      );
 
-    if (missingInputs.length > 0) {
-      const missingFields = missingInputs.map((input) => input.labelBD).join(", ");
-   addToast(`Please fill in all required fields: ${missingFields}`, {
-        appearance: "error",
-        autoDismiss: true,
-      });
-      return;
-    }
-
-    // Step 2: Prepare userInputs
-    const updatedUserInputs = { ...userInputs };
-    for (const [name, value] of Object.entries(userInputs)) {
-      const inputConfig = selectedPaymentMethod.userInputs.find((input) => input.name === name);
-      if (!inputConfig) continue;
-
-      if (value instanceof File) {
-        // Handle file upload
-        const fileFormData = new FormData();
-        fileFormData.append("image", value);
-        const uploadResponse = await fetch(`${import.meta.env.VITE_BASE_API_URL}/upload`, {
-          method: "POST",
-          body: fileFormData,
+      if (missingInputs.length > 0) {
+        const missingFields = missingInputs
+          .map((input) => input.labelBD)
+          .join(", ");
+        addToast(`Please fill in all required fields: ${missingFields}`, {
+          appearance: "error",
+          autoDismiss: true,
         });
-        const uploadResult = await uploadResponse.json();
-        if (!uploadResponse.ok) {
-          throw new Error(uploadResult.error || "Failed to upload file");
-        }
-        updatedUserInputs[name] = {
-          level: "user",
-          type: inputConfig.type,
-          data: uploadResult.filePath,
-        };
-      } else {
-        // Handle text/number inputs
-        updatedUserInputs[name] = {
-          level: inputConfig.labelBD.toLowerCase().replace(/\s+/g, "_"), // যেমন, "Phone Number" -> "phone_number"
-          type: inputConfig.type,
-          data: value,
-        };
+        return;
       }
-    }
 
-    // Step 3: Create FormData for transaction
-    const formData = new FormData();
-    formData.append("userId", user?._id);
-    formData.append("paymentMethodId", selectedPaymentMethod._id);
-    formData.append("amount", amount);
-    if (selectedOption) {
-      const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
-      formData.append("promotionId", selectedPromo._id);
-    }
+      // Step 2: Prepare userInputs
+      const updatedUserInputs = { ...userInputs };
+      for (const [name, value] of Object.entries(userInputs)) {
+        const inputConfig = selectedPaymentMethod.userInputs.find(
+          (input) => input.name === name
+        );
+        if (!inputConfig) continue;
 
-    // Append userInputs dynamically
-    for (const [name, value] of Object.entries(updatedUserInputs)) {
-      formData.append(`userInputs[${name}]`, JSON.stringify(value));
-    }
+        if (value instanceof File) {
+          // Handle file upload
+          const fileFormData = new FormData();
+          fileFormData.append("image", value);
+          const uploadResponse = await fetch(
+            `${import.meta.env.VITE_BASE_API_URL}/upload`,
+            {
+              method: "POST",
+              body: fileFormData,
+            }
+          );
+          const uploadResult = await uploadResponse.json();
+          if (!uploadResponse.ok) {
+            throw new Error(uploadResult.error || "Failed to upload file");
+          }
+          updatedUserInputs[name] = {
+            level: "user",
+            type: inputConfig.type,
+            data: uploadResult.filePath,
+          };
+        } else {
+          // Handle text/number inputs
+          updatedUserInputs[name] = {
+            level: inputConfig.labelBD.toLowerCase().replace(/\s+/g, "_"), // যেমন, "Phone Number" -> "phone_number"
+            type: inputConfig.type,
+            data: value,
+          };
+        }
+      }
 
-    // Debug: Log FormData contents
-    for (let [key, value] of formData.entries()) {
-      console.log(`${key}: ${value}`);
-    }
+      // Step 3: Create FormData for transaction
+      const formData = new FormData();
+      formData.append("userId", user?._id);
+      formData.append("paymentMethodId", selectedPaymentMethod._id);
+      formData.append("amount", amount);
+      if (selectedOption) {
+        const selectedPromo = promotions.find(
+          (promo) => promo.title_bd === selectedOption
+        );
+        formData.append("promotionId", selectedPromo._id);
+      }
 
-    // Step 4: Send request to backend
-    const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/depositTransactions/create`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: user?._id,
-        paymentMethodId: selectedPaymentMethod._id,
-        amount,
-        promotionId: selectedOption ? promotions.find((promo) => promo.title_bd === selectedOption)?._id : null,
-        userInputs: updatedUserInputs,
-        gateways: selectedChannel,
-      }),
-    });
+      // Append userInputs dynamically
+      for (const [name, value] of Object.entries(updatedUserInputs)) {
+        formData.append(`userInputs[${name}]`, JSON.stringify(value));
+      }
 
-    const result = await response.json();
+      // Debug: Log FormData contents
+      for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+      }
 
-    if (!response.ok) {
-      addToast(`Failed to create deposit transaction: ${result.error || "Unknown error"}`, {
+      // Step 4: Send request to backend
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_API_URL}/depositTransactions/create`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user?._id,
+            paymentMethodId: selectedPaymentMethod._id,
+            amount,
+            promotionId: selectedOption
+              ? promotions.find((promo) => promo.title_bd === selectedOption)
+                  ?._id
+              : null,
+            userInputs: updatedUserInputs,
+            gateways: selectedChannel,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        addToast(
+          `Failed to create deposit transaction: ${
+            result.error || "Unknown error"
+          }`,
+          {
+            appearance: "error",
+            autoDismiss: true,
+          }
+        );
+      }
+      addToast("Deposit transaction created successfully!", {
+        appearance: "success",
+        autoDismiss: true,
+      });
+
+      closeModal();
+    } catch (error) {
+      console.error("Error creating deposit transaction:", error);
+      addToast(`Failed to create deposit transaction: ${error.message}`, {
         appearance: "error",
         autoDismiss: true,
       });
-     
     }
-    addToast("Deposit transaction created successfully!", {
-      appearance: "success",
-      autoDismiss: true,
-    });
-
-   
-    closeModal();
-  } catch (error) {
-    console.error("Error creating deposit transaction:", error);
- addToast(`Failed to create deposit transaction: ${error.message}`, {
-      appearance: "error",
-      autoDismiss: true,
-    });
-  }
-};
+  };
 
   // Get bonus label for a payment method based on selected promotion
   const getBonusLabel = (methodId) => {
     if (!selectedOption) return null;
-    const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
+    const selectedPromo = promotions.find(
+      (promo) => promo.title_bd === selectedOption
+    );
     if (!selectedPromo) return null;
 
     const bonus = selectedPromo.promotion_bonuses.find(
@@ -226,15 +262,20 @@ const handleSubmit = async () => {
     );
     if (!bonus) return null;
 
-    return bonus.bonus_type === "Fix" ? `+${bonus.bonus}TK` : `+${bonus.bonus}%`;
+    return bonus.bonus_type === "Fix"
+      ? `+${bonus.bonus}TK`
+      : `+${bonus.bonus}%`;
   };
 
   // Filter payment methods based on selected promotion
   const filteredPaymentMethods = selectedOption
     ? paymentMethods.filter((method) => {
-        const selectedPromo = promotions.find((promo) => promo.title_bd === selectedOption);
+        const selectedPromo = promotions.find(
+          (promo) => promo.title_bd === selectedOption
+        );
         return selectedPromo?.promotion_bonuses.some(
-          (bonus) => bonus.payment_method._id.toString() === method._id.toString()
+          (bonus) =>
+            bonus.payment_method._id.toString() === method._id.toString()
         );
       })
     : paymentMethods;
@@ -244,7 +285,10 @@ const handleSubmit = async () => {
 
   // Check if the deposit button should be enabled
   const isDepositButtonEnabled =
-    selectedPaymentMethod && selectedChannel && amount && parseFloat(amount) >= 200;
+    selectedPaymentMethod &&
+    selectedChannel &&
+    amount &&
+    parseFloat(amount) >= 200;
 
   return (
     <div className="flex gap-4">
@@ -257,7 +301,9 @@ const handleSubmit = async () => {
             </div>
           </Link>
           <Link to={"/profile/withdrawal"}>
-            <div className="w-full p-2 text-yellow-300 text-center">উত্তোলন</div>
+            <div className="w-full p-2 text-yellow-300 text-center">
+              উত্তোলন
+            </div>
           </Link>
         </div>
 
@@ -280,10 +326,12 @@ const handleSubmit = async () => {
                   }`}
                 >
                   <img
-                    src={`${import.meta.env.VITE_BASE_API_URL}${method.methodImage}`}
+                    src={`${import.meta.env.VITE_BASE_API_URL}${
+                      method.methodImage
+                    }`}
                     alt={method.methodNameBD}
                     className="w-full h-auto"
-                    style={{ objectFit: "contain",    width: "60px" }}
+                    style={{ objectFit: "contain", width: "60px" }}
                   />
                 </div>
                 {getBonusLabel(method._id) && (
@@ -305,11 +353,15 @@ const handleSubmit = async () => {
               <button
                 key={index}
                 onClick={() => handleChannelSelect(gateway)}
-                className={selectedPaymentMethod ? "" : "pointer-events-none opacity-50"}
+                className={
+                  selectedPaymentMethod ? "" : "pointer-events-none opacity-50"
+                }
               >
                 <div
                   className={`py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg border-2 ${
-                    selectedChannel === gateway ? "border-yellow-400" : "border-gray-400"
+                    selectedChannel === gateway
+                      ? "border-yellow-400"
+                      : "border-gray-400"
                   }`}
                 >
                   {gateway}
@@ -336,37 +388,30 @@ const handleSubmit = async () => {
               disabled={!selectedChannel}
             />
           </form>
-        {
-          
-        // <p className="text-xs font-mibold">
-        //   ৳ 400.00 এর নিচে ডিপজিটে কোন বোনাস পাবেন না
-        // </p>
-        
-        }
+          {
+            // <p className="text-xs font-mibold">
+            //   ৳ 400.00 এর নিচে ডিপজিটে কোন বোনাস পাবেন না
+            // </p>
+          }
           <div className="grid grid-cols-3 gap-2 sm:gap-4">
             {["200", "500", "2000", "5000", "10000", "20000"].map((value) => (
               <button
                 key={value}
                 onClick={() => handleQuickAmountSelect(value)}
-                className={selectedChannel ? "" : "pointer-events-none opacity-50"}
+                className={
+                  selectedChannel ? "" : "pointer-events-none opacity-50"
+                }
               >
                 <div className="relative">
                   <div
                     className={`py-1.5 px-4 flex items-center justify-center hover:bg-slate-200 duration-300 rounded-lg ${
-                      amount === value ? "border-2 border-yellow-400" : "bg-gray-200"
+                      amount === value
+                        ? "border-2 border-yellow-400"
+                        : "bg-gray-200"
                     }`}
                   >
                     {value}
                   </div>
-                  {parseInt(value) >= 500 && selectedOption && (
-                    <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                      {promotions
-                        .find((promo) => promo.title_bd === selectedOption)
-                        ?.promotion_bonuses.some((bonus) => bonus.bonus_type === "Percentage")
-                        ? "+3%"
-                        : "+3TK"}
-                    </div>
-                  )}
                 </div>
               </button>
             ))}
@@ -431,7 +476,10 @@ const handleSubmit = async () => {
                   </p>
                 </div>
                 <p className="text-lg md:text-xl">
-                  Amount: <span className="text-red-500 font-bold">{amount || "2000.00"}</span>
+                  Amount:{" "}
+                  <span className="text-red-500 font-bold">
+                    {amount || "2000.00"}
+                  </span>
                 </p>
                 <div className="space-y-4">
                   {selectedPaymentMethod.userInputs.map((input, index) => (
@@ -440,14 +488,19 @@ const handleSubmit = async () => {
                         htmlFor={input.name}
                         className="text-lg text-red-500 font-medium mb-2"
                       >
-                        {input.labelBD} {input.isRequired === "true" && <span className="text-red-500">*</span>}
+                        {input.labelBD}{" "}
+                        {input.isRequired === "true" && (
+                          <span className="text-red-500">*</span>
+                        )}
                       </label>
                       {input.type === "file" ? (
                         <input
                           type="file"
                           id={input.name}
                           className="w-full py-2 px-3 bg-white rounded-lg border border-gray-300 text-gray-700"
-                          onChange={(e) => handleFileChange(input.name, e.target.files[0])}
+                          onChange={(e) =>
+                            handleFileChange(input.name, e.target.files[0])
+                          }
                         />
                       ) : (
                         <input
@@ -458,7 +511,9 @@ const handleSubmit = async () => {
                           placeholder={input.fieldInstructionBD}
                           required={input.isRequired === "true"}
                           value={userInputs[input.name] || ""}
-                          onChange={(e) => handleInputChange(input.name, e.target.value)}
+                          onChange={(e) =>
+                            handleInputChange(input.name, e.target.value)
+                          }
                         />
                       )}
                     </div>
@@ -481,12 +536,18 @@ const handleSubmit = async () => {
               {/* Right Side: Timer and Payment Page Image */}
               <div className="w-full lg:w-1/2 space-y-6">
                 <div className="text-center bg-gray-100 rounded-lg py-4 shadow-inner">
-                  <p className="text-xl md:text-2xl font-semibold text-gray-800">Time Remaining</p>
-                  <p className="text-4xl md:text-5xl text-red-500 font-bold mt-2">{formatTimer(timer)}</p>
+                  <p className="text-xl md:text-2xl font-semibold text-gray-800">
+                    Time Remaining
+                  </p>
+                  <p className="text-4xl md:text-5xl text-red-500 font-bold mt-2">
+                    {formatTimer(timer)}
+                  </p>
                 </div>
                 <img
                   className="w-full h-48 md:h-64 object-contain rounded-lg "
-                  src={`${import.meta.env.VITE_BASE_API_URL}${selectedPaymentMethod.paymentPageImage}`}
+                  src={`${import.meta.env.VITE_BASE_API_URL}${
+                    selectedPaymentMethod.paymentPageImage
+                  }`}
                   alt={selectedPaymentMethod.methodNameBD}
                 />
               </div>
@@ -494,9 +555,13 @@ const handleSubmit = async () => {
 
             <div className="mt-6 text-base md:text-lg text-gray-600 text-center">
               <p>
-               {
-                <div dangerouslySetInnerHTML={{ __html: selectedPaymentMethod?.instructionBD }} />
-               }
+                {
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: selectedPaymentMethod?.instructionBD,
+                    }}
+                  />
+                }
               </p>
             </div>
           </div>
@@ -507,3 +572,18 @@ const handleSubmit = async () => {
 };
 
 export default Deposit;
+
+//***
+//
+//
+//  {parseInt(value) >= 500 && selectedOption && (
+//   <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
+//     {promotions
+//       .find((promo) => promo.title_bd === selectedOption)
+//       ?.promotion_bonuses.some((bonus) => bonus.bonus_type === "Percentage")
+//       ? "+3%"
+//       : "+3TK"}
+//   </div>
+// )}
+//
+// /
