@@ -26,6 +26,7 @@ const withdrawPaymentMethodApi = require("./apis/withdrawPaymentMethodApi/withdr
 const withdrawTransactionsApi = require("./apis/withdrawTransactionsApi/withdrawTransactionsApi");
 
 const gameApi = require("./apis/gameApi/gameApi");
+const adminDashboardApi = require("./apis/adminDashboardApi/adminDashboardApi");
 
 const corsConfig = {
   origin: [
@@ -173,6 +174,7 @@ app.use(
       "/withdrawTransactions",
       withdrawTransactionsApi(withdrawTransactionsCollection, usersCollection, withdrawPaymentMethodCollection)
     );
+  app.use("/admin", adminDashboardApi(usersCollection, gamesCollection, depositTransactionsCollection, withdrawTransactionsCollection)); // New router
 
  
     app.use("/games", gameApi(gamesCollection));

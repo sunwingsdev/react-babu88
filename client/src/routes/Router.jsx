@@ -35,14 +35,26 @@ import DepositHistory from "@/components/dashboard/Dashboard-Page/Deposit-Histor
 import AddWithdrawMethods from "@/components/dashboard/Dashboard-Page/Add-Withdrow-Methods/AddWithdrowMethods";
 
 import AdminLogin from "@/pages/AdminLogin";
-<<<<<<< HEAD
 import WithdrawalHistory from "@/components/dashboard/Dashboard-Page/Withdrawal-History/WithdrawalHistory";
 import History from './../components/dashboard/profile/history/History';
 
-=======
 import AddCategories from "@/pages/dashboard/AddCategories";
 import AddGame from "@/pages/dashboard/AddGame";
->>>>>>> 3b46d62d879b30592f9f67054702cc78296191c4
+import SportsLiveTv from "@/components/dashboard/Dashboard-Page/GameAPI/SportsLiveTv";
+import BetFairApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetFairApi";
+import SportsRadarApi from "@/components/dashboard/Dashboard-Page/GameAPI/SportsRadarApi";
+import OddsJamApi from "@/components/dashboard/Dashboard-Page/GameAPI/OddsJamApi";
+import BetConstructApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetConstructApi";
+import KambiApi from "@/components/dashboard/Dashboard-Page/GameAPI/KambiApi";
+import PinnacleApi from "@/components/dashboard/Dashboard-Page/GameAPI/PinnacleApi";
+import SoftSwissApi from "@/components/dashboard/Dashboard-Page/GameAPI/SoftSwissApi";
+import BetradarApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetradarApi";
+import EvolutionApi from "@/components/dashboard/Dashboard-Page/GameAPI/EvolutionApi";
+import PragmaticPlayApi from "@/components/dashboard/Dashboard-Page/GameAPI/PragmaticPlayApi";
+import PlaytechApi from "@/components/dashboard/Dashboard-Page/GameAPI/PlaytechApi";
+import NetEntApi from "@/components/dashboard/Dashboard-Page/GameAPI/NetEntApi";
+import BetsoftGamingApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetsoftGamingApi";
+import AllUser from "@/components/dashboard/Dashboard-Page/Users/AllUser";
 
 const router = createBrowserRouter([
   {
@@ -190,6 +202,67 @@ const router = createBrowserRouter([
         path: "WithdrawalHistory",
         element: <WithdrawalHistory />, // Add the new route
       },
+         {
+        path: "games-api/sports-live-tv",
+        element: <SportsLiveTv />, // Add the new route
+      },
+         {
+        path: "games-api/betfair-api",
+        element: <BetFairApi />, // Add the new route
+      },
+         {
+        path: "games-api/sports-radar-api",
+        element: <SportsRadarApi />, // Add the new route
+      },
+         {
+        path: "games-api/odds-jam-api",
+        element: <OddsJamApi />, // Add the new route
+      },
+         {
+        path: "games-api/bet-construct-api",
+        element: <BetConstructApi />, // Add the new route
+      },
+         {
+        path: "games-api/kambi-api",
+        element: <KambiApi />, // Add the new route
+      },
+         {
+        path: "games-api/pinnacle-api",
+        element: <PinnacleApi />, // Add the new route
+      },
+         {
+        path: "games-api/softswiss-api",
+        element: <SoftSwissApi />, // Add the new route
+      },
+         {
+        path: "games-api/betradar-api",
+        element: <BetradarApi />, // Add the new route
+      },
+         {
+        path: "games-api/evolution-api",
+        element: <EvolutionApi />, // Add the new route
+      },
+         {
+        path: "games-api/pragmatic-play-api",
+        element: <PragmaticPlayApi />, // Add the new route
+      },
+         {
+        path: "games-api/playtech-api",
+        element: <PlaytechApi />, // Add the new route
+      },
+         {
+        path: "games-api/netent-api",
+        element: <NetEntApi />, // Add the new route
+      },
+         {
+        path: "games-api/betsoft-gaming-api",
+        element: <BetsoftGamingApi />, // Add the new route
+      },
+         {
+        path: "/dashboard/all-user",
+        element: <AllUser />, // Add the new route
+      },
+
     ],
   },
   {

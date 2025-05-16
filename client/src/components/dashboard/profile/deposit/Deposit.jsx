@@ -358,15 +358,7 @@ const handleSubmit = async () => {
                   >
                     {value}
                   </div>
-                  {parseInt(value) >= 500 && selectedOption && (
-                    <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
-                      {promotions
-                        .find((promo) => promo.title_bd === selectedOption)
-                        ?.promotion_bonuses.some((bonus) => bonus.bonus_type === "Percentage")
-                        ? "+3%"
-                        : "+3TK"}
-                    </div>
-                  )}
+                 
                 </div>
               </button>
             ))}
@@ -507,3 +499,20 @@ const handleSubmit = async () => {
 };
 
 export default Deposit;
+
+
+
+//***
+// 
+// 
+//  {parseInt(value) >= 500 && selectedOption && (
+                  //   <div className="p-1 absolute -top-1 -right-1 flex justify-center items-center text-[9px] text-white bg-blue-500 rounded-full">
+                  //     {promotions
+                  //       .find((promo) => promo.title_bd === selectedOption)
+                  //       ?.promotion_bonuses.some((bonus) => bonus.bonus_type === "Percentage")
+                  //       ? "+3%"
+                  //       : "+3TK"}
+                  //   </div>
+                  // )}
+// 
+// /
