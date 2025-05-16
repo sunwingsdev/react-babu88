@@ -1,74 +1,101 @@
+import { useState } from "react";
 import VideoSlider from "@/components/home/videoSlider/VideoSlider";
 import BannerSlider from "../../../components/home/bannerSlider/BannerSlider";
 import SecondaryBanner from "../../../components/home/secondaryBanner/SecondaryBanner";
 import GameCard from "../../../components/shared/gameCard/GameCard";
 import HomeMobileButton from "@/components/home/homeMobilButton/HomeMobileButton";
 import { useGetGamesQuery } from "@/redux/features/allApis/gameApi/gameApi";
+import hotImage from "@/assets/homepageHot.svg";
+import cricketImage from "@/assets/cricket.svg";
+import casinoImage from "@/assets/ld.svg";
+import slotImage from "@/assets/rng.svg";
+import tableImage from "@/assets/table.svg";
+import sbImage from "@/assets/sb.svg";
+import fishingImage from "@/assets/fishing.svg";
+import crashImage from "@/assets/crash.svg";
 
 const Home = () => {
   const { data: games } = useGetGamesQuery();
+  const [activeFilter, setActiveFilter] = useState("hot");
 
   const buttons = [
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/homepageHot.svg",
-
+      image: hotImage,
       title: "হট গেমস",
+      value: "hot",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/cricket.svg",
-
+      image: cricketImage,
       title: "ক্রিকেট",
+      value: "cricket",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/ld.svg",
-
+      image: casinoImage,
       title: "ক্যাসিনো",
+      value: "casino",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/rng.svg",
-
+      image: slotImage,
       title: "স্লট",
+      value: "slot",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/table.svg",
-
+      image: tableImage,
       title: "টেবিল খেলা",
+      value: "table",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/sb.svg",
-
+      image: sbImage,
       title: "এসবি",
+      value: "sb",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/fishing.svg",
-
+      image: fishingImage,
       title: "মাছ ধরা",
+      value: "fishing",
     },
     {
-      image: "https://www.babu88.app/static/svg/gameTabHolder/crash.svg",
-
+      image: crashImage,
       title: "ক্র্যাশ",
+      value: "crash",
     },
   ];
+
+  const filteredGames = games?.filter((game) => {
+    if (activeFilter === "hot") {
+      return game.badge === "hot";
+    } else {
+      return game.category === activeFilter;
+    }
+  });
+
   return (
     <div>
       <BannerSlider />
       <div className="container mx-auto mt-6 md:mt-0 px-4 sm:px-10 lg:px-24">
         <SecondaryBanner image="https://jiliwin.9terawolf.com/images/babu/banner/register_banner_home.jpg" />
+
+        {/* Mobile Filter Buttons */}
         <div className="md:hidden py-2 flex gap-3 overflow-x-auto">
           {buttons.map((button) => (
             <HomeMobileButton
-              key={button.image}
+              key={button.value}
               image={button.image}
               title={button.title}
+              isActive={activeFilter === button.value}
+              onClick={() => setActiveFilter(button.value)}
             />
           ))}
         </div>
+
+        {/* Section Title */}
         <h2 className="hidden md:block py-2 text-[27px] font-medium">
-          হট গেমস
+          {buttons.find((b) => b.value === activeFilter)?.title || "হট গেমস"}
         </h2>
+
+        {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-          {games?.map((game) => (
+          {filteredGames?.map((game) => (
             <GameCard
               key={game._id}
               gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game?.image}`}
@@ -79,9 +106,13 @@ const Home = () => {
             />
           ))}
         </div>
+
+        {/* Video Slider */}
         <div className="pb-4 md:pb-0">
           <VideoSlider />
         </div>
+
+        {/* Promotion Section */}
         <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
           প্রচার
         </h2>
@@ -90,6 +121,8 @@ const Home = () => {
           src="https://www.babu88.app/static/image/banner/referral/mobile_BDT_bd.jpg"
           alt=""
         />
+
+        {/* Desktop Promotion Section */}
         <div className="hidden py-0 md:py-4 lg:py-8 md:flex flex-col lg:flex-row gap-6">
           <div className="relative">
             <img
@@ -117,6 +150,8 @@ const Home = () => {
             alt=""
           />
         </div>
+
+        {/* Download Section */}
         <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
           ডাউনলোড করুন
         </h2>

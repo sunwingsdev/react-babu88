@@ -18,6 +18,11 @@ const GameSubcategoryManager = () => {
   const categories = [
     { label: "ক্রিকেট", value: "cricket" },
     { label: "ক্যাসিনো", value: "casino" },
+    { label: "স্লট", value: "slot" },
+    { label: "টেবিল খেলা", value: "table" },
+    { label: "এসবি", value: "sb" },
+    { label: "মাছ ধরা", value: "fishing" },
+    { label: "ক্র্যাশ", value: "crash" },
   ];
 
   const handleChange = (e) => {

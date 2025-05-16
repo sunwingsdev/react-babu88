@@ -50,7 +50,8 @@ const DashboardLayout = () => {
       name: "Games Control",
       icon: <IoGameController />,
       submenu: [
-        { name: "Categories", path: "/dashboard/game-categories" },
+        { name: "Add Categories", path: "/dashboard/add-category" },
+        { name: "Add Game", path: "/dashboard/add-game" },
         { name: "Active Games", path: "/dashboard/active-games" },
         { name: "Inactive Games", path: "/dashboard/inactive-games" },
       ],
@@ -124,8 +125,8 @@ const DashboardLayout = () => {
       name: "Banking Deposit",
       icon: <BsPiggyBank />,
       submenu: [
-        { name: "Deposit Promotion", path: "/dashboard/depositPromotion"}, 
-        { name: "Deposit Method", path: "/dashboard/depositmethod"},
+        { name: "Deposit Promotion", path: "/dashboard/depositPromotion" },
+        { name: "Deposit Method", path: "/dashboard/depositmethod" },
         { name: "Deposit History", path: "/dashboard/DepositHistory" },
       ],
     },

@@ -18,7 +18,9 @@ const SportsBook = () => {
             "https://jiliwin.9terawolf.com/images/babu/game_banner/sb_new.jpg"
           }
           B_heading={"খেলার বই"}
-          B_semiText={"BABU88-এর সাথে সেরা ক্রীড়া প্রতিকূলতা উপভোগ করুন"}
+          B_semiText={`${
+            import.meta.env.VITE_SITE_NAME
+          }-এর সাথে সেরা ক্রীড়া প্রতিকূলতা উপভোগ করুন`}
           B_text={
             "ক্রিকেট, ফুটবল এবং আরও অনেক কিছুর জন্য প্রিমিয়ার স্পোর্টস বেটিং প্ল্যাটফর্ম!"
           }
