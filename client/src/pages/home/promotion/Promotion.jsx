@@ -52,32 +52,32 @@ const Promotion = () => {
     {
       image:
         "https://jiliwin.9terawolf.com/cms/undefined/image/bd-mobile-66f1021a9c2a2.jpg",
-      heading: "BABU88 NO.1 VIP প্রিমিয়াম সদস্য",
+      heading: `${import.meta.env.VITE_SITE_NAME} NO.1 VIP প্রিমিয়াম সদস্য`,
       text: "আপনার খেলা উন্নত করুন - একজন ভিআইপি হয়ে উঠুন এবং একচেটিয়া সুবিধা উপভোগ করুন!",
       button: "দাবি করুন",
     },
     {
       image:
         "https://jiliwin.9terawolf.com/cms/undefined/image/bd-mobile-66c2ec234e8e1.jpg",
-      heading: "BABU88 Reward Store এখানে!",
+      heading: `${import.meta.env.VITE_SITE_NAME} Reward Store এখানে!`,
       text: "এখনই পুরস্কারের কয়েন দিয়ে কেনাকাটা করুন এবং নতুন আইফোন, বিনামূল্যে ক্রেডিটসহ আরও অনেক কিছু পান!",
     },
     {
       image:
         "https://jiliwin.9terawolf.com/cms/undefined/image/bd-mobile-6695e642489af.jpg",
-      heading: "BABU88 বেটিং পাস",
+      heading: `${import.meta.env.VITE_SITE_NAME} বেটিং পাস`,
       text: "রোমাঞ্চকর পুরষ্কার পান এবং প্রতিবার যখন আপনি একটি নতুন স্তর জয় করেন তখন বিনামূল্যে নগদ পান!",
     },
     {
       image:
         "https://jiliwin.9terawolf.com/cms/undefined/image/bd-mobile-669f56e11fef1.jpg",
-      heading: "BABU88 রেফার করুন এবং চিরকাল উপার্জন করুন",
+      heading: `${import.meta.env.VITE_SITE_NAME} রেফার করুন এবং চিরকাল উপার্জন করুন`,
       text: "আমন্ত্রণ করুন এবং উপার্জন করুন! প্রতিবার আপনার বন্ধুরা ডিপোজিট করলে, আপনি ৳500...",
     },
     {
       image:
         "https://jiliwin.9terawolf.com/cms/undefined/image/bd-mobile-6696237cb4ad0.jpg",
-      heading: "BABU88 এজেন্ট অ্যাফিলিয়েট প্রোগ্রামে",
+      heading: `${import.meta.env.VITE_SITE_NAME} এজেন্ট অ্যাফিলিয়েট প্রোগ্রামে`,
       text: "No. 1 বেটিং প্ল্যাটফর্মের সাথে একজন এজেন্ট হন এবং আজই উপার্জন শুরু করুন!",
     },
     {

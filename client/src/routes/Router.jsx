@@ -53,7 +53,6 @@ import NetEntApi from "@/components/dashboard/Dashboard-Page/GameAPI/NetEntApi";
 import BetsoftGamingApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetsoftGamingApi";
 import AllUser from "@/components/dashboard/Dashboard-Page/Users/AllUser";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -199,67 +198,66 @@ const router = createBrowserRouter([
         path: "WithdrawalHistory",
         element: <WithdrawalHistory />, // Add the new route
       },
-         {
+      {
         path: "games-api/sports-live-tv",
         element: <SportsLiveTv />, // Add the new route
       },
-         {
+      {
         path: "games-api/betfair-api",
         element: <BetFairApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/sports-radar-api",
         element: <SportsRadarApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/odds-jam-api",
         element: <OddsJamApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/bet-construct-api",
         element: <BetConstructApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/kambi-api",
         element: <KambiApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/pinnacle-api",
         element: <PinnacleApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/softswiss-api",
         element: <SoftSwissApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/betradar-api",
         element: <BetradarApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/evolution-api",
         element: <EvolutionApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/pragmatic-play-api",
         element: <PragmaticPlayApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/playtech-api",
         element: <PlaytechApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/netent-api",
         element: <NetEntApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/betsoft-gaming-api",
         element: <BetsoftGamingApi />, // Add the new route
       },
-         {
-        path: "/dashboard/all-user",
+      {
+        path: "all-user",
         element: <AllUser />, // Add the new route
       },
-
     ],
   },
   {

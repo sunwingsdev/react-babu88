@@ -1,5 +1,4 @@
-
-import  { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaPlus, FaTrash, FaEdit, FaSpinner, FaTimes } from "react-icons/fa";
@@ -8,7 +7,14 @@ import "react-quill/dist/quill.snow.css";
 import { deleteImage } from "@/hooks/files";
 
 // Reusable Input Field Component
-const InputField = ({ label, name, value, onChange, required, type = "text" }) => (
+const InputField = ({
+  label,
+  name,
+  value,
+  onChange,
+  required,
+  type = "text",
+}) => (
   <div>
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <input
@@ -16,7 +22,9 @@ const InputField = ({ label, name, value, onChange, required, type = "text" }) =
       name={name}
       value={value}
       onChange={onChange}
-      className={`mt-1 p-3 w-full border ${value || !required ? "border-gray-300" : "border-red-500"} rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm`}
+      className={`mt-1 p-3 w-full border ${
+        value || !required ? "border-gray-300" : "border-red-500"
+      } rounded-lg focus:ring-blue-500 focus:border-blue-500 shadow-sm`}
       required={required}
     />
     {required && !value && (
@@ -34,7 +42,9 @@ const ColorPicker = ({ label, name, value, onChange, required }) => (
       name={name}
       value={value}
       onChange={onChange}
-      className={`mt-1 p-2 w-20 h-10 border ${value || !required ? "border-gray-300" : "border-red-500"} rounded-lg shadow-sm`}
+      className={`mt-1 p-2 w-20 h-10 border ${
+        value || !required ? "border-gray-300" : "border-red-500"
+      } rounded-lg shadow-sm`}
       required={required}
     />
   </div>
@@ -61,7 +71,14 @@ const FileInput = ({ label, onChange, image, field }) => (
 );
 
 // Reusable Rich Text Editor Component
-const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5000 }) => (
+const RichTextEditor = ({
+  label,
+  name,
+  value,
+  onChange,
+  charCount,
+  maxLength = 5000,
+}) => (
   <div>
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <ReactQuill
@@ -135,21 +152,33 @@ const AddDepositMethods = () => {
   const [showUserInputModal, setShowUserInputModal] = useState(false);
 
   // Calculate character counts for instructions
-  const instructionENCharCount = formData.instructionEN.replace(/<[^>]+>/g, "").length;
-  const instructionBDCharCount = formData.instructionBD.replace(/<[^>]+>/g, "").length;
+  const instructionENCharCount = formData.instructionEN.replace(
+    /<[^>]+>/g,
+    ""
+  ).length;
+  const instructionBDCharCount = formData.instructionBD.replace(
+    /<[^>]+>/g,
+    ""
+  ).length;
   const maxLength = 5000;
 
   // Fetch all deposit methods
   useEffect(() => {
     const fetchDepositMethods = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-methods`);
+        const response = await fetch(
+          `${
+            import.meta.env.VITE_BASE_API_URL
+          }/depositPaymentMethod/deposit-methods`
+        );
         if (!response.ok) throw new Error("Failed to fetch deposit methods");
         const data = await response.json();
         setDepositMethods(data.data);
         setLoading(false);
       } catch (error) {
-        toast.error("Failed to load deposit methods.", { position: "top-right" });
+        toast.error("Failed to load deposit methods.", {
+          position: "top-right",
+        });
         setLoading(false);
       }
     };
@@ -171,10 +200,13 @@ const AddDepositMethods = () => {
     uploadFormData.append("image", file);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/upload`, {
-        method: "POST",
-        body: uploadFormData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_API_URL}/upload`,
+        {
+          method: "POST",
+          body: uploadFormData,
+        }
+      );
       if (!response.ok) throw new Error("Failed to upload image");
       const data = await response.json();
       setFormData({ ...formData, [field]: data.filePath });
@@ -253,7 +285,9 @@ const AddDepositMethods = () => {
         ...formData,
         userInputs: formData.userInputs.filter((_, i) => i !== index),
       });
-      toast.success("User input removed successfully.", { position: "top-right" });
+      toast.success("User input removed successfully.", {
+        position: "top-right",
+      });
     }
   };
 
@@ -265,27 +299,28 @@ const AddDepositMethods = () => {
 
   // Handle form submission (Create or Update)
   const handleSubmit = async (e) => {
-
- 
-
     e.preventDefault();
-    if (instructionENCharCount > maxLength || instructionBDCharCount > maxLength) {
-      toast.error("Instructions exceed character limit.", { position: "top-right" });
+    if (
+      instructionENCharCount > maxLength ||
+      instructionBDCharCount > maxLength
+    ) {
+      toast.error("Instructions exceed character limit.", {
+        position: "top-right",
+      });
       return;
     }
 
     try {
       const url = isEditMode
-        ? `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${editId}`
-        : `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method`;
+        ? `${
+            import.meta.env.VITE_BASE_API_URL
+          }/depositPaymentMethod/deposit-method/${editId}`
+        : `${
+            import.meta.env.VITE_BASE_API_URL
+          }/depositPaymentMethod/deposit-method`;
       const method = isEditMode ? "PUT" : "POST";
 
-      
-      
-      let urlLink = url
-
-
-
+      let urlLink = url;
 
       const response = await fetch(urlLink, {
         method,
@@ -293,10 +328,10 @@ const AddDepositMethods = () => {
         body: JSON.stringify(formData),
       });
 
-
-
-
-      if (!response.ok) throw new Error(`Failed to ${isEditMode ? "update" : "create"} deposit method`);
+      if (!response.ok)
+        throw new Error(
+          `Failed to ${isEditMode ? "update" : "create"} deposit method`
+        );
       const data = await response.json();
 
       if (isEditMode) {
@@ -314,7 +349,9 @@ const AddDepositMethods = () => {
       setShowForm(false);
     } catch (error) {
       toast.error(
-        isEditMode ? "Failed to update deposit method." : "Failed to create deposit method.",
+        isEditMode
+          ? "Failed to update deposit method."
+          : "Failed to create deposit method.",
         { position: "top-right" }
       );
     }
@@ -324,7 +361,9 @@ const AddDepositMethods = () => {
   const handleEdit = async (id) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${id}`
+        `${
+          import.meta.env.VITE_BASE_API_URL
+        }/depositPaymentMethod/deposit-method/${id}`
       );
       if (!response.ok) throw new Error("Failed to fetch deposit method");
       const data = await response.json();
@@ -338,31 +377,36 @@ const AddDepositMethods = () => {
   };
 
   // Handle delete deposit method
-  const handleDelete = async ({id ,paymentPageImage,methodImage}) => {
-    if (window.confirm("Are you sure you want to delete this deposit method?")) {
+  const handleDelete = async ({ id, paymentPageImage, methodImage }) => {
+    if (
+      window.confirm("Are you sure you want to delete this deposit method?")
+    ) {
+      console.log("click delete ", paymentPageImage, methodImage, id);
 
-         console.log("click delete ",paymentPageImage , methodImage , id);
-
-      if(paymentPageImage || methodImage) {
-
+      if (paymentPageImage || methodImage) {
         try {
-          paymentPageImage && await deleteImage(paymentPageImage.split('/').pop());
-          methodImage && await deleteImage(methodImage.split('/').pop());
-        } catch (err) {
-         
-        }
+          paymentPageImage &&
+            (await deleteImage(paymentPageImage.split("/").pop()));
+          methodImage && (await deleteImage(methodImage.split("/").pop()));
+        } catch (err) {}
       }
 
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_API_URL}/depositPaymentMethod/deposit-method/${id}`,
+          `${
+            import.meta.env.VITE_BASE_API_URL
+          }/depositPaymentMethod/deposit-method/${id}`,
           { method: "DELETE" }
         );
         if (!response.ok) throw new Error("Failed to delete deposit method");
         setDepositMethods(depositMethods.filter((method) => method._id !== id));
-        toast.success("Deposit method deleted successfully.", { position: "top-right" });
+        toast.success("Deposit method deleted successfully.", {
+          position: "top-right",
+        });
       } catch (error) {
-        toast.error("Failed to delete deposit method.", { position: "top-right" });
+        toast.error("Failed to delete deposit method.", {
+          position: "top-right",
+        });
       }
     }
   };
@@ -421,12 +465,14 @@ const AddDepositMethods = () => {
     <div className="p-6 max-w-7xl mx-auto bg-gray-100 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Deposit Payment Methods</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Deposit Payment Methods
+        </h1>
         <button
           onClick={() => {
             resetForm();
             setShowForm(true);
-            setIsEditMode(false)
+            setIsEditMode(false);
           }}
           className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition duration-200 shadow-md"
         >
@@ -437,7 +483,9 @@ const AddDepositMethods = () => {
       {/* Deposit Methods Table */}
       <div className="bg-white shadow-md rounded-xl overflow-hidden mb-8">
         {depositMethods.length === 0 ? (
-          <p className="p-6 text-gray-600 text-center">No deposit methods found.</p>
+          <p className="p-6 text-gray-600 text-center">
+            No deposit methods found.
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -459,7 +507,10 @@ const AddDepositMethods = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {depositMethods.map((method) => (
-                  <tr key={method._id} className="hover:bg-gray-50 transition duration-150">
+                  <tr
+                    key={method._id}
+                    className="hover:bg-gray-50 transition duration-150"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {method.methodNameEN}
                     </td>
@@ -486,7 +537,13 @@ const AddDepositMethods = () => {
                         <FaEdit />
                       </button>
                       <button
-                        onClick={() => handleDelete({id : method._id,methodImage:method.methodImage,paymentPageImage:method.paymentPageImage}) }
+                        onClick={() =>
+                          handleDelete({
+                            id: method._id,
+                            methodImage: method.methodImage,
+                            paymentPageImage: method.paymentPageImage,
+                          })
+                        }
                         className="text-red-500 hover:text-red-700"
                         title="Delete Method"
                       >
@@ -505,7 +562,9 @@ const AddDepositMethods = () => {
       {showForm && (
         <div className="bg-white shadow-md rounded-xl p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            {isEditMode ? "Edit Deposit Payment Method" : "Add Deposit Payment Method"}
+            {isEditMode
+              ? "Edit Deposit Payment Method"
+              : "Add Deposit Payment Method"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -563,7 +622,9 @@ const AddDepositMethods = () => {
 
               {/* Gateway */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">Gateways</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Gateways
+                </label>
                 <div className="flex items-center space-x-3 mt-1">
                   <input
                     type="text"
@@ -627,7 +688,9 @@ const AddDepositMethods = () => {
 
               {/* Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Status
+                </label>
                 <select
                   name="status"
                   value={formData.status}
@@ -689,13 +752,21 @@ const AddDepositMethods = () => {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200"
                     >
                       <div>
-                        <p className="text-sm font-medium text-gray-700">Name: {input.name}</p>
-                        <p className="text-sm text-gray-600">Type: {input.type}</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          Name: {input.name}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Type: {input.type}
+                        </p>
                         <p className="text-sm text-gray-600">
                           Required: {input.isRequired === "true" ? "Yes" : "No"}
                         </p>
-                        <p className="text-sm text-gray-600">Label (EN): {input.label || "N/A"}</p>
-                        <p className="text-sm text-gray-600">Label (BD): {input.labelBD || "N/A"}</p>
+                        <p className="text-sm text-gray-600">
+                          Label (EN): {input.label || "N/A"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Label (BD): {input.labelBD || "N/A"}
+                        </p>
                       </div>
                       <div className="flex space-x-2">
                         <button
@@ -737,7 +808,8 @@ const AddDepositMethods = () => {
                 type="submit"
                 className="flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg hover:from-green-700 hover:to-green-600 transition duration-200 shadow-sm"
               >
-                <FaPlus className="mr-2" /> {isEditMode ? "Update" : "Create"} Deposit Method
+                <FaPlus className="mr-2" /> {isEditMode ? "Update" : "Create"}{" "}
+                Deposit Method
               </button>
             </div>
           </form>
@@ -756,12 +828,16 @@ const AddDepositMethods = () => {
               <FaTimes />
             </button>
             <h3 className="text-xl font-semibold text-gray-800 mb-6">
-              {editUserInputIndex !== null ? "Edit User Input" : "Add User Input"}
+              {editUserInputIndex !== null
+                ? "Edit User Input"
+                : "Add User Input"}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Type</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Type
+                </label>
                 <select
                   name="type"
                   value={newUserInput.type}
@@ -776,7 +852,9 @@ const AddDepositMethods = () => {
 
               {/* Required */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Required</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Required
+                </label>
                 <select
                   name="isRequired"
                   value={newUserInput.isRequired}
@@ -838,7 +916,8 @@ const AddDepositMethods = () => {
                 onClick={addOrUpdateUserInput}
                 className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition duration-200 shadow-sm"
               >
-                <FaPlus className="mr-2" /> {editUserInputIndex !== null ? "Update" : "Add"} User Input
+                <FaPlus className="mr-2" />{" "}
+                {editUserInputIndex !== null ? "Update" : "Add"} User Input
               </button>
               <div className="flex space-x-3">
                 <button

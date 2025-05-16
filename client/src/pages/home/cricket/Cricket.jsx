@@ -24,7 +24,9 @@ const Cricket = () => {
           "https://jiliwin.9terawolf.com/images/babu/game_banner/cricket_new.jpg"
         }
         B_heading={"ক্রিকেট"}
-        B_semiText={"BABU88 হল ক্রিকেট বেটিং এর জন্য এক নম্বর চয়েস"}
+        B_semiText={`${
+          import.meta.env.VITE_SITE_NAME
+        } হল ক্রিকেট বেটিং এর জন্য এক নম্বর চয়েস`}
         B_text={
           "সমস্ত বড় ক্রিকেট লিগের জন্য সেরা প্রতিকূলতার সাথে লাইভ বেটিং!"
         }

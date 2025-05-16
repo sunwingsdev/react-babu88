@@ -4,7 +4,11 @@ const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 const sendEmail = require("../../emailService");
 
-const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsCollection) => {
+const usersApi = (
+  usersCollection,
+  homeControlsCollection,
+  withdrawTransactionsCollection
+) => {
   const router = express.Router();
   const jwtSecret = process.env.JWT_SECRET;
 
@@ -184,8 +188,6 @@ const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsC
       });
       if (!user) return res.status(404).json({ error: "User not found" });
 
-     
-
       const pendingTransactions = await withdrawTransactionsCollection
         .find({ userId: new ObjectId(req.user.userId), status: "pending" })
         .toArray();
@@ -193,7 +195,6 @@ const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsC
         (acc, curr) => acc + curr.amount,
         0
       );
-   
 
       const { password: _, ...userInfo } = user;
       userInfo.balance -= totalPendingAmount;
@@ -342,14 +343,13 @@ const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsC
       return;
     }
 
-     const pendingTransactions = await withdrawTransactionsCollection
-        .find({ userId: new ObjectId(id), status: "pending" })
-        .toArray();
-      const totalPendingAmount = pendingTransactions.reduce(
-        (acc, curr) => acc + curr.amount,
-        0
-      );
- 
+    const pendingTransactions = await withdrawTransactionsCollection
+      .find({ userId: new ObjectId(id), status: "pending" })
+      .toArray();
+    const totalPendingAmount = pendingTransactions.reduce(
+      (acc, curr) => acc + curr.amount,
+      0
+    );
 
     const result = await usersCollection.findOne(
       { _id: new ObjectId(id) },
@@ -505,8 +505,7 @@ const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsC
     }
   });
 
-
-    // GET /users - Fetch all users (for admin)
+  // GET /users - Fetch all users (for admin)
   router.get("/admin/get-users", async (req, res) => {
     try {
       const users = await usersCollection.find().toArray();
