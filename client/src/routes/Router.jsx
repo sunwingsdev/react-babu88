@@ -55,6 +55,7 @@ import PlaytechApi from "@/components/dashboard/Dashboard-Page/GameAPI/PlaytechA
 import NetEntApi from "@/components/dashboard/Dashboard-Page/GameAPI/NetEntApi";
 import BetsoftGamingApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetsoftGamingApi";
 import AllUser from "@/components/dashboard/Dashboard-Page/Users/AllUser";
+import UserDetails from "@/components/dashboard/Dashboard-Page/Users/UserDetails";
 
 const router = createBrowserRouter([
   {
@@ -262,6 +263,10 @@ const router = createBrowserRouter([
         path: "/dashboard/all-user",
         element: <AllUser />, // Add the new route
       },
+     {
+      path: "userDetails/:userId",
+      element: <UserDetails />,
+    }
 
     ],
   },

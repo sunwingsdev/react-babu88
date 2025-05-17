@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
-import { FaCopy, FaEye, FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaCopy, FaEye } from "react-icons/fa";
 
 export default function AllUser() {
   const { addToast } = useToasts();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -39,17 +41,17 @@ export default function AllUser() {
   }, []);
 
   // Format date
-  const formatDate = (dateString) => {
-    if (!dateString) return "N/A";
-    return new Date(dateString).toLocaleString("en-US", {
-      dateStyle: "medium",
-      timeStyle: "short",
-    });
-  };
+  // const formatDate = (dateString) => {
+  //   if (!dateString) return "N/A";
+  //   return new Date(dateString).toLocaleString("en-US", {
+  //     dateStyle: "medium",
+  //     timeStyle: "short",
+  //   });
+  // };
 
   // Format currency
   const formatCurrency = (amount) => {
-    return `৳${Number(amount).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
+    return `৳${Number(amount || 0).toLocaleString("en-US", { minimumFractionDigits: 2 })}`;
   };
 
   // Copy to clipboard
@@ -58,128 +60,115 @@ export default function AllUser() {
     addToast("Copied to clipboard", { appearance: "success", autoDismiss: true });
   };
 
+  // Navigate to user details
+  const goToDetails = (id) => {
+    // navigate(`/dashboard/user/userDetails/${id}`);
+    navigate(`/dashboard/userDetails/${id}`);
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 sm:p-6">
-      <h2 className="text-lg sm:text-xl font-bold mb-4">All Users</h2>
-      {loading ? (
-        <div className="text-center py-10 text-gray-600 text-sm sm:text-base">
-          Loading...
-        </div>
-      ) : users.length === 0 ? (
-        <div className="text-center py-10 text-gray-600 text-sm sm:text-base">
-          No users found.
-        </div>
-      ) : (
-        <>
-          {/* Desktop: Table View */}
-          <div className="hidden sm:block overflow-x-auto">
-            <table className="min-w-full bg-white">
-              <thead>
-                <tr>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Username</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Phone Number</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Role</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Balance</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Total Deposit</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Total Withdraw</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Created At</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Last Login</th>
-                  <th className="py-2 px-4 border-b text-sm sm:text-base">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {users.map((user) => (
-                  <tr key={user._id} className="border-b hover:bg-gray-100">
-                    <td className="py-2 px-4 text-sm sm:text-base">{user.username}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base flex items-center">
-                      {user.number}
+    <div className="container mx-auto p-4 sm:p-6 bg-gray-100 min-h-screen">
+      <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">All Users</h2>
+        {loading ? (
+          <div className="text-center py-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+            <p className="text-gray-600 mt-2">Loading...</p>
+          </div>
+        ) : users.length === 0 ? (
+          <div className="text-center py-10 text-gray-600 text-sm sm:text-base">
+            No users found.
+          </div>
+        ) : (
+          <>
+            {/* Desktop: Table View */}
+            <div className="hidden sm:block overflow-x-auto">
+              <table className="min-w-full bg-white rounded-lg">
+                <thead className="bg-blue-600 text-white">
+                  <tr>
+                    <th className="py-3 px-4 text-left text-sm font-semibold">Username</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold">Phone Number</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold">Role</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold">Balance</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold">Total Deposit</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {users.map((user) => (
+                    <tr key={user._id} className="border-b hover:bg-gray-50 transition">
+                      <td className="py-3 px-4 text-sm text-gray-700">{user.username}</td>
+                      <td className="py-3 px-4 text-sm text-gray-700 flex items-center">
+                        {user.number}
+                        <button
+                          className="ml-2 text-blue-500 hover:text-blue-700"
+                          onClick={() => copyToClipboard(user.number)}
+                        >
+                          <FaCopy />
+                        </button>
+                      </td>
+                      <td className="py-3 px-4 text-sm text-gray-700 capitalize">{user.role}</td>
+                      <td className="py-3 px-4 text-sm text-gray-700">{formatCurrency(user.balance)}</td>
+                      <td className="py-3 px-4 text-sm text-gray-700">{formatCurrency(user.deposit)}</td>
+                      <td className="py-3 px-4 text-sm">
+                        <button
+                          onClick={() => goToDetails(user._id)}
+                          className="flex items-center text-blue-500 hover:text-blue-700"
+                        >
+                          <FaEye className="mr-1" /> Details
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile: Card View */}
+            <div className="block sm:hidden">
+              {users.map((user) => (
+                <div
+                  key={user._id}
+                  className="bg-white rounded-lg shadow-md p-4 mb-4 hover:shadow-lg transition"
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold text-sm text-gray-800">Username:</span>
+                    <span className="text-sm text-gray-600">{user.username}</span>
+                  </div>
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="font-semibold text-sm text-gray-800">Phone:</span>
+                    <div className="flex items-center">
+                      <span className="text-sm text-gray-600">{user.number}</span>
                       <button
-                        className="ml-2 text-blue-500"
+                        className="ml-2 text-blue-500 hover:text-blue-700"
                         onClick={() => copyToClipboard(user.number)}
                       >
                         <FaCopy />
                       </button>
-                    </td>
-                    <td className="py-2 px-4 text-sm sm:text-base capitalize">{user.role}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base">{formatCurrency(user.balance)}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base">{formatCurrency(user.deposit)}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base">{formatCurrency(user.withdraw)}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base">{formatDate(user.createdAt)}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base">{formatDate(user.lastLoginAt)}</td>
-                    <td className="py-2 px-4 text-sm sm:text-base flex space-x-2">
-                      <button className="text-blue-500 hover:text-blue-700">
-                        <FaEye />
-                      </button>
-                      <button className="text-green-500 hover:text-green-700">
-                        <FaEdit />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {/* Mobile: Card View */}
-          <div className="block sm:hidden">
-            {users.map((user) => (
-              <div
-                key={user._id}
-                className="border-b p-4 mb-2 bg-white rounded-lg shadow-sm hover:bg-gray-100"
-              >
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Username:</span>
-                  <span className="text-sm">{user.username}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="font-semibold text-sm">Phone:</span>
-                  <div className="flex items-center">
-                    <span className="text-sm">{user.number}</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span className="font-semibold text-sm text-gray-800">Role:</span>
+                    <span className="text-sm text-gray-600 capitalize">{user.role}</span>
+                  </div>
+                  <div className="flex justify-between mb-2">
+                    <span className="font-semibold text-sm text-gray-800">Balance:</span>
+                    <span className="text-sm text-gray-600">{formatCurrency(user.balance)}</span>
+                  </div>
+                  <div className="flex justify-end">
                     <button
-                      className="ml-2 text-blue-500 text-xs"
-                      onClick={() => copyToClipboard(user.number)}
+                      onClick={() => goToDetails(user._id)}
+                      className="flex items-center text-blue-500 hover:text-blue-700 text-sm"
                     >
-                      <FaCopy />
+                      <FaEye className="mr-1" /> Details
                     </button>
                   </div>
                 </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Role:</span>
-                  <span className="text-sm capitalize">{user.role}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Balance:</span>
-                  <span className="text-sm">{formatCurrency(user.balance)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Deposit:</span>
-                  <span className="text-sm">{formatCurrency(user.deposit)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Withdraw:</span>
-                  <span className="text-sm">{formatCurrency(user.withdraw)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Created:</span>
-                  <span className="text-sm">{formatDate(user.createdAt)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-semibold text-sm">Last Login:</span>
-                  <span className="text-sm">{formatDate(user.lastLoginAt)}</span>
-                </div>
-                <div className="flex justify-end space-x-2 mt-2">
-                  <button className="text-blue-500 hover:text-blue-700 text-sm">
-                    <FaEye />
-                  </button>
-                  <button className="text-green-500 hover:text-green-700 text-sm">
-                    <FaEdit />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }

@@ -522,6 +522,88 @@ const usersApi = (usersCollection, homeControlsCollection, withdrawTransactionsC
     }
   });
 
+
+  router.put("/admin/update-user/:id", async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid ID format" });
+    }
+
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: "No data provided to update" });
+    }
+
+    try {
+      // Validate required fields
+      if (updateData.username) {
+        const existingUser = await usersCollection.findOne({
+          username: updateData.username,
+          _id: { $ne: new ObjectId(id) },
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Username already exists" });
+        }
+      }
+
+      if (updateData.number) {
+        const existingUser = await usersCollection.findOne({
+          number: updateData.number,
+          _id: { $ne: new ObjectId(id) },
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Number already exists" });
+        }
+      }
+
+      if (updateData.email && updateData.email !== "") {
+        const existingUser = await usersCollection.findOne({
+          email: updateData.email,
+          _id: { $ne: new ObjectId(id) },
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Email already exists" });
+        }
+      }
+
+      if (updateData.balance !== undefined && updateData.balance < 0) {
+        return res.status(400).json({ error: "Balance cannot be negative" });
+      }
+
+      if (updateData.role && !["user", "agent"].includes(updateData.role)) {
+        return res.status(400).json({ error: "Invalid role. Must be 'user' or 'agent'" });
+      }
+
+      const updateDoc = {
+        $set: {
+          ...updateData,
+          updatedAt: new Date(),
+          primaryNumber: updateData.number || undefined,
+        },
+      };
+
+      const result = await usersCollection.updateOne(
+        { _id: new ObjectId(id) },
+        updateDoc
+      );
+
+      if (result.matchedCount === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (result.modifiedCount === 0) {
+        return res.status(200).json({ message: "No changes made" });
+      }
+
+      res.status(200).json({ message: "User updated successfully" });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ error: "Failed to update user" });
+    }
+  });
+
+
   return router;
 };
 
