@@ -29,11 +29,11 @@ const DashboardLayout = () => {
       name: "Cash Agent",
       icon: <PiCashRegister />,
       submenu: [
-        { name: "All Agents", path: "/dashboard/cashagent" },
-        { name: "KYC", path: "/dashboard/kyc" },
+        { name: "All Agents", path: "" },
+        { name: "KYC", path: "" },
         {
           name: "Payment Requests",
-          path: "/dashboard/paymentmethodrequests",
+          path: "",
         },
       ],
     },
@@ -42,17 +42,18 @@ const DashboardLayout = () => {
       icon: <FaAffiliatetheme />,
 
       submenu: [
-        { name: "All Affiliates", path: "/dashboard/affiliators" },
-        { name: "All Affiliate Links", path: "/dashboard/allaffiliatelinks" },
+        { name: "All Affiliates", path: "" },
+        { name: "All Affiliate Links", path: "" },
       ],
     },
     {
       name: "Games Control",
       icon: <IoGameController />,
       submenu: [
-        { name: "Categories", path: "/dashboard/game-categories" },
-        { name: "Active Games", path: "/dashboard/active-games" },
-        { name: "Inactive Games", path: "/dashboard/inactive-games" },
+        { name: "Add Categories", path: "/dashboard/add-category" },
+        { name: "Add Game", path: "/dashboard/add-game" },
+        { name: "Active Games", path: "" },
+        { name: "Inactive Games" },
       ],
     },
     {
@@ -91,7 +92,7 @@ const DashboardLayout = () => {
       name: "Bonuses",
       icon: <GiRibbonMedal />,
       submenu: [
-        { name: "Happy Hours", path: "/dashboard/games" },
+        { name: "Happy Hours" },
         { name: "Deposit Bonuses" },
         { name: "Refer Bonuses" },
         { name: "Welcome Bonuses" },
@@ -113,8 +114,8 @@ const DashboardLayout = () => {
       icon: <BsFront />,
       submenu: [
         { name: "Home Control", path: "/dashboard/home-control" },
-        { name: "Promotions", path: "/dashboard/promotion-offer" },
-        { name: "Pages", path: "/dashboard/manage-pages" },
+        { name: "Promotions" },
+        { name: "Pages" },
         { name: "FAQ" },
         { name: "Sponsorship" },
         { name: "Brand Ambassador" },
@@ -124,8 +125,8 @@ const DashboardLayout = () => {
       name: "Banking Deposit",
       icon: <BsPiggyBank />,
       submenu: [
-        { name: "Deposit Promotion", path: "/dashboard/depositPromotion"}, 
-        { name: "Deposit Method", path: "/dashboard/depositmethod"},
+        { name: "Deposit Promotion", path: "/dashboard/depositPromotion" },
+        { name: "Deposit Method", path: "/dashboard/depositmethod" },
         { name: "Deposit History", path: "/dashboard/DepositHistory" },
       ],
     },

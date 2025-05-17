@@ -2,8 +2,12 @@ const express = require("express");
 const router = express.Router();
 const { ObjectId } = require("mongodb");
 
-module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPaymentMethodCollection) => {
-   // Create a new withdraw transaction (POST)
+module.exports = (
+  withdrawTransactionsCollection,
+  usersCollection,
+  withdrawPaymentMethodCollection
+) => {
+  // Create a new withdraw transaction (POST)
   router.post("/", async (req, res) => {
     console.log("this is withdraw -> ", req.body);
 
@@ -17,10 +21,6 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
         status = "pending",
       } = req.body;
 
-   
-
-
-
       // Validate required fields
       if (!userId || !paymentMethod || !amount || !userInputs) {
         return res.status(400).json({ error: "Required fields are missing" });
@@ -33,12 +33,16 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
 
       // Validate payment method
       if (!paymentMethod.methodName || !paymentMethod.methodImage) {
-        return res.status(400).json({ error: "Payment method details are missing" });
+        return res
+          .status(400)
+          .json({ error: "Payment method details are missing" });
       }
 
       // Validate amount
       if (amount < 800 || amount > 30000) {
-        return res.status(400).json({ error: "Amount must be between ৳800 and ৳30,000" });
+        return res
+          .status(400)
+          .json({ error: "Amount must be between ৳800 and ৳30,000" });
       }
 
       // Validate userInputs
@@ -53,13 +57,17 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
           return res.status(400).json({ error: "Invalid user input type" });
         }
         if (!input.name || !input.value || !input.label || !input.labelBD) {
-          return res.status(400).json({ error: "User input details are missing" });
+          return res
+            .status(400)
+            .json({ error: "User input details are missing" });
         }
         const requiredInput = method.userInputs.find(
           (i) => i.name === input.name && i.isRequired === "true"
         );
         if (requiredInput && !input.value) {
-          return res.status(400).json({ error: `Required field ${input.label} is missing` });
+          return res
+            .status(400)
+            .json({ error: `Required field ${input.label} is missing` });
         }
       }
 
@@ -70,7 +78,8 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
       }
       if (user.balance < amount) {
         return res.status(400).json({
-          error: "The withdrawal amount exceeds the available balance in the user's account.",
+          error:
+            "The withdrawal amount exceeds the available balance in the user's account.",
         });
       }
 
@@ -79,7 +88,9 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
         return res.status(400).json({ error: "Invalid status value" });
       }
       if (["failed", "cancelled"].includes(status) && !req.body.reason) {
-        return res.status(400).json({ error: "Reason is required for failed or cancelled status" });
+        return res
+          .status(400)
+          .json({ error: "Reason is required for failed or cancelled status" });
       }
 
       const newTransaction = {
@@ -98,15 +109,16 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
         updatedAt: new Date(),
       };
 
-      const result = await withdrawTransactionsCollection.insertOne(newTransaction);
+      const result = await withdrawTransactionsCollection.insertOne(
+        newTransaction
+      );
 
-    // user = user.withdraw ? user.withdraw : 0;
+      // user = user.withdraw ? user.withdraw : 0;
 
-        // await usersCollection.updateOne(
-        //   { _id: new ObjectId(userId) },
-        //   { $inc: { withdraw: user.withdraw + amount, balance: -amount } }
-        // );
-     
+      // await usersCollection.updateOne(
+      //   { _id: new ObjectId(userId) },
+      //   { $inc: { withdraw: user.withdraw + amount, balance: -amount } }
+      // );
 
       res.status(201).json({
         message: "Withdraw transaction created",
@@ -117,8 +129,6 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
       res.status(500).json({ error: err.message });
     }
   });
-
-
 
   router.get("/", async (req, res) => {
     try {
@@ -186,21 +196,33 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
 
       // Validate status
       if (!["completed", "cancelled"].includes(status)) {
-        return res.status(400).json({ error: "Invalid status value. Must be 'completed' or 'cancelled'" });
+        return res
+          .status(400)
+          .json({
+            error: "Invalid status value. Must be 'completed' or 'cancelled'",
+          });
       }
       if (status === "cancelled" && !reason) {
-        return res.status(400).json({ error: "Reason is required for cancelled status" });
+        return res
+          .status(400)
+          .json({ error: "Reason is required for cancelled status" });
       }
 
       // Find transaction
-      const transaction = await withdrawTransactionsCollection.findOne({ _id: new ObjectId(id) });
+      const transaction = await withdrawTransactionsCollection.findOne({
+        _id: new ObjectId(id),
+      });
       if (!transaction) {
         return res.status(404).json({ error: "Transaction not found" });
       }
 
       // Prevent updates if already completed
       if (transaction.status === "completed") {
-        return res.status(400).json({ error: "Transaction already completed and cannot be modified" });
+        return res
+          .status(400)
+          .json({
+            error: "Transaction already completed and cannot be modified",
+          });
       }
 
       // Update transaction
@@ -217,7 +239,9 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
 
       // Deduct balance if status is completed
       if (result.modifiedCount === 1 && status === "completed") {
-        const user = await usersCollection.findOne({ _id: new ObjectId(transaction.userId) });
+        const user = await usersCollection.findOne({
+          _id: new ObjectId(transaction.userId),
+        });
         if (!user) {
           return res.status(404).json({ error: "User not found" });
         }
@@ -227,13 +251,16 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
           });
         }
 
-        console.log("0000000000000000000",user);
-        
+        console.log("0000000000000000000", user);
 
         await usersCollection.updateOne(
           { _id: new ObjectId(transaction.userId) },
-          { $inc: { balance: -(transaction.amount),
-             withdraw:  +parseFloat(transaction.amount) } }
+          {
+            $inc: {
+              balance: -transaction.amount,
+              withdraw: +parseFloat(transaction.amount),
+            },
+          }
         );
       }
 
@@ -258,21 +285,24 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
       }
 
       // Find transaction
-      const transaction = await withdrawTransactionsCollection.findOne({ _id: new ObjectId(id) });
+      const transaction = await withdrawTransactionsCollection.findOne({
+        _id: new ObjectId(id),
+      });
       if (!transaction) {
         return res.status(404).json({ error: "Transaction not found" });
       }
 
       // Prevent deletion if already completed
       if (transaction.status === "completed") {
-
-
-
-        return res.status(400).json({ error: "Completed transaction cannot be deleted" });
+        return res
+          .status(400)
+          .json({ error: "Completed transaction cannot be deleted" });
       }
 
       // Delete transaction
-      const result = await withdrawTransactionsCollection.deleteOne({ _id: new ObjectId(id) });
+      const result = await withdrawTransactionsCollection.deleteOne({
+        _id: new ObjectId(id),
+      });
 
       if (result.deletedCount === 1) {
         res.status(200).json({ message: "Transaction deleted" });
@@ -284,7 +314,6 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
       res.status(500).json({ error: err.message });
     }
   });
-
 
   // Get all withdraw transactions for a user
   router.get("/user/:userId", async (req, res) => {
@@ -308,7 +337,6 @@ module.exports = (withdrawTransactionsCollection, usersCollection, withdrawPayme
       res.status(500).json({ error: err.message });
     }
   });
-
 
   return router;
 };

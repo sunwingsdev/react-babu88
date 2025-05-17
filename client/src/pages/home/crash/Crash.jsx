@@ -46,9 +46,9 @@ const Crash = () => {
             "https://jiliwin.9terawolf.com/images/babu/game_banner/crash_new.jpg"
           }
           B_heading={"ক্র্যাশ"}
-          B_semiText={
-            "BABU88 আপনার জন্য সব সাম্প্রতিক এবং হটেস্ট ক্র্যাশ গেম নিয়ে এসেছে"
-          }
+          B_semiText={`${
+            import.meta.env.VITE_SITE_NAME
+          } আপনার জন্য সব সাম্প্রতিক এবং হটেস্ট ক্র্যাশ গেম নিয়ে এসেছে`}
           B_text={
             "অন্তহীন উত্তেজনার জন্য Aviator এবং Plinko এর মত ক্লাসিক উপভোগ করুন!"
           }

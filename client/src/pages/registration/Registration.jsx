@@ -1,6 +1,7 @@
 import { useAddUserMutation } from "@/redux/features/allApis/usersApi/usersApi";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 
 const Registration = () => {
@@ -12,6 +13,7 @@ const Registration = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const navigate = useNavigate();
   const { addToast } = useToasts();
 
   const onSubmit = async (data) => {
@@ -32,6 +34,7 @@ const Registration = () => {
       });
       reset();
       reloadVerificationCode();
+      navigate("/login");
     }
   };
 

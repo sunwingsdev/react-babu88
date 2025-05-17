@@ -38,7 +38,7 @@ export default function AllUser() {
     };
 
     fetchUsers();
-  }, []);
+  }, [addToast, baseURL]);
 
   // Format date
   // const formatDate = (dateString) => {

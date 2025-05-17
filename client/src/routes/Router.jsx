@@ -30,14 +30,11 @@ import HomeControl from "@/pages/dashboard/HomeControl";
 import AdminRoute from "./AdminRoute";
 import AddDepositMethods from "@/components/dashboard/Dashboard-Page/Add-Deposit-Methods/AddDepositMethods";
 import DepositPromotion from "@/components/dashboard/Dashboard-Page/DepositPromotion/DepositPromotion";
-
 import DepositHistory from "@/components/dashboard/Dashboard-Page/Deposit-History/DepositHistory";
 import AddWithdrawMethods from "@/components/dashboard/Dashboard-Page/Add-Withdrow-Methods/AddWithdrowMethods";
-
 import AdminLogin from "@/pages/AdminLogin";
 import WithdrawalHistory from "@/components/dashboard/Dashboard-Page/Withdrawal-History/WithdrawalHistory";
-import History from './../components/dashboard/profile/history/History';
-
+import History from "./../components/dashboard/profile/history/History";
 import AddCategories from "@/pages/dashboard/AddCategories";
 import AddGame from "@/pages/dashboard/AddGame";
 import SportsLiveTv from "@/components/dashboard/Dashboard-Page/GameAPI/SportsLiveTv";
@@ -161,7 +158,6 @@ const router = createBrowserRouter([
           {
             path: "history",
             element: <History />,
-
           },
         ],
       },
@@ -186,7 +182,7 @@ const router = createBrowserRouter([
         path: "depositmethod",
         element: <AddDepositMethods />, // Add the new route
       },
-   
+
       {
         path: "depositPromotion",
         element: <DepositPromotion />, // Add the new route
@@ -195,72 +191,72 @@ const router = createBrowserRouter([
         path: "DepositHistory",
         element: <DepositHistory />, // Add the new route
       },
-         {
+      {
         path: "withdrawMethods",
         element: <AddWithdrawMethods />, // Add the new route
       },
-         {
+      {
         path: "WithdrawalHistory",
         element: <WithdrawalHistory />, // Add the new route
       },
-         {
+      {
         path: "games-api/sports-live-tv",
         element: <SportsLiveTv />, // Add the new route
       },
-         {
+      {
         path: "games-api/betfair-api",
         element: <BetFairApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/sports-radar-api",
         element: <SportsRadarApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/odds-jam-api",
         element: <OddsJamApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/bet-construct-api",
         element: <BetConstructApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/kambi-api",
         element: <KambiApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/pinnacle-api",
         element: <PinnacleApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/softswiss-api",
         element: <SoftSwissApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/betradar-api",
         element: <BetradarApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/evolution-api",
         element: <EvolutionApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/pragmatic-play-api",
         element: <PragmaticPlayApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/playtech-api",
         element: <PlaytechApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/netent-api",
         element: <NetEntApi />, // Add the new route
       },
-         {
+      {
         path: "games-api/betsoft-gaming-api",
         element: <BetsoftGamingApi />, // Add the new route
       },
-         {
-        path: "/dashboard/all-user",
+      {
+        path: "all-user",
         element: <AllUser />, // Add the new route
       },
      {

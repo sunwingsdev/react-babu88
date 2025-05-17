@@ -3,21 +3,11 @@ const router = express.Router();
 const { ObjectId } = require("mongodb");
 
 const createDepositPaymentMethodsApi = (depositPaymentMethodCollection) => {
-
-
- console.log("this is inside the api");
-   
-    
-
-
+  console.log("this is inside the api");
 
   // POST: Create a new deposit payment method
   router.post("/deposit-method", async (req, res) => {
-
-   
-   console.log("this is inside the api", req.body);
-   
-    
+    console.log("this is inside the api", req.body);
 
     try {
       const {
@@ -48,7 +38,9 @@ const createDepositPaymentMethodsApi = (depositPaymentMethodCollection) => {
         !color ||
         !buttonColor
       ) {
-        return res.status(400).json({ error: "All required fields must be provided" });
+        return res
+          .status(400)
+          .json({ error: "All required fields must be provided" });
       }
 
       // Prepare the document
@@ -72,7 +64,9 @@ const createDepositPaymentMethodsApi = (depositPaymentMethodCollection) => {
       };
 
       // Insert into MongoDB
-      const result = await depositPaymentMethodCollection.insertOne(depositMethod);
+      const result = await depositPaymentMethodCollection.insertOne(
+        depositMethod
+      );
 
       res.status(201).json({
         message: "Deposit method created successfully",
@@ -87,7 +81,9 @@ const createDepositPaymentMethodsApi = (depositPaymentMethodCollection) => {
   // GET: Retrieve all deposit payment methods
   router.get("/deposit-methods", async (req, res) => {
     try {
-      const depositMethods = await depositPaymentMethodCollection.find({}).toArray();
+      const depositMethods = await depositPaymentMethodCollection
+        .find({})
+        .toArray();
       res.status(200).json({
         message: "Deposit methods retrieved successfully",
         data: depositMethods,
@@ -160,7 +156,9 @@ const createDepositPaymentMethodsApi = (depositPaymentMethodCollection) => {
         !color ||
         !buttonColor
       ) {
-        return res.status(400).json({ error: "All required fields must be provided" });
+        return res
+          .status(400)
+          .json({ error: "All required fields must be provided" });
       }
 
       // Prepare the updated document

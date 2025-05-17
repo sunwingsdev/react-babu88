@@ -5,7 +5,14 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 // Reusable Input Field Component
-const InputField = ({ label, name, value, onChange, required, type = "text" }) => (
+const InputField = ({
+  label,
+  name,
+  value,
+  onChange,
+  required,
+  type = "text",
+}) => (
   <div>
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <input
@@ -62,7 +69,14 @@ const FileInput = ({ label, onChange, image, field }) => (
 );
 
 // Reusable Rich Text Editor Component
-const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5000 }) => (
+const RichTextEditor = ({
+  label,
+  name,
+  value,
+  onChange,
+  charCount,
+  maxLength = 5000,
+}) => (
   <div>
     <label className="block text-sm font-medium text-gray-700">{label}</label>
     <ReactQuill
@@ -79,7 +93,16 @@ const RichTextEditor = ({ label, name, value, onChange, charCount, maxLength = 5
           ["clean"],
         ],
       }}
-      formats={["header", "bold", "italic", "underline", "strike", "list", "bullet", "link"]}
+      formats={[
+        "header",
+        "bold",
+        "italic",
+        "underline",
+        "strike",
+        "list",
+        "bullet",
+        "link",
+      ]}
     />
     <p className="mt-1 text-xs text-gray-500">
       {charCount}/{maxLength} characters
@@ -124,21 +147,31 @@ const AddWithdrawMethods = () => {
   const [showUserInputModal, setShowUserInputModal] = useState(false);
 
   // Calculate character counts for instructions
-  const instructionCharCount = formData.instruction.replace(/<[^>]+>/g, "").length;
-  const instructionBDCharCount = formData.instructionBD.replace(/<[^>]+>/g, "").length;
+  const instructionCharCount = formData.instruction.replace(
+    /<[^>]+>/g,
+    ""
+  ).length;
+  const instructionBDCharCount = formData.instructionBD.replace(
+    /<[^>]+>/g,
+    ""
+  ).length;
   const maxLength = 5000;
 
   // Fetch all withdraw methods
   useEffect(() => {
     const fetchWithdrawMethods = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod`
+        );
         if (!response.ok) throw new Error("Failed to fetch withdraw methods");
         const data = await response.json();
         setWithdrawMethods(data);
         setLoading(false);
       } catch (error) {
-        toast.error("Failed to load withdraw methods.", { position: "top-right" });
+        toast.error("Failed to load withdraw methods.", {
+          position: "top-right",
+        });
         setLoading(false);
       }
     };
@@ -160,10 +193,13 @@ const AddWithdrawMethods = () => {
     uploadFormData.append("image", file);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/upload`, {
-        method: "POST",
-        body: uploadFormData,
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_API_URL}/upload`,
+        {
+          method: "POST",
+          body: uploadFormData,
+        }
+      );
       if (!response.ok) throw new Error("Failed to upload image");
       const data = await response.json();
       setFormData({ ...formData, [field]: data.filePath });
@@ -245,7 +281,9 @@ const AddWithdrawMethods = () => {
         ...formData,
         userInputs: formData.userInputs.filter((_, i) => i !== index),
       });
-      toast.success("User input removed successfully.", { position: "top-right" });
+      toast.success("User input removed successfully.", {
+        position: "top-right",
+      });
     }
   };
 
@@ -258,8 +296,13 @@ const AddWithdrawMethods = () => {
   // Handle form submission (Create or Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (instructionCharCount > maxLength || instructionBDCharCount > maxLength) {
-      toast.error("Instructions exceed character limit.", { position: "top-right" });
+    if (
+      instructionCharCount > maxLength ||
+      instructionBDCharCount > maxLength
+    ) {
+      toast.error("Instructions exceed character limit.", {
+        position: "top-right",
+      });
       return;
     }
     try {
@@ -274,7 +317,10 @@ const AddWithdrawMethods = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) throw new Error(`Failed to ${isEditMode ? "update" : "create"} withdraw method`);
+      if (!response.ok)
+        throw new Error(
+          `Failed to ${isEditMode ? "update" : "create"} withdraw method`
+        );
       const data = await response.json();
 
       if (isEditMode) {
@@ -284,7 +330,10 @@ const AddWithdrawMethods = () => {
           )
         );
       } else {
-        setWithdrawMethods([...withdrawMethods, { _id: data.data.insertedId, ...formData }]);
+        setWithdrawMethods([
+          ...withdrawMethods,
+          { _id: data.data.insertedId, ...formData },
+        ]);
       }
 
       toast.success(data.message, { position: "top-right" });
@@ -292,7 +341,9 @@ const AddWithdrawMethods = () => {
       setShowForm(false);
     } catch (error) {
       toast.error(
-        isEditMode ? "Failed to update withdraw method." : "Failed to create withdraw method.",
+        isEditMode
+          ? "Failed to update withdraw method."
+          : "Failed to create withdraw method.",
         { position: "top-right" }
       );
     }
@@ -301,7 +352,9 @@ const AddWithdrawMethods = () => {
   // Handle edit withdraw method
   const handleEdit = async (id) => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${id}`);
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${id}`
+      );
       if (!response.ok) throw new Error("Failed to fetch withdraw method");
       const data = await response.json();
       setFormData(data);
@@ -315,16 +368,27 @@ const AddWithdrawMethods = () => {
 
   // Handle delete withdraw method
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this withdraw method?")) {
+    if (
+      window.confirm("Are you sure you want to delete this withdraw method?")
+    ) {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${id}`, {
-          method: "DELETE",
-        });
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_API_URL}/withdrawPaymentMethod/${id}`,
+          {
+            method: "DELETE",
+          }
+        );
         if (!response.ok) throw new Error("Failed to delete withdraw method");
-        setWithdrawMethods(withdrawMethods.filter((method) => method._id !== id));
-        toast.success("Withdraw method deleted successfully.", { position: "top-right" });
+        setWithdrawMethods(
+          withdrawMethods.filter((method) => method._id !== id)
+        );
+        toast.success("Withdraw method deleted successfully.", {
+          position: "top-right",
+        });
       } catch (error) {
-        toast.error("Failed to delete withdraw method.", { position: "top-right" });
+        toast.error("Failed to delete withdraw method.", {
+          position: "top-right",
+        });
       }
     }
   };
@@ -381,7 +445,9 @@ const AddWithdrawMethods = () => {
     <div className="p-6 max-w-7xl mx-auto bg-gray-100 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Withdraw Payment Methods</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Withdraw Payment Methods
+        </h1>
         <button
           onClick={() => {
             resetForm();
@@ -396,7 +462,9 @@ const AddWithdrawMethods = () => {
       {/* Withdraw Methods Table */}
       <div className="bg-white shadow-md rounded-xl overflow-hidden mb-8">
         {withdrawMethods.length === 0 ? (
-          <p className="p-6 text-gray-600 text-center">No withdraw methods found.</p>
+          <p className="p-6 text-gray-600 text-center">
+            No withdraw methods found.
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -418,7 +486,10 @@ const AddWithdrawMethods = () => {
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {withdrawMethods.map((method) => (
-                  <tr key={method._id} className="hover:bg-gray-50 transition duration-150">
+                  <tr
+                    key={method._id}
+                    className="hover:bg-gray-50 transition duration-150"
+                  >
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                       {method.methodName}
                     </td>
@@ -464,7 +535,9 @@ const AddWithdrawMethods = () => {
       {showForm && (
         <div className="bg-white shadow-md rounded-xl p-6">
           <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-            {isEditMode ? "Edit Withdraw Payment Method" : "Add Withdraw Payment Method"}
+            {isEditMode
+              ? "Edit Withdraw Payment Method"
+              : "Add Withdraw Payment Method"}
           </h2>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -504,7 +577,9 @@ const AddWithdrawMethods = () => {
 
               {/* Gateway */}
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">Gateways</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Gateways
+                </label>
                 <div className="flex items-center space-x-3 mt-1">
                   <input
                     type="text"
@@ -569,7 +644,9 @@ const AddWithdrawMethods = () => {
 
               {/* Status */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Status
+                </label>
                 <select
                   name="status"
                   value={formData.status}
@@ -631,13 +708,21 @@ const AddWithdrawMethods = () => {
                       className="flex items-center justify-between p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200"
                     >
                       <div>
-                        <p className="text-sm font-medium text-gray-700">Name: {input.name}</p>
-                        <p className="text-sm text-gray-600">Type: {input.type}</p>
+                        <p className="text-sm font-medium text-gray-700">
+                          Name: {input.name}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Type: {input.type}
+                        </p>
                         <p className="text-sm text-gray-600">
                           Required: {input.isRequired === "true" ? "Yes" : "No"}
                         </p>
-                        <p className="text-sm text-gray-600">Label: {input.label || "N/A"}</p>
-                        <p className="text-sm text-gray-600">Label (BD): {input.labelBD || "N/A"}</p>
+                        <p className="text-sm text-gray-600">
+                          Label: {input.label || "N/A"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          Label (BD): {input.labelBD || "N/A"}
+                        </p>
                       </div>
                       <div className="flex space-x-2">
                         <button
@@ -679,7 +764,8 @@ const AddWithdrawMethods = () => {
                 type="submit"
                 className="flex items-center px-4 py-2 bg-gradient-to-r from-green-600 to-green-500 text-white rounded-lg hover:from-green-700 hover:to-green-600 transition duration-200 shadow-sm"
               >
-                <FaPlus className="mr-2" /> {isEditMode ? "Update" : "Create"} Withdraw Method
+                <FaPlus className="mr-2" /> {isEditMode ? "Update" : "Create"}{" "}
+                Withdraw Method
               </button>
             </div>
           </form>
@@ -698,12 +784,16 @@ const AddWithdrawMethods = () => {
               <FaTimes />
             </button>
             <h3 className="text-xl font-semibold text-gray-800 mb-6">
-              {editUserInputIndex !== null ? "Edit User Input" : "Add User Input"}
+              {editUserInputIndex !== null
+                ? "Edit User Input"
+                : "Add User Input"}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Type */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Type</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Type
+                </label>
                 <select
                   name="type"
                   value={newUserInput.type}
@@ -718,7 +808,9 @@ const AddWithdrawMethods = () => {
 
               {/* Required */}
               <div>
-                <label className="block text-sm font-medium text-gray-700">Required</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Required
+                </label>
                 <select
                   name="isRequired"
                   value={newUserInput.isRequired}
@@ -780,7 +872,8 @@ const AddWithdrawMethods = () => {
                 onClick={addOrUpdateUserInput}
                 className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-500 text-white rounded-lg hover:from-blue-700 hover:to-blue-600 transition duration-200 shadow-sm"
               >
-                <FaPlus className="mr-2" /> {editUserInputIndex !== null ? "Update" : "Add"} User Input
+                <FaPlus className="mr-2" />{" "}
+                {editUserInputIndex !== null ? "Update" : "Add"} User Input
               </button>
               <div className="flex space-x-3">
                 <button

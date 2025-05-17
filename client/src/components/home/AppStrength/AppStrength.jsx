@@ -6,7 +6,7 @@ const AppStrength = () => {
   return (
     <>
       {isVisble && (
-        <div className="md:hidden text-black flex justify-between items-center px-4 py-2">
+        <div className="md:hidden text-black bg-blue-100 flex justify-between items-center px-4 py-2">
           <IoClose
             onClick={() => setIsVisble(false)}
             className="text-3xl w-1/8"

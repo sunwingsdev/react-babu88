@@ -27,7 +27,9 @@ const Fishing = () => {
             "https://jiliwin.9terawolf.com/images/babu/game_banner/fishing_new.jpg"
           }
           B_heading={"মাছ ধরা"}
-          B_semiText={"BABU88 এর সাথে আপনার জয়ের জন্য রিল করুন"}
+          B_semiText={`${
+            import.meta.env.VITE_SITE_NAME
+          } এর সাথে আপনার জয়ের জন্য রিল করুন`}
           B_text={"আপনার ভাগ্য চেষ্টা করুন এবং আজ জ্যাকপট ফিশিং গেম শুরু করুন!"}
         />
         {/* mobile slide menu */}

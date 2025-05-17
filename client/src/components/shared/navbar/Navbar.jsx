@@ -17,7 +17,7 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import { useToasts } from "react-toast-notifications";
 import { logout } from "@/redux/slices/authSlice";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
-import {  useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
+import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
 import hotIcon from "@/assets/images/hot-icon.png";
 
 const data = [
@@ -370,30 +370,20 @@ const Navbar = () => {
     (control) => control.category === "logo" && control.isSelected
   );
 
-
-const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetUserByIdQuery();
-
-
+  const [triggerGetUserById, { data: userData, isLoading, isError }] =
+    useLazyGetUserByIdQuery();
 
   const getUserDataAgain = (props) => {
-
     if (props) {
       triggerGetUserById(props);
     }
-
   };
 
-
-
   useEffect(() => {
-    
     if (user) {
       triggerGetUserById(user._id);
     }
-  }, [user]);
-
-
-
+  }, [user, triggerGetUserById]);
 
   return (
     <div className="z-20">
@@ -523,7 +513,21 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
                       </li>
                     </Link>
                   </SheetClose>
-                  {/* Add other menu items as needed */}
+                  {user && (
+                    <SheetClose asChild>
+                      <li
+                        onClick={handleLogout}
+                        className="flex gap-4 mt-10 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
+                      >
+                        <img
+                          className="w-4"
+                          src="https://babo88.com/static/svg/mobileMenu/logout.svg"
+                          alt=""
+                        />
+                        <p className="text-[#9b9b9b]">প্রস্থান</p>
+                      </li>
+                    </SheetClose>
+                  )}
                 </ul>
               </SheetContent>
             </Sheet>
@@ -572,9 +576,14 @@ const [triggerGetUserById, { data: userData, isLoading, isError }] = useLazyGetU
                 </div>
                 <div className="flex gap-2 items-center pl-4 rounded-full bg-gray-200">
                   <Link>
-                    <div className="flex items-center text-xl lg:text-2xl" onClick={() => user && getUserDataAgain(user._id) } >
+                    <div
+                      className="flex items-center text-xl lg:text-2xl"
+                      onClick={() => user && getUserDataAgain(user._id)}
+                    >
                       <TbCurrencyTaka />
-                      <p>{userData?.balance ? userData?.balance : user?.balance }</p>
+                      <p>
+                        {userData?.balance ? userData?.balance : user?.balance}
+                      </p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
