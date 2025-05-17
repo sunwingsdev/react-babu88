@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useToasts } from "react-toast-notifications";
 import VideoSlider from "@/components/home/videoSlider/VideoSlider";
 import BannerSlider from "../../../components/home/bannerSlider/BannerSlider";
 import SecondaryBanner from "../../../components/home/secondaryBanner/SecondaryBanner";
@@ -14,17 +15,47 @@ import sbImage from "@/assets/sb.svg";
 import fishingImage from "@/assets/fishing.svg";
 import crashImage from "@/assets/crash.svg";
 import ImageVideoSlider from "@/components/home/ImageVideoSlider/ImageVideoSlider";
-import mobileBdtImage from "@/assets/mobile_BDT_bd.jpg";
 import referBannerImage from "@/assets/refer_banner.jpg";
-import mobileBannerImage from "@/assets/mobile.jpg";
-import desktopBannerImage from "@/assets/desktop.jpg";
 import bettingPassImage from "@/assets/betting-pass.jpg";
-import bannerImage from "@/assets/register_banner.jpg";
 import Matches from "@/components/home/Matches/Matches";
-
+import bannerImage from "@/assets/register_banner.jpg";
 const Home = () => {
+  const { addToast } = useToasts();
   const { data: games } = useGetGamesQuery();
   const [activeFilter, setActiveFilter] = useState("hot");
+  const [publishImage, setPublishImage] = useState("");
+  const [downloadImage, setDownloadImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
+
+  // Fetch publish and download images
+  useEffect(() => {
+    const fetchImages = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${baseURL}/features-image`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch images");
+        }
+        const data = await response.json();
+        setPublishImage(data.publish || "");
+        setDownloadImage(data.download || "");
+      } catch (err) {
+        console.error("Fetch error:", err);
+        addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
+        setPublishImage("");
+        setDownloadImage("");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchImages();
+  }, []);
 
   const buttons = [
     {
@@ -98,7 +129,6 @@ const Home = () => {
 
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-          {/* Show filtered games on mobile, all games on desktop/tablet */}
           {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
             <GameCard
               key={game._id}
@@ -128,7 +158,21 @@ const Home = () => {
         <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
           প্রচার
         </h2>
-        <img className="md:hidden rounded-2xl" src={mobileBdtImage} alt="" />
+        {loading ? (
+          <div className="md:hidden w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : publishImage ? (
+          <img
+            className="md:hidden rounded-2xl"
+            src={`${baseURL}${publishImage}`}
+            alt="Promotion"
+          />
+        ) : (
+          <div className="md:hidden w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
+            <p className="text-gray-600 text-sm">No promotion image available</p>
+          </div>
+        )}
 
         {/* Desktop Promotion Section */}
         <div className="hidden md:flex flex-col lg:flex-row gap-3 my-3">
@@ -163,11 +207,21 @@ const Home = () => {
         <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
           ডাউনলোড করুন
         </h2>
-        <SecondaryBanner
-          zipFile={"/babu88.apk"}
-          image={desktopBannerImage}
-          imageMobil={mobileBannerImage}
-        />
+        {loading ? (
+          <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : downloadImage ? (
+          <SecondaryBanner
+            zipFile={"/babu88.apk"}
+            image={`${baseURL}${downloadImage}`}
+            imageMobil={`${baseURL}${downloadImage}`}
+          />
+        ) : (
+          <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
+            <p className="text-gray-600 text-sm">No download image available</p>
+          </div>
+        )}
       </div>
     </div>
   );
