@@ -12,7 +12,7 @@ import AppStrength from "@/components/home/AppStrength/AppStrength";
 const navItems = [
   {
     id: 1,
-    to: "",
+    to: "/profile/voucher",
     icon: <TbUsersGroup className="w-7 h-7" />,
     label: "সুপারিশ",
   },
@@ -36,7 +36,7 @@ const navItems = [
   },
   {
     id: 5,
-    to: "",
+    to: "/profile",
     icon: <CiUser className="w-7 h-7" />,
     label: "হিসাব",
   },
@@ -53,7 +53,7 @@ const MainLayout = () => {
 
       {!user && !token ? (
         <div className="flex sticky bottom-0 w-full md:hidden z-50">
-          <Link to={"/registration"} className="w-1/2">
+          <Link to={"/register"} className="w-1/2">
             <p className="p-3 text-base text-center font-semibold text-black bg-[#FFCD03] hover:bg-[#e5be22] transition-all duration-500">
               নিবন্ধন করুন
             </p>

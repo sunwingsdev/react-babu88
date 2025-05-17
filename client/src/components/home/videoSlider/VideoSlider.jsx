@@ -1,35 +1,34 @@
 import { useState, useEffect } from "react";
+import image1 from "@/assets/video1.webp";
+import image2 from "@/assets/video2.webp";
+import image3 from "@/assets/video3.webp";
+import image4 from "@/assets/video4.webp";
 
 const VideoSlider = () => {
   const bannerImages = [
     {
       id: 1,
-      image:
-        "https://jiliwin.9terawolf.com/cms/banner/image/bd-desktop-66c442ab4e9f9.jpg",
+      image: image1,
       videoId: "https://youtu.be/UwnS-ATONek",
     },
     {
       id: 2,
-      image:
-        "https://jiliwin.9terawolf.com/cms/banner/image/bd-desktop-66c2c5680c279.jpg",
+      image: image2,
       videoId: "https://youtu.be/dQw4w9WgXcQ",
     },
     {
       id: 3,
-      image:
-        "https://jiliwin.9terawolf.com/cms/banner/image/bd-desktop-65938d6405590.jpg",
+      image: image3,
       videoId: "https://youtu.be/UwnS-ATONek",
     },
     {
       id: 4,
-      image:
-        "https://jiliwin.9terawolf.com/cms/banner/image/bd-desktop-669769f71da59.jpg",
+      image: image4,
       videoId: "https://youtu.be/dQw4w9WgXcQ",
     },
     {
       id: 5,
-      image:
-        "https://jiliwin.9terawolf.com/cms/banner/image/bd-desktop-667e3b922437d.jpg",
+      image: image3,
       videoId: "https://youtu.be/UwnS-ATONek",
     },
   ];
