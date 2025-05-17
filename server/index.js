@@ -27,6 +27,7 @@ const withdrawTransactionsApi = require("./apis/withdrawTransactionsApi/withdraw
 
 const gameApi = require("./apis/gameApi/gameApi");
 const adminDashboardApi = require("./apis/adminDashboardApi/adminDashboardApi");
+const featuresImageApi = require("./apis/featuresImageApi/featuresImageApi");
 
 const corsConfig = {
   origin: [
@@ -126,6 +127,7 @@ async function run() {
       .db("babu88")
       .collection("depositTransactions");
     const gamesCollection = client.db("babu88").collection("games");
+    const featuresImageCollection = client.db("babu88").collection("FeaturesImage");
 
     // APIs
     app.use(
@@ -202,6 +204,8 @@ async function run() {
         withdrawTransactionsCollection
       )
     ); // New router
+        app.use("/features-image", featuresImageApi(featuresImageCollection));
+
 
     app.use("/games", gameApi(gamesCollection));
 

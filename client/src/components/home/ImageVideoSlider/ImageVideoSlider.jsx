@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import banner from "@/assets/BB88_mobile.png";
+import { useToasts } from "react-toast-notifications";
 
 const ImageVideoSlider = () => {
+  const { addToast } = useToasts();
   const slides = [
     {
       id: 1,
@@ -23,6 +24,36 @@ const ImageVideoSlider = () => {
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
+  const [featuresImage, setFeaturesImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
+
+  // Fetch features image
+  useEffect(() => {
+    const fetchFeaturesImage = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch(`${baseURL}/features-image`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch features image");
+        }
+        const data = await response.json();
+        setFeaturesImage(data.features || "");
+      } catch (err) {
+        console.error("Fetch error:", err);
+        addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
+        setFeaturesImage("");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFeaturesImage();
+  }, [addToast, baseURL]);
 
   // Auto-rotate every 5 seconds
   useEffect(() => {
@@ -59,13 +90,23 @@ const ImageVideoSlider = () => {
     <div className="relative w-full max-w-4xl mx-auto md:hidden">
       {/* Image section with relative positioning for buttons */}
       <div className="relative">
-        <div className={`transition-opacity duration-300`}>
-          <img
-            className="w-full h-64 object-cover rounded-t-xl"
-            src={banner}
-            alt={`Slide ${currentSlide.id}`}
-          />
-        </div>
+        {loading ? (
+          <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-t-xl">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : featuresImage ? (
+          <div className={`transition-opacity duration-300`}>
+            <img
+              className="w-full h-64 object-cover rounded-t-xl"
+              src={`${baseURL}${featuresImage}`}
+              alt={`Slide ${currentSlide.id}`}
+            />
+          </div>
+        ) : (
+          <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-t-xl">
+            <p className="text-gray-600 text-sm">No features image available</p>
+          </div>
+        )}
 
         {/* Navigation buttons positioned at bottom-left of image */}
         <div className="absolute bottom-2 left-2 flex space-x-2">
