@@ -19,6 +19,8 @@ import referBannerImage from "@/assets/refer_banner.jpg";
 import mobileBannerImage from "@/assets/mobile.jpg";
 import desktopBannerImage from "@/assets/desktop.jpg";
 import bettingPassImage from "@/assets/betting-pass.jpg";
+import bannerImage from "@/assets/register_banner.jpg";
+import Matches from "@/components/home/Matches/Matches";
 
 const Home = () => {
   const { data: games } = useGetGamesQuery();
@@ -79,7 +81,7 @@ const Home = () => {
     <div>
       <BannerSlider />
       <div className="container mx-auto mt-6 md:mt-0 px-4 sm:px-10 lg:px-24">
-        <SecondaryBanner image="https://jiliwin.9terawolf.com/images/babu/banner/register_banner_home.jpg" />
+        <SecondaryBanner image={bannerImage} />
 
         {/* Mobile Filter Buttons - Only shown on mobile */}
         <div className="md:hidden py-2 flex gap-3 overflow-x-auto">
@@ -113,6 +115,10 @@ const Home = () => {
         <div className="pb-4 md:pb-0">
           <VideoSlider />
         </div>
+
+        <div className="pb-4 md:pb-0">
+          <Matches />
+        </div>
         {/* Video Slider */}
         <div className="pb-4 md:pb-0">
           <ImageVideoSlider />
@@ -125,14 +131,14 @@ const Home = () => {
         <img className="md:hidden rounded-2xl" src={mobileBdtImage} alt="" />
 
         {/* Desktop Promotion Section */}
-        <div className="hidden py-0 md:py-4 lg:py-8 md:flex flex-col lg:flex-row gap-6">
-          <div className="relative">
+        <div className="hidden md:flex flex-col lg:flex-row gap-3 my-3">
+          <div className="relative w-3/5">
             <img
-              className="h-52 object-fill rounded-2xl overflow-hidden"
+              className="w-full h-52 object-fill rounded-2xl overflow-hidden"
               src={referBannerImage}
               alt=""
             />
-            <div className="text-white absolute top-0 p-4 space-y-3 max-w-96">
+            <div className="text-white absolute top-0 p-4 space-y-3 ">
               <h2 className="text-xl font-semibold">
                 Refer friends and start earning
               </h2>
@@ -147,7 +153,7 @@ const Home = () => {
             </button>
           </div>
           <img
-            className="w-full lg:max-w-96 object-fill rounded-2xl overflow-hidden"
+            className="w-2/5 object-fill rounded-2xl overflow-hidden"
             src={bettingPassImage}
             alt=""
           />
