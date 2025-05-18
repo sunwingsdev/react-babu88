@@ -38,8 +38,8 @@ const GameCard = ({
           )}
         </div>
         <img
-          className="absolute top-1 right-1 w-10"
-          src={badge === "new" ? newIcon : hotIcon}
+          className="absolute top-1 right-1 w-7 md:w-10 "
+          src={badge === "new" ? newIcon : badge === "hot" ? hotIcon : ""}
           alt=""
         />
       </div>
