@@ -92,6 +92,7 @@ const BannerSlider = () => {
           </CarouselItem>
         ))}
       </CarouselContent>
+      
 
       {/* Slide Select Buttons */}
       <div className="absolute bottom-8 md:bottom-16 right-4 md:right-[5.5rem] flex space-x-2">

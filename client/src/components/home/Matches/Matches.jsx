@@ -75,7 +75,7 @@ const Matches = () => {
   return (
     <div
       style={{ scrollbarWidth: "thin", scrollbarColor: "#ffce01 #f3f4f6" }}
-      className="hidden  bg-white p-4 font-sans md:flex gap-6 overflow-x-auto "
+      className="flex  bg-white p-4 font-sans gap-6 overflow-x-auto "
     >
       {matches.map((match, index) => (
         <div
