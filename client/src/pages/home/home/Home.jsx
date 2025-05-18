@@ -131,7 +131,7 @@ const Home = () => {
        <AnimationBanner />
 
         {/* Games Grid */}
-        <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
+        <div className=" md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
           {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
             <GameCard
               key={game._id}
