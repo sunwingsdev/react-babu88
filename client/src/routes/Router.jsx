@@ -53,6 +53,7 @@ import NetEntApi from "@/components/dashboard/Dashboard-Page/GameAPI/NetEntApi";
 import BetsoftGamingApi from "@/components/dashboard/Dashboard-Page/GameAPI/BetsoftGamingApi";
 import AllUser from "@/components/dashboard/Dashboard-Page/Users/AllUser";
 import UserDetails from "@/components/dashboard/Dashboard-Page/Users/UserDetails";
+import ProfileAccount from "@/pages/home/profileAccount/profileAccount";
 
 const router = createBrowserRouter([
   {
@@ -158,6 +159,10 @@ const router = createBrowserRouter([
           {
             path: "history",
             element: <History />,
+          },
+          {
+            path: "profileAccount",
+            element: <ProfileAccount />,
           },
         ],
       },
