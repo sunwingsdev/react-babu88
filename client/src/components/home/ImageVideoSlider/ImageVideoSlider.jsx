@@ -97,7 +97,7 @@ const ImageVideoSlider = () => {
         ) : featuresImage ? (
           <div className={`transition-opacity duration-300`}>
             <img
-              className="w-full h-64 object-cover rounded-t-xl"
+              className="w-full  rounded-t-xl"
               src={`${baseURL}${featuresImage}`}
               alt={`Slide ${currentSlide.id}`}
             />
@@ -125,14 +125,14 @@ const ImageVideoSlider = () => {
 
       {/* Video section (bottom) */}
       <div
-        className={`bg-gray-900 rounded-b-xl overflow-hidden transition-opacity duration-300 ${
+        className={`bg-gray-900 rounded-xl overflow-hidden transition-opacity duration-300 ${
           fade ? "opacity-100" : "opacity-0"
         }`}
       >
         {currentSlide.videoId && (
-          <div className="aspect-w-16 aspect-h-9">
+          <div className="aspect-w-16 aspect-h-9 rounded-xl">
             <iframe
-              className="w-full h-64"
+              className="w-full h-64 rounded-xl"
               src={`https://www.youtube.com/embed/${extractYouTubeId(
                 currentSlide.videoId
               )}`}

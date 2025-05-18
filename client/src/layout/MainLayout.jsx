@@ -1,4 +1,4 @@
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import Navbar from "../components/shared/navbar/Navbar";
 import Footer from "../components/shared/footer/Footer";
 import { TbUsersGroup } from "react-icons/tb";
@@ -7,12 +7,13 @@ import { MdOutlineLocalPlay } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
 import { useSelector } from "react-redux";
 import AppStrength from "@/components/home/AppStrength/AppStrength";
+import { useEffect, useState } from "react";
 
 // নেভিগেশন ডেটা
 const navItems = [
   {
     id: 1,
-    to: "/profile/voucher",
+    to: "/referral",
     icon: <TbUsersGroup className="w-7 h-7" />,
     label: "সুপারিশ",
   },
@@ -36,7 +37,7 @@ const navItems = [
   },
   {
     id: 5,
-    to: "/profile",
+    to: "/profile/profileAccount",
     icon: <CiUser className="w-7 h-7" />,
     label: "হিসাব",
   },
@@ -44,6 +45,17 @@ const navItems = [
 
 const MainLayout = () => {
   const { user, token } = useSelector((state) => state.auth);
+  const location = useLocation();
+
+  const [path, setPath] = useState("");
+
+
+  useEffect(() => {
+    console.log("router: ", location.pathname);
+    setPath(location.pathname);
+  }, [location]);
+
+
   return (
     <div>
       <AppStrength />
@@ -69,7 +81,11 @@ const MainLayout = () => {
           {navItems.map((item) => (
             <Link key={item.id} to={item.to}>
               <div className="w-full py-3 px-2 flex flex-col items-center justify-center text-sm gap-0.5">
-                {item.icon}
+                {(path === item.to || (item.to === '/profile/deposit' && path.includes('/profile/deposit')) || (item.to === '/profile/deposit' && path.includes('/profile/withdrawal'))) ? (
+                  <div className="text-yellow-400">{item.icon}</div>
+                ) : (
+                  item.icon
+                )}
                 <p>{item.label}</p>
               </div>
             </Link>

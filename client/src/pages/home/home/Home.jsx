@@ -19,6 +19,7 @@ import referBannerImage from "@/assets/refer_banner.jpg";
 import bettingPassImage from "@/assets/betting-pass.jpg";
 import Matches from "@/components/home/Matches/Matches";
 import bannerImage from "@/assets/register_banner.jpg";
+import AnimationBanner from "../AnimationBanner/AnimationBanner";
 const Home = () => {
   const { addToast } = useToasts();
   const { data: games } = useGetGamesQuery();
@@ -126,6 +127,8 @@ const Home = () => {
             />
           ))}
         </div>
+
+       <AnimationBanner />
 
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">

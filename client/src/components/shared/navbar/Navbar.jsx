@@ -394,7 +394,9 @@ const Navbar = () => {
           <div className="md:hidden">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
+     
                 <button>
+                
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
@@ -541,7 +543,9 @@ const Navbar = () => {
                 alt=""
               />
             </Link>
+          
           </div>
+          
 
           <div className="flex items-center gap-3">
             {/* Sign up */}

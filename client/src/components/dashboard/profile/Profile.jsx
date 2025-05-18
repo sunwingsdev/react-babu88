@@ -14,7 +14,7 @@ const topbarData = [
   { label: "ব্যাংক বিবরণ", route: "" },
   { label: "গোপন নম্বর", route: "" },
   { label: "ইনবক্স", route: "/profile/inbox" },
-  { label: "সুপারিশ", route: "" },
+  { label: "সুপারিশ", route: "/profile/referral" },
   { label: "বেটিং পাস", route: "" },
   { label: "হুইল অফ ফরচুন", route: "" },
   { label: "পুরস্কার", route: "/profile/rewards" },
