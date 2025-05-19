@@ -39,6 +39,7 @@ export default function AnimationBanner() {
         textAlign: "center",
         fontFamily: "'SolaimanLipi', sans-serif",
       }}
+      className="md:hidden"
     >
       {/* Banner Image */}
       <img
