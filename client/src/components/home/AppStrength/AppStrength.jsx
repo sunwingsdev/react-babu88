@@ -43,7 +43,7 @@ const AppStrength = () => {
           />
           <div className="flex gap-2">
             <img className="size-10" src={image} alt="Download app" />
-            <p className="text-[#3a3a3a] leading-4">
+            <p className=" leading-4" style={{color:mainColor}} >
               এখনই আমাদের APP সংস্করণ ডাউনলোড করুন!
             </p>
           </div>
