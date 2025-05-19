@@ -127,23 +127,40 @@ const gamesData = [
 const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
   const { user, token } = useSelector((state) => state.auth);
+  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addToast } = useToasts();
-  // cricket
+
+  // Fallback colors
+  const navBackgroundColor = backgroundColor || "#333333";
+  const primaryColor = mainColor || "#FFCD03";
+  // Utility to darken a hex color for hover effect
+  const _darkenColor = (hex, amount) => {
+    let color = hex.replace("#", "");
+    const num = parseInt(color, 16);
+    const r = Math.max(0, (num >> 16) - Math.round(255 * amount));
+    const g = Math.max(0, ((num >> 8) & 0x00ff) - Math.round(255 * amount));
+    const b = Math.max(0, (num & 0x0000ff) - Math.round(255 * amount));
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+  };
+
+  const darkenColor = (hex, amount) => _darkenColor(hex, amount);
+
+  const primaryHoverColor = mainColor ? darkenColor(mainColor, 0.1) : "#e5be22";
+
+  // Cricket
   const megaMenuCricket = [
     {
       route: "/cricket",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
     },
     {
       route: "/cricket",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
     },
   ];
-  // casino
+  // Casino
   const megaMenuCasino = [
     {
       route: "/casino",
@@ -155,8 +172,7 @@ const Navbar = () => {
     },
     {
       route: "/casino",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
     },
     {
       route: "/casino",
@@ -175,7 +191,7 @@ const Navbar = () => {
       image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/aura_new.png",
     },
   ];
-  // slot
+  // Slot
   const megaMenuSlot = [
     {
       route: "/slot",
@@ -223,13 +239,11 @@ const Navbar = () => {
     },
     {
       route: "/slot",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
     },
     {
       route: "/slot",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
     },
     {
       route: "/slot",
@@ -237,58 +251,51 @@ const Navbar = () => {
     },
     {
       route: "/slot",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
     },
   ];
-  // table-games
+  // Table-games
   const megaMenuTable = [
     {
       route: "/table-games",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
     },
     {
       route: "/table-games",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
     },
     {
       route: "/table-games",
       image: "https://jiliwin.9terawolf.com/images/babu/menu/table/spg_new.png",
     },
   ];
-  // sport
+  // Sport
   const megaMenuSportBook = [
     {
       route: "/sports-book",
       image: "https://jiliwin.9terawolf.com/images/babu/menu/sb/ibc_new.png",
     },
   ];
-  // fishing
+  // Fishing
   const megaMenuFishing = [
     {
       route: "/fishing",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
     },
     {
       route: "/fishing",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
     },
   ];
   // Crash
   const megaMenuCrash = [
     {
       route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
     },
     {
       route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
     },
     {
       route: "/crash",
@@ -296,24 +303,18 @@ const Navbar = () => {
     },
     {
       route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
     },
     {
       route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
     },
     {
       route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
     },
   ];
 
-  {
-    /* মডাল ডেটা */
-  }
   const modalData = [
     {
       id: 1,
@@ -340,7 +341,7 @@ const Navbar = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); // State for hover
+  const [isHovered, setIsHovered] = useState(false);
   const [isCasinoHovered, setIsCasinoHovered] = useState(false);
   const [isSlotHovered, setIsSlotHovered] = useState(false);
   const [isTableHovered, setIsTableHovered] = useState(false);
@@ -387,6 +388,32 @@ const Navbar = () => {
 
   return (
     <div className="z-20">
+      <style>
+        {`
+          .nav-link:hover {
+            color: ${primaryColor};
+            background-color: #424242;
+            border-bottom: 4px solid ${primaryColor};
+          }
+          .login-button:hover {
+            background-color: ${primaryHoverColor};
+          }
+          .signup-button:hover {
+            background-color: #2f9bff;
+          }
+          .language-button:hover {
+            background-color: #c2c2c2;
+          }
+          .profile-button:hover,
+          .notification-button:hover,
+          .logout-button:hover {
+            background-color: ${primaryHoverColor};
+          }
+          .deposit-button:hover {
+            background-color: #0066cc;
+          }
+        `}
+      </style>
       {/* Start top navbar */}
       <div className="container mx-auto px-4 py-2">
         <div className="flex justify-between items-center">
@@ -394,24 +421,20 @@ const Navbar = () => {
           <div className="md:hidden">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
-     
-                <button>
-                
+                <button className="ml-auto">
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
               <SheetContent
+                className="bg-slate-50 text-gray-600 w-64 p-2"
                 side="left"
-                className=" bg-slate-50 text-gray-600 w-64 p-2"
               >
                 <SheetClose asChild className="border-b-2 pb-2">
                   <div className="w-40">
                     <Link to={"/"}>
                       <img
-                        src={`${import.meta.env.VITE_BASE_API_URL}${
-                          logo?.image
-                        }`}
-                        alt=""
+                        src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
+                        alt="Logo"
                       />
                     </Link>
                   </div>
@@ -421,12 +444,12 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex items-center justify-start gap-3 mt-4 text-xs font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img className="w-6" src={item.image} alt="" />
-                          <p className="text-[#9b9b9b]">{item.title}</p>
+                          <img className="w-6" src={item.image} alt={item.title} />
+                          <p className="text-black">{item.title}</p>
                           {item?.badge &&
                             (item?.badge === "hot" ? (
                               <div className="w-8 animate-pulse">
-                                <img className="w-full" src={hotIcon} alt="" />
+                                <img className="w-full" src={hotIcon} alt="Hot" />
                               </div>
                             ) : (
                               <button className="animate-pulse rounded-full w-8 bg-[#04B22B] text-white">
@@ -437,7 +460,6 @@ const Navbar = () => {
                       </Link>
                     </SheetClose>
                   ))}
-
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Games</p>
                   </div>
@@ -445,8 +467,8 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img className="w-6" src={item.image} alt="" />
-                          <p className="text-[#9b9b9b]">{item.title}</p>
+                          <img className="w-6" src={item.image} alt={item.title} />
+                          <p className="text-black">{item.title}</p>
                           {item?.badge && (
                             <button className="animate-pulse rounded-full w-10 py-1 bg-[#04B22B] text-white">
                               new
@@ -456,7 +478,6 @@ const Navbar = () => {
                       </Link>
                     </SheetClose>
                   ))}
-
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Others</p>
                   </div>
@@ -469,9 +490,9 @@ const Navbar = () => {
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
-                          alt=""
+                          alt="Language"
                         />
-                        <p className="text-[#9b9b9b]"> ভাষা</p>
+                        <p className="text-black"> ভাষা</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -481,12 +502,9 @@ const Navbar = () => {
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
-                          alt=""
+                          alt="FAQ"
                         />
-                        <p className="text-[#9b9b9b]">
-                          {" "}
-                          প্রায়শই জিজ্ঞাসিত প্রশ্নাবল
-                        </p>
+                        <p className="text-black"> প্রায়শই জিজ্ঞাসিত প্রশ্নাবল</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -496,22 +514,21 @@ const Navbar = () => {
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
-                          alt=""
+                          alt="Live Chat"
                         />
-                        <p className="text-[#9b9b9b]"> সরাসরি কথোপকথন</p>
+                        <p className="text-black"> সরাসরি কথোপকথন</p>
                       </li>
                     </Link>
                   </SheetClose>
-
                   <SheetClose asChild>
                     <Link to={"./babu88.apk"} target={"_blank"} download>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/downloadApp.svg"
-                          alt=""
+                          alt="Download App"
                         />
-                        <p className="text-[#9b9b9b]">ডাউনলোড করুন</p>
+                        <p className="text-black">ডাউনলোড করুন</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -524,9 +541,9 @@ const Navbar = () => {
                         <img
                           className="w-4"
                           src="https://babo88.com/static/svg/mobileMenu/logout.svg"
-                          alt=""
+                          alt="Logout"
                         />
-                        <p className="text-[#9b9b9b]">প্রস্থান</p>
+                        <p className="text-black">প্রস্থান</p>
                       </li>
                     </SheetClose>
                   )}
@@ -540,28 +557,24 @@ const Navbar = () => {
             <Link to={"/"}>
               <img
                 src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
-                alt=""
+                alt="Logo"
               />
             </Link>
-          
           </div>
-          
 
           <div className="flex items-center gap-3">
-            {/* Sign up */}
-
-            {/* dashboard */}
+            {/* Dashboard */}
             {token && user ? (
               <div className="md:flex justify-center items-center gap-3 hidden">
                 <div className="flex justify-center items-center gap-2 lg:gap-3">
                   <p className="text-lg font-bold">{user?.username}</p>
                   <Link to={"/profile"}>
-                    <div className="flex justify-center items-center p-3 text-base lg:text-xl bg-yellow-400 hover:bg-yellow-500 duration-300 rounded-full">
+                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: primaryColor }}>
                       <FaUser />
                     </div>
                   </Link>
                   <Link to={"/profile/inbox"} className="relative">
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl bg-yellow-400 hover:bg-yellow-500 duration-300 rounded-full">
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: primaryColor }}>
                       <IoMdNotifications />
                     </div>
                     <div className="absolute -top-1 -right-1 flex justify-center items-center w-5 h-5 text-xs text-white bg-blue-500 rounded-full">
@@ -571,7 +584,8 @@ const Navbar = () => {
                   <div>
                     <button
                       onClick={handleLogout}
-                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl bg-yellow-400 hover:bg-yellow-500 duration-300 rounded-full"
+                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl logout-button rounded-full"
+                      style={{ backgroundColor: primaryColor }}
                     >
                       <RiLogoutCircleRFill />
                     </button>
@@ -585,13 +599,11 @@ const Navbar = () => {
                       onClick={() => user && getUserDataAgain(user._id)}
                     >
                       <TbCurrencyTaka />
-                      <p>
-                        {userData?.balance ? userData?.balance : user?.balance}
-                      </p>
+                      <p>{(userData?.balance || user?.balance || 0).toLocaleString()}</p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white bg-blue-500 hover:bg-blue-600 duration-300 rounded-full">
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: "#0083FB" }}>
                       <FaPlus />
                     </div>
                   </Link>
@@ -600,12 +612,12 @@ const Navbar = () => {
             ) : (
               <ul className="md:flex items-center gap-4 hidden">
                 <Link to={"/login"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg bg-[#FFCD03] hover:bg-[#e5be22] transition-all duration-500">
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor }}>
                     প্রবেশ করুন
                   </li>
                 </Link>
                 <Link to={"/register"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white bg-[#0083FB] hover:bg-[#2f9bff] transition-all duration-500">
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: "#0083FB" }}>
                     এখনি যোগদিন
                   </li>
                 </Link>
@@ -616,14 +628,13 @@ const Navbar = () => {
             <ul>
               <li
                 onClick={handleModalOpen}
-                className="cursor-pointer text-sm lg:text-base font-semibold px-2 py-1 rounded-lg bg-[#d6d6d6] hover:bg-[#c2c2c2] transition-all duration-500"
+                className="cursor-pointer text-sm lg:text-base font-semibold px-2 py-1 rounded-lg language-button"
+                style={{ backgroundColor: "#d6d6d6" }}
               >
                 <div className="flex items-center">
                   <div className="w-6 md:w-7">
                     <img
-                      src={
-                        "https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-bangladesh-flag-icon-in-modern-neomorphism-style-png-image_4872074.png"
-                      }
+                      src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-bangladesh-flag-icon-in-modern-neomorphism-style-png-image_4872074.png"
                       alt="BD flag"
                     />
                   </div>
@@ -636,34 +647,34 @@ const Navbar = () => {
       </div>
 
       {/* Bottom navbar */}
-      <div className="bg-[#333] md:flex hidden relative">
+      <div className="md:flex hidden relative" style={{ backgroundColor: navBackgroundColor }}>
         <div className="container mx-auto px-4">
           <ul className="flex whitespace-nowrap overflow-x-auto">
-            {/* single menu */}
+            {/* Single menu */}
             <NavLink
               to={"/"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center py-3 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center py-3 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
             >
               <p className="py-1 px-5 border-r-[1px]">
                 <IoHome size={20} />
               </p>
             </NavLink>
 
-            {/* single cricket menu */}
+            {/* Single cricket menu */}
             <div
-              className=""
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
               <NavLink
                 to={"/cricket"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>ক্রিকেট</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                  style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -673,73 +684,69 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* single casino menu */}
+            {/* Single casino menu */}
             <div
-              className=""
               onMouseEnter={() => setIsCasinoHovered(true)}
               onMouseLeave={() => setIsCasinoHovered(false)}
             >
               <NavLink
                 to={"/casino"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>ক্যাসিনো</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                  style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCasinoHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <div className="">
-                  <MegaMenu items={megaMenuCasino} />
-                </div>
+                <MegaMenu items={megaMenuCasino} />
               </div>
             </div>
 
-            {/* single slot menu */}
+            {/* Single slot menu */}
             <div
-              className=""
               onMouseEnter={() => setIsSlotHovered(true)}
               onMouseLeave={() => setIsSlotHovered(false)}
             >
               <NavLink
                 to={"/slot"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>স্লট গেম</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                  style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSlotHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <div className="">
-                  <MegaMenu items={megaMenuSlot} />
-                </div>
+                <MegaMenu items={megaMenuSlot} />
               </div>
             </div>
 
-            {/* single table game menu */}
+            {/* Single table game menu */}
             <div
-              className=""
               onMouseEnter={() => setIsTableHovered(true)}
               onMouseLeave={() => setIsTableHovered(false)}
             >
               <NavLink
                 to={"/table-games"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>টেবিল গেম</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                  style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isTableHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -749,21 +756,21 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* single sports-book menu */}
+            {/* Single sports-book menu */}
             <div
-              className=""
               onMouseEnter={() => setIsSportHovered(true)}
               onMouseLeave={() => setIsSportHovered(false)}
             >
               <NavLink
                 to={"/sports-book"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>খেলার বই</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                  style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSportHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -773,21 +780,21 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* single fishing menu */}
+            {/* Single fishing menu */}
             <div
-              className=""
               onMouseEnter={() => setIsFishingHovered(true)}
               onMouseLeave={() => setIsFishingHovered(false)}
             >
               <NavLink
-                to={"/sports-book"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                to={"/fishing"}
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>মাছ ধরা</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                  style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isFishingHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -797,21 +804,21 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* single Crash menu */}
+            {/* Single Crash menu */}
             <div
-              className=""
               onMouseEnter={() => setIsCrashHovered(true)}
               onMouseLeave={() => setIsCrashHovered(false)}
             >
               <NavLink
                 to={"/crash"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
               >
                 <p>ক্র্যাশ</p>
               </NavLink>
-              {/* MegaMenu */}
               <div
-                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: `${backgroundColor}` }}
+
+                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCrashHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -821,36 +828,34 @@ const Navbar = () => {
               </div>
             </div>
 
-            {/* single promotion menu */}
+            {/* Single promotion menu */}
             <NavLink
               to={"/promotion"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
             >
               <p>প্রমোশন</p>
             </NavLink>
 
-            {/* single betting-pass menu */}
+            {/* Single betting-pass menu */}
             <NavLink
               to={"/betting-pass"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
             >
               <p>বেটিং পাস</p>
             </NavLink>
 
-            {/* single referral menu */}
+            {/* Single referral menu */}
             <NavLink
               to={"/referral"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
             >
               <p>সুপারিশ</p>
             </NavLink>
-
-            {/* Add other menu items */}
           </ul>
         </div>
       </div>
 
-      {/* মডাল */}
+      {/* Modal */}
       <Modal
         isOpen={isModalOpen}
         onOpenChange={handleModalClose}
@@ -859,14 +864,12 @@ const Navbar = () => {
         <div className="space-y-4">
           {modalData.map((item) => (
             <div key={item.id} className="flex gap-2 md:gap-6">
-              {/* মুদ্রা তথ্য */}
               <div className="flex items-center gap-1 md:gap-2 w-full">
                 <img className="w-10" src={item.flagSrc} alt={item.currency} />
                 <p className="text-sm md:text-base font-semibold text-gray-400">
                   {item.currencySymbol} {item.currency}
                 </p>
               </div>
-              {/* ভাষা বাটন */}
               {item.languages.map((language) => (
                 <button
                   key={language}

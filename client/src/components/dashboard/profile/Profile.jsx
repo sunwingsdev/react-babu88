@@ -7,7 +7,7 @@ const topbarData = [
   { label: "আমানত", route: "/profile/deposit" },
   { label: "উত্তোলন", route: "/profile/withdrawal" },
   { label: "ভাউচার", route: "/profile/voucher" },
-  { label: "বাজি ইতিহাস", route: "" },
+  { label: "বাজি ইতিহাস", route: "/profile/BettingHistory" },
   { label: "ইতিহাস", route: "/profile/history" },
   { label: "টার্নওভার ইতিহাস", route: "" },
   { label: "আমার প্রোফাইল", route: "" },

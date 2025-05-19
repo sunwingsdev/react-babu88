@@ -11,6 +11,7 @@ import qg from "@/assets/matches/qg.png";
 import rr from "@/assets/matches/rr.png";
 import uae from "@/assets/matches/uae.png";
 import bd from "@/assets/matches/bd.png";
+import { useSelector } from "react-redux";
 
 const Matches = () => {
   const matches = [
@@ -71,10 +72,15 @@ const Matches = () => {
       teamImage2: lq,
     },
   ];
+const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+
+
+
+
 
   return (
     <div
-      style={{ scrollbarWidth: "thin", scrollbarColor: "#ffce01 #f3f4f6" }}
+      style={{ scrollbarWidth: "thin", scrollbarColor: `${mainColor} #f3f4f6` }}
       className="flex  bg-white p-4 font-sans gap-6 overflow-x-auto "
     >
       {matches.map((match, index) => (
@@ -82,8 +88,12 @@ const Matches = () => {
           key={index}
           className="min-w-[280px] rounded-lg shadow-sm shadow-gray-500 pb-3 "
         >
-          <div className="bg-[#ffce01] flex items-center gap-2 p-2 rounded-t-lg text-sm">
-            <p className="bg-black px-1 text-white rounded-lg">Upcoming</p>
+          <div 
+          style={{ backgroundColor :backgroundColor }}
+          className="flex items-center gap-2 p-2 rounded-t-lg text-sm">
+            <p className="bg-black px-1 rounded-lg" 
+            style={{ color :mainColor }}
+            >Upcoming</p>
             <h2 className="font-medium">{match.league}</h2>
           </div>
           <div className="px-2 text-sm">
