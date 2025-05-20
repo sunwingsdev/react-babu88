@@ -28,6 +28,7 @@ const withdrawTransactionsApi = require("./apis/withdrawTransactionsApi/withdraw
 const gameApi = require("./apis/gameApi/gameApi");
 const adminDashboardApi = require("./apis/adminDashboardApi/adminDashboardApi");
 const featuresImageApi = require("./apis/featuresImageApi/featuresImageApi");
+const themeColorApi = require("./apis/themeColorApi/themeColorApi");
 
 const corsConfig = {
   origin: [
@@ -128,6 +129,9 @@ async function run() {
       .collection("depositTransactions");
     const gamesCollection = client.db("babu88").collection("games");
     const featuresImageCollection = client.db("babu88").collection("FeaturesImage");
+ const themeColorCollection = client.db("babu88").collection("ThemeColor");
+
+
 
     // APIs
     app.use(
@@ -205,6 +209,7 @@ async function run() {
       )
     ); // New router
         app.use("/features-image", featuresImageApi(featuresImageCollection));
+    app.use("/theme-color", themeColorApi(themeColorCollection));
 
 
     app.use("/games", gameApi(gamesCollection));

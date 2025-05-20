@@ -9,6 +9,7 @@ import SliderSelectionSection from "@/components/dashboard/SliderSelectionSectio
 import NoticeUploadSection from "@/components/dashboard/NoticeUploadSection";
 import NoticeSelectionSection from "@/components/dashboard/NoticeSelectionSection";
 import AddFeatures from "./AddFeatures";
+import AddColors from "./AddColors";
 // import NoticeSelectionSection from "../../components/dashboard/NoticeSelectionSection";
 // import NoticeUploadSection from "../../components/dashboard/NoticeUploadSection";
 // import SliderSelectionSection from "../../components/dashboard/SliderSelectionSection";
@@ -29,6 +30,7 @@ const HomeControl = () => {
       <NoticeUploadSection />
       <NoticeSelectionSection />
       <AddFeatures />
+      <AddColors />
     </div>
   );
 };

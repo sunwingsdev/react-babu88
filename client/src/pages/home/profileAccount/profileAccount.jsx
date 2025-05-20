@@ -4,10 +4,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
 import { TbCurrencyTaka } from "react-icons/tb";
+import { useToasts } from "react-toast-notifications";
+import { Link, useNavigate } from "react-router-dom";
+
+
 
 export default function ProfileAccount() {
+    const navigate = useNavigate();
   const [openAccordion, setOpenAccordion] = useState(null);
-
+  const { addToast } = useToasts();
   const toggleAccordion = (index) => {
     setOpenAccordion(openAccordion === index ? null : index);
   };
@@ -23,6 +28,15 @@ export default function ProfileAccount() {
   
     const getUserDataAgain = (props) => {
       if (props) {
+
+        triggerGetUserById(props);
+        if (!isError) {
+          addToast("Amount refreshed successfully", { appearance: "success" });
+        } else {
+          addToast("Failed to refresh user data", { appearance: "error" });
+        }
+
+
         triggerGetUserById(props);
       }
     };
@@ -44,27 +58,49 @@ export default function ProfileAccount() {
     {
       icon: <FaHistory />,
       label: "ইতিহাস",
-      subItems: ["বাজি ইতিহাস", "টার্নওভার ইতিহাস", "ওয়ালেট ইতিহাস"],
+      subItems: [
+        { label: "বাজি ইতিহাস", link: "/profile/BettingHistory" },
+        { label: "টার্নওভার ইতিহাস", link: "/history/turnover" },
+        { label: "ওয়ালেট ইতিহাস", link: "/profile/history" },
+      ],
     },
     {
       icon: <FaCalendarAlt />,
       label: "বিশেষ",
-      subItems: ["রেফারেল প্রোগ্রাম", "বেটিং পাস", "অ্যাফিলিয়েট"],
+      subItems: [
+        { label: "রেফারেল প্রোগ্রাম", link: "/special/referral" },
+        { label: "বেটিং পাস", link: "/special/betting-pass" },
+        { label: "অ্যাফিলিয়েট", link: "/special/affiliate" },
+      ],
     },
     {
       icon: <FaGift />,
       label: "পুরস্কার",
-      subItems: ["দাবি ভাউচার", "ভাগ্য ঘোরা", "দৈনিক চেক ইন", "রিওয়ার্ড স্টোর"],
+      subItems: [
+        { label: "দাবি ভাউচার", link: "/reward/claim-voucher" },
+        { label: "ভাগ্য ঘোরা", link: "/reward/lucky-wheel" },
+        { label: "দৈনিক চেক ইন", link: "/reward/daily-check-in" },
+        { label: "রিওয়ার্ড স্টোর", link: "/reward/store" },
+      ],
     },
     {
       icon: <FaBullhorn />,
       label: "সামাজিক যোগাযোগ মাধ্যম",
-      subItems: ["Facebook", "Telegram", "Twitter", "YouTube"],
+      subItems: [
+        { label: "Facebook", link: "https://www.facebook.com/" },
+        { label: "Telegram", link: "https://t.me/" },
+        { label: "Twitter", link: "https://twitter.com/" },
+        { label: "YouTube", link: "https://www.youtube.com/" },
+      ],
     },
     {
       icon: <FaCog />,
       label: "ব্যাংক বিবরণ",
-      subItems: ["প্রোফাইল", "ব্যাংক বিবরণ", "পাসওয়ার্ড পরিবর্তন করুন"],
+      subItems: [
+        { label: "প্রোফাইল", link: "/bank/profile" },
+        { label: "ব্যাংক বিবরণ", link: "/bank/details" },
+        { label: "পাসওয়ার্ড পরিবর্তন করুন", link: "/bank/change-password" },
+      ],
     },
   ];
 
@@ -77,7 +113,7 @@ export default function ProfileAccount() {
           {user.username}
         </div>
         <span className="flex items-center">
-          ট {userData?.balance || user?.balance}
+          ট    {(userData?.balance || user?.balance || 0).toLocaleString()}
           <motion.div
            // animate={isLoading ? { rotate: 0 } : { rotate: 360 }}
           //  transition={{ duration: 0.5, ease: "easeOut", repeat: Infinity }}
@@ -93,18 +129,26 @@ export default function ProfileAccount() {
           <IconWithLabel
             icon={<FaHome className="w-5 h-5" />}
             label="বেটিং পাশ"
+           navigate={navigate}
+            link="/"
           />
           <IconWithLabel
             icon={<FaGift className="w-5 h-5" />}
             label="পুরস্কার"
+      navigate={navigate}
+            link="/promotion"
           />
           <IconWithLabel
             icon={<FaUsers className="w-5 h-5" />}
             label="সুপারিশ"
+      navigate={navigate}
+            link="/referral"
           />
           <IconWithLabel
             icon={<TbCurrencyTaka className="w-5 h-5" />}
             label="উত্তোলন"
+             navigate={navigate}
+            link="/profile/withdrawal"
           />
         </div>
       </div>
@@ -176,8 +220,9 @@ export default function ProfileAccount() {
                       className=" p-1 my-3 text-sm text-gray-800 flex items-center justify-between cursor-pointer"
                       whileHover={{ x: 5, color: "#1f2937" }}
                       transition={{ duration: 0.2 }}
+                      onClick={() => navigate(subItem.link)}
                     >
-                      {subItem}
+                      {subItem.label}
                       <FaChevronRight className="ml-auto" />
                     </motion.li>
                   ))}
@@ -191,14 +236,14 @@ export default function ProfileAccount() {
   );
 }
 
-function IconWithLabel({ icon, label }) {
+function IconWithLabel({ icon, label ,link ,navigate}) {
   return (
     <motion.div
       className="flex flex-col items-center text-xs "
       whileHover={{ scale: 1.1 }}
       transition={{ duration: 0.2 }}
     >
-      <div className=" text-white bg-gray-800 rounded-lg p-3 mb-1 flex justify-center items-center">
+      <div onClick={() => navigate(link)}  className=" text-white bg-gray-800 rounded-lg p-3 mb-1 flex justify-center items-center">
         {icon}
       </div>
       <span>{label}</span>

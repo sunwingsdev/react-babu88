@@ -54,6 +54,8 @@ import BetsoftGamingApi from "@/components/dashboard/Dashboard-Page/GameAPI/Bets
 import AllUser from "@/components/dashboard/Dashboard-Page/Users/AllUser";
 import UserDetails from "@/components/dashboard/Dashboard-Page/Users/UserDetails";
 import ProfileAccount from "@/pages/home/profileAccount/profileAccount";
+import BettingHistory from "@/components/dashboard/profile/BettingHistory/BettingHistory";
+import WalletHistory from "@/components/dashboard/profile/WalletHistory/WalletHistory";
 
 const router = createBrowserRouter([
   {
@@ -159,6 +161,14 @@ const router = createBrowserRouter([
           {
             path: "history",
             element: <History />,
+          },
+          {
+            path: "BettingHistory",
+            element: <BettingHistory />,
+          },
+          {
+            path: "WalletHistory",
+            element: <WalletHistory />,
           },
           {
             path: "profileAccount",
