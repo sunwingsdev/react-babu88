@@ -12,6 +12,18 @@ export default function AnimationBanner() {
     major: 12037.73,
   });
 
+  // State for mobile version
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    // Check if mobile version
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent)) {
+      setIsMobile(true);
+    }
+  }, []); // Empty dependency array to run once on mount
+
+
   useEffect(() => {
     // Increment each jackpot by 0.01 every 100ms
     const interval = setInterval(() => {
@@ -29,9 +41,13 @@ export default function AnimationBanner() {
   // Format numbers with commas and 2 decimal places
   const formatNumber = (num) => num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+
+
+
   return (
     <div
       style={{
+        display: isMobile ? "block" : "none",
         position: "relative",
         width: "100%",
         maxWidth: "480px",
