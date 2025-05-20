@@ -94,10 +94,12 @@ const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
             <p className="bg-black px-1 rounded-lg" 
             style={{ color :mainColor }}
             >Upcoming</p>
-            <h2 className="font-medium">{match.league}</h2>
+            <h2      style={{ color :mainColor }} className="font-medium">{match.league}</h2>
           </div>
           <div className="px-2 text-sm">
-            <p className="text-[#959595] text-base py-1">{match.date}</p>
+            <p 
+            style={{ color :mainColor }}
+            className=" text-base py-1">{match.date}</p>
             <div className="flex items-center gap-2 mb-2">
               <img className="size-10" src={match?.teamImage1} alt="" />
               <p className="line-clamp-1">{match.team1}</p>

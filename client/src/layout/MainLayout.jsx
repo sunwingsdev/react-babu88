@@ -94,16 +94,16 @@ const MainLayout = () => {
         <div className="flex sticky bottom-0 w-full md:hidden z-50">
           <Link to={"/register"} className="w-1/2">
             <p
-              className="p-3 text-base text-center font-semibold text-black register-button"
-              style={{ backgroundColor: buttonBgColor }}
+              className="p-3 text-base text-center font-semibold register-button"
+              style={{ backgroundColor: backgroundColor , color:mainColor }}
             >
               নিবন্ধন করুন
             </p>
           </Link>
           <Link to={"/login"} className="w-1/2">
             <p
-              className="p-3 text-base text-center font-semibold text-white login-button"
-              style={{ backgroundColor: buttonBgColor }}
+              className="p-3 text-base text-center font-semibold  login-button"
+              style={{ backgroundColor: mainColor , color:backgroundColor }}
             >
               প্রবেশ করুন
             </p>

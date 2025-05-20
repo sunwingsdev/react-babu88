@@ -18,6 +18,9 @@ const Deposit = () => {
   const [userInputs, setUserInputs] = useState({}); // Store user input values
   const { addToast } = useToasts();
 
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
+
   const { user } = useSelector((state) => state.auth);
 
   // Fetch data on component mount
@@ -296,12 +299,14 @@ const Deposit = () => {
         <h1 className="text-lg font-semibold hidden md:block">আমানত</h1>
         <div className="grid grid-cols-2 bg-gray-700 rounded-t-xl md:hidden">
           <Link to={"/profile/deposit"}>
-            <div className="w-full p-2 text-yellow-300 text-center border-b-4 border-yellow-400">
+            <div className="w-full p-2 text-center border-b-4"
+            style={{borderColor:mainColor , color:mainColor}}
+            >
               আমানত
             </div>
           </Link>
           <Link to={"/profile/withdrawal"}>
-            <div className="w-full p-2 text-yellow-300 text-center">
+            <div className="w-full p-2  text-center"  style={{color:backgroundColor}}>
               উত্তোলন
             </div>
           </Link>

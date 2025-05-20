@@ -391,12 +391,12 @@ const Navbar = () => {
       <style>
         {`
           .nav-link:hover {
-            color: ${primaryColor};
+            color: ${mainColor};
             background-color: #424242;
-            border-bottom: 4px solid ${primaryColor};
+            border-bottom: 4px solid ${mainColor};
           }
           .login-button:hover {
-            background-color: ${primaryHoverColor};
+            background-color: ${darkenColor(mainColor, 0.1)};
           }
           .signup-button:hover {
             background-color: #2f9bff;
@@ -407,10 +407,10 @@ const Navbar = () => {
           .profile-button:hover,
           .notification-button:hover,
           .logout-button:hover {
-            background-color: ${primaryHoverColor};
+            background-color: ${darkenColor(mainColor, 0.1)};
           }
           .deposit-button:hover {
-            background-color: #0066cc;
+            background-color:  ${mainColor};
           }
         `}
       </style>
@@ -425,6 +425,8 @@ const Navbar = () => {
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
+
+              
               <SheetContent
                 className="bg-slate-50 text-gray-600 w-64 p-2"
                 side="left"
@@ -569,12 +571,12 @@ const Navbar = () => {
                 <div className="flex justify-center items-center gap-2 lg:gap-3">
                   <p className="text-lg font-bold">{user?.username}</p>
                   <Link to={"/profile"}>
-                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: primaryColor }}>
+                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: backgroundColor,color: mainColor }}>
                       <FaUser />
                     </div>
                   </Link>
                   <Link to={"/profile/inbox"} className="relative">
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: primaryColor }}>
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: backgroundColor,color: mainColor}}>
                       <IoMdNotifications />
                     </div>
                     <div className="absolute -top-1 -right-1 flex justify-center items-center w-5 h-5 text-xs text-white bg-blue-500 rounded-full">
@@ -585,7 +587,7 @@ const Navbar = () => {
                     <button
                       onClick={handleLogout}
                       className="flex justify-center items-center p-2.5 text-xl lg:text-2xl logout-button rounded-full"
-                      style={{ backgroundColor: primaryColor }}
+                      style={{backgroundColor: backgroundColor,color: mainColor }}
                     >
                       <RiLogoutCircleRFill />
                     </button>
@@ -603,7 +605,7 @@ const Navbar = () => {
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: "#0083FB" }}>
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: backgroundColor,color: mainColor }}>
                       <FaPlus />
                     </div>
                   </Link>
@@ -612,12 +614,12 @@ const Navbar = () => {
             ) : (
               <ul className="md:flex items-center gap-4 hidden">
                 <Link to={"/login"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor }}>
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor , color: backgroundColor }}>
                     প্রবেশ করুন
                   </li>
                 </Link>
                 <Link to={"/register"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: "#0083FB" }}>
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: backgroundColor , color: mainColor}}>
                     এখনি যোগদিন
                   </li>
                 </Link>

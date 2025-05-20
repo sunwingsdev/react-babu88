@@ -39,6 +39,7 @@ const HomeMobileButton = ({ image, title, isActive, onClick }) => {
       }`}
       style={{
         backgroundColor: isActive ? buttonBgColor : bannerBgColor,
+        color: isActive ? inactiveTextColor  : activeTextColor,
       }}
     >
       <style>
