@@ -48,10 +48,10 @@ const AppStrength = () => {
             </p>
           </div>
           <button
-            className="px-1 py-2 text-base rounded-md text-center text-black transition-all duration-500"
+            className="px-1 py-2 text-base rounded-md text-center transition-all duration-500"
             style={{
-              backgroundColor: buttonBgColor,
-              ":hover": { backgroundColor: buttonHoverBgColor },
+              backgroundColor: mainColor,
+              color: backgroundColor,
             }}
           >
             ডাউনলোড

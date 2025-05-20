@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaChevronRight, FaHistory, FaCalendarAlt, FaGift, FaBullhorn, FaCog, FaRedo, FaHome, FaUsers, FaEnvelope } from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, color } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
 import { TbCurrencyTaka } from "react-icons/tb";
@@ -16,6 +16,9 @@ export default function ProfileAccount() {
   const toggleAccordion = (index) => {
     setOpenAccordion(openAccordion === index ? null : index);
   };
+
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
 
 
 
@@ -60,7 +63,7 @@ export default function ProfileAccount() {
       label: "ইতিহাস",
       subItems: [
         { label: "বাজি ইতিহাস", link: "/profile/BettingHistory" },
-        { label: "টার্নওভার ইতিহাস", link: "/history/turnover" },
+        { label: "টার্নওভার ইতিহাস", link: "profile/BettingHistory" },
         { label: "ওয়ালেট ইতিহাস", link: "/profile/history" },
       ],
     },
@@ -68,19 +71,19 @@ export default function ProfileAccount() {
       icon: <FaCalendarAlt />,
       label: "বিশেষ",
       subItems: [
-        { label: "রেফারেল প্রোগ্রাম", link: "/special/referral" },
-        { label: "বেটিং পাস", link: "/special/betting-pass" },
-        { label: "অ্যাফিলিয়েট", link: "/special/affiliate" },
+        { label: "রেফারেল প্রোগ্রাম", link: "/profile/BettingHistory" },
+        { label: "বেটিং পাস", link: "/profile/BettingHistory" },
+        { label: "অ্যাফিলিয়েট", link: "/profile/BettingHistory" },
       ],
     },
     {
       icon: <FaGift />,
       label: "পুরস্কার",
       subItems: [
-        { label: "দাবি ভাউচার", link: "/reward/claim-voucher" },
-        { label: "ভাগ্য ঘোরা", link: "/reward/lucky-wheel" },
-        { label: "দৈনিক চেক ইন", link: "/reward/daily-check-in" },
-        { label: "রিওয়ার্ড স্টোর", link: "/reward/store" },
+        { label: "দাবি ভাউচার", link: "/profile/BettingHistory" },
+        { label: "ভাগ্য ঘোরা", link: "/profile/BettingHistory" },
+        { label: "দৈনিক চেক ইন", link: "/profile/BettingHistory" },
+        { label: "রিওয়ার্ড স্টোর", link: "/profile/BettingHistory" },
       ],
     },
     {
@@ -97,9 +100,9 @@ export default function ProfileAccount() {
       icon: <FaCog />,
       label: "ব্যাংক বিবরণ",
       subItems: [
-        { label: "প্রোফাইল", link: "/bank/profile" },
-        { label: "ব্যাংক বিবরণ", link: "/bank/details" },
-        { label: "পাসওয়ার্ড পরিবর্তন করুন", link: "/bank/change-password" },
+        { label: "প্রোফাইল", link: "/profile" },
+        { label: "ব্যাংক বিবরণ", link: "/profile" },
+        { label: "পাসওয়ার্ড পরিবর্তন করুন", link: "/profile" },
       ],
     },
   ];
@@ -127,28 +130,36 @@ export default function ProfileAccount() {
      
         <div className="flex space-x-4">
           <IconWithLabel
-            icon={<FaHome className="w-5 h-5" />}
+            icon={<FaHome className="w-5 h-5 " />}
             label="বেটিং পাশ"
-           navigate={navigate}
+            navigate={navigate}
             link="/"
+            bg={backgroundColor}
+            color={color}
           />
           <IconWithLabel
             icon={<FaGift className="w-5 h-5" />}
             label="পুরস্কার"
       navigate={navigate}
             link="/promotion"
+              bg={backgroundColor}
+            color={color}
           />
           <IconWithLabel
             icon={<FaUsers className="w-5 h-5" />}
             label="সুপারিশ"
       navigate={navigate}
             link="/referral"
+              bg={backgroundColor}
+            color={color}
           />
           <IconWithLabel
             icon={<TbCurrencyTaka className="w-5 h-5" />}
             label="উত্তোলন"
              navigate={navigate}
             link="/profile/withdrawal"
+              bg={backgroundColor}
+            color={color}
           />
         </div>
       </div>

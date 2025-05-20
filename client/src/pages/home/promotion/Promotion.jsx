@@ -1,8 +1,12 @@
 import Button from "@/components/shared/button/Button";
 import OfferCard from "@/components/shared/offerCard/OfferCard";
 import RouteChange from "@/components/shared/routeChange/RouteChange";
+import { useSelector } from "react-redux";
 
 const Promotion = () => {
+
+  const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
   const buttons = [
     {
       textName: "সব",
