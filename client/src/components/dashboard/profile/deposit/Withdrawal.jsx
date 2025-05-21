@@ -20,6 +20,10 @@ const Withdrawal = () => {
     amount: "",
     userInputs: [],
   });
+
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
+
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -248,10 +252,12 @@ const Withdrawal = () => {
         <h1 className="text-lg font-semibold hidden md:block">উত্তোলন</h1>
         <div className="grid grid-cols-2 bg-gray-700 rounded-t-xl md:hidden">
           <Link to={"/profile/deposit"}>
-            <div className="w-full p-2 text-yellow-300 text-center">আমানত</div>
+            <div className="w-full p-2  text-center" style={{color:backgroundColor}}>আমানত</div>
           </Link>
           <Link to={"/profile/withdrawal"}>
-            <div className="w-full p-2 text-yellow-300 text-center border-b-4 border-yellow-400">
+            <div className="w-full p-2  text-center border-b-4"
+               style={{borderColor:mainColor ,color:mainColor}}
+            >
               উত্তোলন
             </div>
           </Link>

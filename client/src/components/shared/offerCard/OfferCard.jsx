@@ -1,4 +1,10 @@
+import { useSelector } from "react-redux";
+
 const OfferCard = ({ cardImage, cardHeading, cardText, cardButton }) => {
+
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
+
   return (
     <div>
       <div className="p-5 sm:p-6 bg-slate-100 rounded-lg space-y-4">
@@ -6,11 +12,13 @@ const OfferCard = ({ cardImage, cardHeading, cardText, cardButton }) => {
         <h2 className="text-base lg:text-lg font-semibold">{cardHeading}</h2>
         <p className="text-sm lg:text-base">{cardText}</p>
         <div className="flex gap-4">
-          <button className="p-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all duration-300">
+          <button 
+          style={{color: mainColor , backgroundColor: backgroundColor }}
+          className="p-2 text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all duration-300">
             আরও পড়ুন
           </button>
           {cardButton && (
-            <button className="p-2 text-black bg-yellow-400 hover:bg-yellow-500 rounded-lg transition-all duration-300">
+            <button  style={{backgroundColor: mainColor , color: backgroundColor }} className="p-2 text-black bg-yellow-400 hover:bg-yellow-500 rounded-lg transition-all duration-300">
               {cardButton}
             </button>
           )}

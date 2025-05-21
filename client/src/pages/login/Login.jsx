@@ -4,7 +4,7 @@ import {
 } from "@/redux/features/allApis/usersApi/usersApi";
 import { logout, setCredentials } from "@/redux/slices/authSlice";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 
@@ -14,6 +14,9 @@ const Login = () => {
   const dispatch = useDispatch();
   const { addToast } = useToasts();
   const navigate = useNavigate();
+
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
 
   const [formData, setFormData] = useState({
     username: "",
@@ -111,7 +114,8 @@ const Login = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="text-base text-black bg-[#FFCD03] hover:bg-[#e5be22] transition-all duration-500 focus:outline-none font-medium rounded-lg w-full px-5 py-2.5 text-center"
+              style={{ backgroundColor: backgroundColor , color: mainColor }}
+              className="text-base text-black transition-all duration-500 focus:outline-none font-medium rounded-lg w-full px-5 py-2.5 text-center"
             >
               {isLoading ? "অপেক্ষা করুন..." : "প্রবেশ করুন"}
             </button>

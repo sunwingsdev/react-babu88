@@ -19,46 +19,68 @@ import { logout } from "@/redux/slices/authSlice";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
 import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
 import hotIcon from "@/assets/images/hot-icon.png";
+import promotion from "@/assets/icons/promotion.svg";
+import rewards from "@/assets/icons/rewards.svg";
+import referAndEarn from "@/assets/icons/referAndEarn.svg";
+import bettingPass from "@/assets/icons/bettingPass.svg";
+import bpass_ipl_icon from "@/assets/icons/bpass_ipl_icon.svg";
+import agentAff from "@/assets/icons/agentAff.svg";
+import cricket from "@/assets/icons/cricket.svg";
+import ld from "@/assets/icons/ld.svg";
+import rng from "@/assets/icons/rng.svg";
+import table from "@/assets/icons/table.svg";
+import sb from "@/assets/icons/sb.svg";
+import fishing from "@/assets/icons/fishing.svg";
+import crash from "@/assets/icons/crash.svg";
+import fastgames from "@/assets/icons/fastgames.svg";
+import language from "@/assets/icons/language.svg";
+import faq from "@/assets/icons/faq.svg";
+import liveChat from "@/assets/icons/liveChat.svg";
+import downloadApp from "@/assets/icons/downloadApp.svg";
+import logoutImage from "@/assets/icons/logout.svg";
+import bdFlag from "@/assets/icons/bdFlag.png";
+import inrFlag from "@/assets/icons/INR.svg";
+import nprFlag from "@/assets/icons/NPR.svg";
 
 const data = [
   {
     id: 1,
-    image: "https://www.babu88.app/static/svg/mobileMenu/promotion.svg",
+    image: promotion,
     title: "প্রমোশন",
     route: "/promotion",
     badge: "",
   },
   {
     id: 2,
-    image: "https://www.babu88.app/static/svg/mobileMenu/rewards.svg",
+    image: rewards,
     title: "পুরস্কার",
     route: "/profile/rewards",
     badge: "new",
   },
   {
     id: 3,
-    image: "https://www.babu88.app/static/svg/mobileMenu/referAndEarn.svg",
+    image: referAndEarn,
     title: "রেফারেল প্রোগ্রাম",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 4,
-    image: "https://www.babu88.app/static/svg/mobileMenu/bettingPass.svg",
+    image: bettingPass,
     title: "বেটিং পাস",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 5,
-    image: "https://www.babu88.app/static/svg/mobileMenu/bpass_ipl_icon.svg",
+    image: bpass_ipl_icon,
     title: "IPL 2025 বেটিং পাস",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 6,
-    image: "https://www.babu88.app/static/svg/mobileMenu/agentAff.svg",
+    image: agentAff,
     title: "অ্যাফিলিয়েট",
     route: "/profile/rewards",
     badge: "",
@@ -68,56 +90,56 @@ const data = [
 const gamesData = [
   {
     id: 1,
-    image: "https://www.babu88.app/static/svg/mobileMenu/cricket.svg",
+    image: cricket,
     title: " ক্রিকেট",
     route: "/cricket",
     badge: "",
   },
   {
     id: 2,
-    image: "https://www.babu88.app/static/svg/mobileMenu/ld.svg",
+    image: ld,
     title: " ক্যাসিনো",
     route: "/cricket",
     badge: "",
   },
   {
     id: 3,
-    image: "https://www.babu88.app/static/svg/mobileMenu/rng.svg",
+    image: rng,
     title: " স্লট গেম",
     route: "/cricket",
     badge: "",
   },
   {
     id: 4,
-    image: "https://www.babu88.app/static/svg/mobileMenu/table.svg",
+    image: table,
     title: " টেবিল গেম",
     route: "/cricket",
     badge: "",
   },
   {
     id: 5,
-    image: "https://www.babu88.app/static/svg/mobileMenu/sb.svg",
+    image: sb,
     title: "খেলার বই",
     route: "/cricket",
     badge: "",
   },
   {
     id: 6,
-    image: "https://www.babu88.app/static/svg/mobileMenu/fishing.svg",
+    image: fishing,
     title: "মাছ ধরা",
     route: "/cricket",
     badge: "",
   },
   {
     id: 7,
-    image: "https://www.babu88.app/static/svg/mobileMenu/crash.svg",
+    image: crash,
     title: "ক্র্যাশ",
     route: "/cricket",
     badge: "new",
   },
   {
     id: 8,
-    image: "https://www.babu88.app/static/svg/mobileMenu/fastgames.svg",
+    image: fastgames,
     title: "দ্রুতগতির গেমস",
     route: "/cricket",
     badge: "",
@@ -127,7 +149,9 @@ const gamesData = [
 const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
   const { user, token } = useSelector((state) => state.auth);
-  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+  const { mainColor, backgroundColor } = useSelector(
+    (state) => state.themeColor
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addToast } = useToasts();
@@ -153,11 +177,13 @@ const Navbar = () => {
   const megaMenuCricket = [
     {
       route: "/cricket",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
     },
     {
       route: "/cricket",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
     },
   ];
   // Casino
@@ -172,7 +198,8 @@ const Navbar = () => {
     },
     {
       route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
     },
     {
       route: "/casino",
@@ -239,11 +266,13 @@ const Navbar = () => {
     },
     {
       route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
     },
     {
       route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
     },
     {
       route: "/slot",
@@ -251,18 +280,21 @@ const Navbar = () => {
     },
     {
       route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
     },
   ];
   // Table-games
   const megaMenuTable = [
     {
       route: "/table-games",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
     },
     {
       route: "/table-games",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
     },
     {
       route: "/table-games",
@@ -280,22 +312,26 @@ const Navbar = () => {
   const megaMenuFishing = [
     {
       route: "/fishing",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
     },
     {
       route: "/fishing",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
     },
   ];
   // Crash
   const megaMenuCrash = [
     {
       route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
     },
     {
       route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
     },
     {
       route: "/crash",
@@ -303,15 +339,18 @@ const Navbar = () => {
     },
     {
       route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
     },
     {
       route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
     },
     {
       route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
     },
   ];
 
@@ -320,21 +359,21 @@ const Navbar = () => {
       id: 1,
       currency: "BDT",
       currencySymbol: "৳",
-      flagSrc: "https://www.babu88.app/static/image/country/BDT.svg",
+      flagSrc: bdFlag,
       languages: ["ENGLISH", "BENGALI"],
     },
     {
       id: 2,
       currency: "INR",
       currencySymbol: "₹",
-      flagSrc: "https://www.babu88.app/static/image/country/INR.svg",
+      flagSrc: inrFlag,
       languages: ["ENGLISH", "HINDI"],
     },
     {
       id: 3,
       currency: "NPR",
       currencySymbol: "₨",
-      flagSrc: "https://www.babu88.app/static/image/country/NPR.svg",
+      flagSrc: nprFlag,
       languages: ["ENGLISH", "NEPALESE"],
     },
   ];
@@ -391,12 +430,12 @@ const Navbar = () => {
       <style>
         {`
           .nav-link:hover {
-            color: ${primaryColor};
+            color: ${mainColor};
             background-color: #424242;
-            border-bottom: 4px solid ${primaryColor};
+            border-bottom: 4px solid ${mainColor};
           }
           .login-button:hover {
-            background-color: ${primaryHoverColor};
+            background-color: ${darkenColor(mainColor, 0.1)};
           }
           .signup-button:hover {
             background-color: #2f9bff;
@@ -407,10 +446,10 @@ const Navbar = () => {
           .profile-button:hover,
           .notification-button:hover,
           .logout-button:hover {
-            background-color: ${primaryHoverColor};
+            background-color: ${darkenColor(mainColor, 0.1)};
           }
           .deposit-button:hover {
-            background-color: #0066cc;
+            background-color:  ${mainColor};
           }
         `}
       </style>
@@ -425,6 +464,7 @@ const Navbar = () => {
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
+
               <SheetContent
                 className="bg-slate-50 text-gray-600 w-64 p-2"
                 side="left"
@@ -433,7 +473,9 @@ const Navbar = () => {
                   <div className="w-40">
                     <Link to={"/"}>
                       <img
-                        src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
+                        src={`${import.meta.env.VITE_BASE_API_URL}${
+                          logo?.image
+                        }`}
                         alt="Logo"
                       />
                     </Link>
@@ -444,12 +486,20 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex items-center justify-start gap-3 mt-4 text-xs font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img className="w-6" src={item.image} alt={item.title} />
+                          <img
+                            className="w-6"
+                            src={item.image}
+                            alt={item.title}
+                          />
                           <p className="text-black">{item.title}</p>
                           {item?.badge &&
                             (item?.badge === "hot" ? (
                               <div className="w-8 animate-pulse">
-                                <img className="w-full" src={hotIcon} alt="Hot" />
+                                <img
+                                  className="w-full"
+                                  src={hotIcon}
+                                  alt="Hot"
+                                />
                               </div>
                             ) : (
                               <button className="animate-pulse rounded-full w-8 bg-[#04B22B] text-white">
@@ -467,7 +517,11 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img className="w-6" src={item.image} alt={item.title} />
+                          <img
+                            className="w-6"
+                            src={item.image}
+                            alt={item.title}
+                          />
                           <p className="text-black">{item.title}</p>
                           {item?.badge && (
                             <button className="animate-pulse rounded-full w-10 py-1 bg-[#04B22B] text-white">
@@ -487,11 +541,7 @@ const Navbar = () => {
                         onClick={handleModalOpen}
                         className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
                       >
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
-                          alt="Language"
-                        />
+                        <img className="w-4" src={language} alt="Language" />
                         <p className="text-black"> ভাষা</p>
                       </li>
                     </Link>
@@ -499,23 +549,18 @@ const Navbar = () => {
                   <SheetClose asChild>
                     <Link to={"/faq"}>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
-                          alt="FAQ"
-                        />
-                        <p className="text-black"> প্রায়শই জিজ্ঞাসিত প্রশ্নাবল</p>
+                        <img className="w-4" src={faq} alt="FAQ" />
+                        <p className="text-black">
+                          {" "}
+                          প্রায়শই জিজ্ঞাসিত প্রশ্নাবল
+                        </p>
                       </li>
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
                     <Link to={"/faq"}>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
-                          alt="Live Chat"
-                        />
+                        <img className="w-4" src={liveChat} alt="Live Chat" />
                         <p className="text-black"> সরাসরি কথোপকথন</p>
                       </li>
                     </Link>
@@ -525,7 +570,7 @@ const Navbar = () => {
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
                         <img
                           className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/downloadApp.svg"
+                          src={downloadApp}
                           alt="Download App"
                         />
                         <p className="text-black">ডাউনলোড করুন</p>
@@ -538,11 +583,7 @@ const Navbar = () => {
                         onClick={handleLogout}
                         className="flex gap-4 mt-10 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
                       >
-                        <img
-                          className="w-4"
-                          src="https://babo88.com/static/svg/mobileMenu/logout.svg"
-                          alt="Logout"
-                        />
+                        <img className="w-4" src={logoutImage} alt="Logout" />
                         <p className="text-black">প্রস্থান</p>
                       </li>
                     </SheetClose>
@@ -569,12 +610,24 @@ const Navbar = () => {
                 <div className="flex justify-center items-center gap-2 lg:gap-3">
                   <p className="text-lg font-bold">{user?.username}</p>
                   <Link to={"/profile"}>
-                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: primaryColor }}>
+                    <div
+                      className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full"
+                      style={{
+                        backgroundColor: backgroundColor,
+                        color: mainColor,
+                      }}
+                    >
                       <FaUser />
                     </div>
                   </Link>
                   <Link to={"/profile/inbox"} className="relative">
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: primaryColor }}>
+                    <div
+                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full"
+                      style={{
+                        backgroundColor: backgroundColor,
+                        color: mainColor,
+                      }}
+                    >
                       <IoMdNotifications />
                     </div>
                     <div className="absolute -top-1 -right-1 flex justify-center items-center w-5 h-5 text-xs text-white bg-blue-500 rounded-full">
@@ -585,7 +638,10 @@ const Navbar = () => {
                     <button
                       onClick={handleLogout}
                       className="flex justify-center items-center p-2.5 text-xl lg:text-2xl logout-button rounded-full"
-                      style={{ backgroundColor: primaryColor }}
+                      style={{
+                        backgroundColor: backgroundColor,
+                        color: mainColor,
+                      }}
                     >
                       <RiLogoutCircleRFill />
                     </button>
@@ -599,11 +655,23 @@ const Navbar = () => {
                       onClick={() => user && getUserDataAgain(user._id)}
                     >
                       <TbCurrencyTaka />
-                      <p>{(userData?.balance || user?.balance || 0).toLocaleString()}</p>
+                      <p>
+                        {(
+                          userData?.balance ||
+                          user?.balance ||
+                          0
+                        ).toLocaleString()}
+                      </p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: "#0083FB" }}>
+                    <div
+                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full"
+                      style={{
+                        backgroundColor: backgroundColor,
+                        color: mainColor,
+                      }}
+                    >
                       <FaPlus />
                     </div>
                   </Link>
@@ -612,12 +680,24 @@ const Navbar = () => {
             ) : (
               <ul className="md:flex items-center gap-4 hidden">
                 <Link to={"/login"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor }}>
+                  <li
+                    className="text-sm font-semibold px-3 py-2 rounded-lg login-button"
+                    style={{
+                      backgroundColor: primaryColor,
+                      color: backgroundColor,
+                    }}
+                  >
                     প্রবেশ করুন
                   </li>
                 </Link>
                 <Link to={"/register"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: "#0083FB" }}>
+                  <li
+                    className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button"
+                    style={{
+                      backgroundColor: backgroundColor,
+                      color: mainColor,
+                    }}
+                  >
                     এখনি যোগদিন
                   </li>
                 </Link>
@@ -633,10 +713,7 @@ const Navbar = () => {
               >
                 <div className="flex items-center">
                   <div className="w-6 md:w-7">
-                    <img
-                      src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-bangladesh-flag-icon-in-modern-neomorphism-style-png-image_4872074.png"
-                      alt="BD flag"
-                    />
+                    <img src={bdFlag} alt="BD flag" />
                   </div>
                   <FaCaretDown />
                 </div>
@@ -647,7 +724,10 @@ const Navbar = () => {
       </div>
 
       {/* Bottom navbar */}
-      <div className="md:flex hidden relative" style={{ backgroundColor: navBackgroundColor }}>
+      <div
+        className="md:flex hidden relative"
+        style={{ backgroundColor: navBackgroundColor }}
+      >
         <div className="container mx-auto px-4">
           <ul className="flex whitespace-nowrap overflow-x-auto">
             {/* Single menu */}
@@ -672,8 +752,7 @@ const Navbar = () => {
                 <p>ক্রিকেট</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: `${backgroundColor}` }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isHovered
                     ? "translate-y-0 opacity-100"
@@ -696,8 +775,7 @@ const Navbar = () => {
                 <p>ক্যাসিনো</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: `${backgroundColor}` }}
                 className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCasinoHovered
                     ? "translate-y-0 opacity-100"
@@ -720,8 +798,7 @@ const Navbar = () => {
                 <p>স্লট গেম</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: `${backgroundColor}` }}
                 className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSlotHovered
                     ? "translate-y-0 opacity-100"
@@ -744,8 +821,7 @@ const Navbar = () => {
                 <p>টেবিল গেম</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: `${backgroundColor}` }}
                 className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isTableHovered
                     ? "translate-y-0 opacity-100"
@@ -768,8 +844,7 @@ const Navbar = () => {
                 <p>খেলার বই</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: `${backgroundColor}` }}
                 className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSportHovered
                     ? "translate-y-0 opacity-100"
@@ -792,8 +867,7 @@ const Navbar = () => {
                 <p>মাছ ধরা</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: `${backgroundColor}` }}
                 className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isFishingHovered
                     ? "translate-y-0 opacity-100"
@@ -817,7 +891,6 @@ const Navbar = () => {
               </NavLink>
               <div
                 style={{ backgroundColor: `${backgroundColor}` }}
-
                 className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCrashHovered
                     ? "translate-y-0 opacity-100"

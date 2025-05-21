@@ -85,6 +85,7 @@ const GameUpload = () => {
       subcategory: formData.subcategory,
       image: filePath,
       link: formData.link,
+      badge: formData.badge,
     };
 
     const result = await addGame(info);
@@ -228,8 +229,8 @@ const GameUpload = () => {
             >
               <option value="">Select a subcategory</option>
               {filteredSubcategories.map((subcategory) => (
-                <option key={subcategory._id} value={subcategory._id}>
-                  {subcategory.name}
+                <option key={subcategory._id} value={subcategory.value}>
+                  {subcategory.title}
                 </option>
               ))}
             </select>

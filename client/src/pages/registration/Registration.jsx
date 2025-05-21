@@ -1,10 +1,15 @@
 import { useAddUserMutation } from "@/redux/features/allApis/usersApi/usersApi";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useToasts } from "react-toast-notifications";
 
 const Registration = () => {
+
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+
+
   const [addUser, { isLoading }] = useAddUserMutation();
   const {
     register,
@@ -201,7 +206,10 @@ const Registration = () => {
                 <button
                   type="button"
                   onClick={reloadVerificationCode}
-                  className="ml-2 p-2 bg-[#FFCD03] rounded-lg hover:bg-[#e5be22] transition-all duration-500"
+                  className="ml-2 p-2  rounded-lg  transition-all duration-500"
+                  style={{ backgroundColor: mainColor , color: backgroundColor }}
+
+
                 >
                   রিলোড
                 </button>
@@ -231,6 +239,7 @@ const Registration = () => {
               disabled={isLoading}
               type="submit"
               className="text-base text-black bg-[#FFCD03] hover:bg-[#e5be22] transition-all duration-500 focus:outline-none font-medium rounded-lg w-full px-5 py-2.5 text-center"
+               style={{ backgroundColor: backgroundColor , color: mainColor }}
             >
               {isLoading ? "অপেক্ষা করুন..." : "নিবন্ধন"}
             </button>
