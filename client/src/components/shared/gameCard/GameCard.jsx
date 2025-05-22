@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import hotIcon from "@/assets/images/hot-icon.png";
 import newIcon from "@/assets/images/game-icon-new.svg";
+import { useSelector } from "react-redux";
 
 const GameCard = ({
   gameCardImg,
@@ -10,6 +11,12 @@ const GameCard = ({
   headingCenter,
   demoId,
 }) => {
+
+
+
+ const { user, token } = useSelector((state) => state.auth);
+
+
   return (
     <div className="">
       <div className="relative group overflow-hidden ">
@@ -25,6 +32,7 @@ const GameCard = ({
             <img
               className="filter-none grayscale hover:filter "
               src={"https://www.babu88.app/static/svg/play_btn.svg"}
+             
               alt=""
             />
           </Link>

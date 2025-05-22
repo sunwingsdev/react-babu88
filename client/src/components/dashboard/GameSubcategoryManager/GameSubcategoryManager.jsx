@@ -9,6 +9,8 @@ const GameSubcategoryManager = () => {
   const [formData, setFormData] = useState({
     image: null,
     imagePreview: null,
+    iconImage: null,
+    iconImagePreview: null,
     category: "",
     value: "",
     title: "",
@@ -27,13 +29,13 @@ const GameSubcategoryManager = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "image") {
+    if (name === "image" || name === "iconImage") {
       const file = files[0];
       if (file) {
         setFormData({
           ...formData,
-          image: file,
-          imagePreview: URL.createObjectURL(file),
+          [name]: file,
+          [name === "image" ? "imagePreview" : "iconImagePreview"]: URL.createObjectURL(file),
         });
       }
     } else {
@@ -43,9 +45,11 @@ const GameSubcategoryManager = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { filePath } = await uploadImage(formData.image);
+    const { filePath: imagePath } = await uploadImage(formData.image);
+    const { filePath: iconImagePath } = await uploadImage(formData.iconImage);
     const info = {
-      image: filePath,
+      image: imagePath,
+      iconImage: iconImagePath,
       category: formData.category,
       value: formData.value,
       title: formData.title,
@@ -65,6 +69,8 @@ const GameSubcategoryManager = () => {
       setFormData({
         image: null,
         imagePreview: null,
+        iconImage: null,
+        iconImagePreview: null,
         category: "",
         value: "",
         title: "",
@@ -73,7 +79,7 @@ const GameSubcategoryManager = () => {
   };
 
   return (
-    <div className="md:w-1/4 w-full bg-white rounded-2xl shadow-xl ">
+    <div className="md:w-1/4 w-full bg-white rounded-2xl shadow-xl p-6">
       <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
         🎮 Add Game Subcategory
       </h2>
@@ -94,12 +100,41 @@ const GameSubcategoryManager = () => {
                 accept="image/*"
                 onChange={handleChange}
                 className="hidden"
+                required
               />
             </label>
             {formData.imagePreview && (
               <img
                 src={formData.imagePreview}
                 alt="Preview"
+                className="h-16 w-16 rounded object-cover border border-gray-200"
+              />
+            )}
+          </div>
+        </div>
+
+        {/* Icon Image Upload with Preview */}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">
+            Subcategory Icon Image
+          </label>
+          <div className="flex items-center gap-4">
+            <label className="cursor-pointer flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 text-sm text-gray-600 rounded-md hover:bg-gray-50 transition">
+              <FiUpload className="text-lg" />
+              Upload Icon Image
+              <input
+                type="file"
+                name="iconImage"
+                accept="image/*"
+                onChange={handleChange}
+                className="hidden"
+                required
+              />
+            </label>
+            {formData.iconImagePreview && (
+              <img
+                src={formData.iconImagePreview}
+                alt="Icon Preview"
                 className="h-16 w-16 rounded object-cover border border-gray-200"
               />
             )}
@@ -171,7 +206,8 @@ const GameSubcategoryManager = () => {
               !formData.category ||
               !formData.value ||
               !formData.title ||
-              !formData.image
+              !formData.image ||
+              !formData.iconImage
             }
             className="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition shadow-sm disabled:bg-slate-400"
           >

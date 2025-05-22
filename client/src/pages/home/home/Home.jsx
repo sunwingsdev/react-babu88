@@ -31,7 +31,6 @@ const Home = () => {
   const [isMobile, setIsMobile] = useState(false);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
-
   // Check if device is mobile
   useEffect(() => {
     const handleResize = () => {
@@ -152,8 +151,8 @@ const Home = () => {
         <AnimationBanner />
 
         {/* Games Grid */}
-        <div className="pt-4 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-          {filteredGames?.map((game) => (
+        <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
+          {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
             <GameCard
               key={game._id}
               gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game?.image}`}

@@ -36,6 +36,10 @@ const GameUpload = () => {
   ];
 
   const handleInputChange = (e) => {
+
+    console.log(e.target.value);
+    
+
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -87,6 +91,9 @@ const GameUpload = () => {
       link: formData.link,
       badge: formData.badge,
     };
+
+    console.log("this is info => ",info);
+    
 
     const result = await addGame(info);
 
@@ -229,7 +236,11 @@ const GameUpload = () => {
             >
               <option value="">Select a subcategory</option>
               {filteredSubcategories.map((subcategory) => (
+<<<<<<< HEAD
                 <option key={subcategory._id} value={subcategory.value}>
+=======
+                <option key={subcategory._id} value={subcategory?.title}>
+>>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   {subcategory.title}
                 </option>
               ))}

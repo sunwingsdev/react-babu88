@@ -5,8 +5,6 @@ const { ObjectId } = require("mongodb");
 const themeColorApi = (themeColorCollection) => {
   const router = express.Router();
 
-
-
   // Initialize theme color document
   router.post("/init", async (req, res) => {
     try {
@@ -17,6 +15,7 @@ const themeColorApi = (themeColorCollection) => {
       const newDoc = {
         mainColor: "",
         backgroundColor: "",
+        textColor: "#fff",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -49,7 +48,7 @@ const themeColorApi = (themeColorCollection) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-    if (!["mainColor", "backgroundColor"].includes(field) || !color) {
+    if (!["mainColor", "backgroundColor", "textColor"].includes(field) || !color) {
       return res.status(400).json({ error: "Valid field and color are required" });
     }
     if (!/^#[0-9A-F]{6}$/i.test(color)) {
@@ -76,7 +75,7 @@ const themeColorApi = (themeColorCollection) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-    if (!["mainColor", "backgroundColor"].includes(field)) {
+    if (!["mainColor", "backgroundColor", "textColor"].includes(field)) {
       return res.status(400).json({ error: "Invalid field" });
     }
     try {
