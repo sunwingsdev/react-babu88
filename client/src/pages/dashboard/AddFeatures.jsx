@@ -4,10 +4,11 @@ import { FaTrash, FaUpload } from "react-icons/fa";
 
 export default function AddFeatures() {
   const { addToast } = useToasts();
-  const [images, setImages] = useState({ features: "", download: "", publish: "" });
+  const [images, setImages] = useState({ features: "", download: "", publish: "", desktop: "" });
+  const [apkFile, setApkFile] = useState("");
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState({ features: false, download: false, publish: false });
-  const [docId, setDocId] = useState(null);
+  const [uploading, setUploading] = useState({ features: false, download: false, publish: false, desktop: false });
+  const [docId, setDocId] = useState(null); // docId স্টেট যোগ করা হয়েছে
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
   // Fetch existing images or initialize document
@@ -23,7 +24,6 @@ export default function AddFeatures() {
         if (!response.ok) {
           const errorData = await response.json();
           if (errorData.error === "No images found") {
-            // Initialize document
             const initResponse = await fetch(`${baseURL}/features-image/init`, {
               method: "POST",
               headers: {
@@ -36,7 +36,8 @@ export default function AddFeatures() {
             }
             const initData = await initResponse.json();
             setDocId(initData.id);
-            setImages({ features: "", download: "", publish: "" });
+            setImages({ features: "", download: "", publish: "", desktop: "" });
+            setApkFile("");
           } else {
             throw new Error(errorData.error || "Failed to fetch images");
           }
@@ -46,7 +47,9 @@ export default function AddFeatures() {
             features: data.features || "",
             download: data.download || "",
             publish: data.publish || "",
+            desktop: data.desktop || "",
           });
+          setApkFile(data.downloadApk || "");
           setDocId(data._id || null);
         }
       } catch (err) {
@@ -59,18 +62,17 @@ export default function AddFeatures() {
     fetchImages();
   }, [addToast, baseURL]);
 
-  // Handle image upload
-  const handleImageUpload = async (e, field) => {
+  // Handle image or APK upload
+  const handleFileUpload = async (e, field, isApk = false) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const formData = new FormData();
-    formData.append("image", file);
+    formData.append(isApk ? "apk" : "image", file);
 
     setUploading((prev) => ({ ...prev, [field]: true }));
     try {
-      // Upload image
-      const uploadResponse = await fetch(`${baseURL}/upload`, {
+      const uploadResponse = await fetch(`${baseURL}/features-image/upload${isApk ? "-apk" : ""}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -79,26 +81,29 @@ export default function AddFeatures() {
       });
       if (!uploadResponse.ok) {
         const errorData = await uploadResponse.json();
-        throw new Error(errorData.error || "Failed to upload image");
+        throw new Error(errorData.error || `Failed to upload ${isApk ? "APK" : "image"}`);
       }
       const uploadData = await uploadResponse.json();
-      const imageLink = uploadData.filePath;
+      const fileLink = uploadData.filePath;
 
-      // Update specific field
       const updateResponse = await fetch(`${baseURL}/features-image/${docId}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ field, imageLink }),
+        body: JSON.stringify({ field, fileLink }),
       });
       if (!updateResponse.ok) {
         const errorData = await updateResponse.json();
-        throw new Error(errorData.error || "Failed to update image");
+        throw new Error(errorData.error || "Failed to update file");
       }
-      setImages((prev) => ({ ...prev, [field]: imageLink }));
-      addToast("Image uploaded successfully", { appearance: "success", autoDismiss: true });
+      if (isApk) {
+        setApkFile(fileLink);
+      } else {
+        setImages((prev) => ({ ...prev, [field]: fileLink }));
+      }
+      addToast(`${isApk ? "APK" : "Image"} uploaded successfully`, { appearance: "success", autoDismiss: true });
     } catch (err) {
       console.error("Upload error:", err);
       addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
@@ -107,8 +112,8 @@ export default function AddFeatures() {
     }
   };
 
-  // Handle image delete
-  const handleDelete = async (field) => {
+  // Handle image or APK delete
+  const handleDelete = async (field, isApk = false) => {
     if (!docId) return;
     try {
       const response = await fetch(`${baseURL}/features-image/${docId}/${field}`, {
@@ -120,10 +125,14 @@ export default function AddFeatures() {
       });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to delete image");
+        throw new Error(errorData.error || `Failed to delete ${isApk ? "APK" : "image"}`);
       }
-      setImages((prev) => ({ ...prev, [field]: "" }));
-      addToast("Image deleted successfully", { appearance: "success", autoDismiss: true });
+      if (isApk) {
+        setApkFile("");
+      } else {
+        setImages((prev) => ({ ...prev, [field]: "" }));
+      }
+      addToast(`${isApk ? "APK" : "Image"} deleted successfully`, { appearance: "success", autoDismiss: true });
     } catch (err) {
       console.error("Delete error:", err);
       addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
@@ -141,8 +150,41 @@ export default function AddFeatures() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {["features", "download", "publish"].map((field) => (
+            {["features", "download", "publish", "desktop"].map((field) => (
               <div key={field} className="border border-[#14805e] p-2 rounded-md relative">
+                <label className="block text-sm font-medium text-gray-700 capitalize mb-2">
+                  {field} {field === "download" ? "Image/APK" : "Image"}
+                </label>
+                {field === "download" && (
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Download APK</label>
+                    {apkFile ? (
+                      <div className="flex items-center gap-4">
+                        <a href={`${baseURL}${apkFile}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                          View APK
+                        </a>
+                        <button
+                          onClick={() => handleDelete("downloadApk", true)}
+                          className="p-2 rounded-full bg-red-600 hover:bg-white duration-200"
+                        >
+                          <FaTrash className="text-xl text-white group-hover:text-red-600 duration-200" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="cursor-pointer flex flex-col items-center">
+                        <FaUpload className="text-2xl text-gray-500" />
+                        <span className="text-sm text-gray-600 mt-2">Upload APK</span>
+                        <input
+                          type="file"
+                          accept=".apk"
+                          className="hidden"
+                          onChange={(e) => handleFileUpload(e, "downloadApk", true)}
+                          disabled={uploading.download || !docId}
+                        />
+                      </label>
+                    )}
+                  </div>
+                )}
                 {images[field] ? (
                   <>
                     <img
@@ -166,7 +208,7 @@ export default function AddFeatures() {
                         type="file"
                         accept="image/*"
                         className="hidden"
-                        onChange={(e) => handleImageUpload(e, field)}
+                        onChange={(e) => handleFileUpload(e, field)}
                         disabled={uploading[field] || !docId}
                       />
                     </label>

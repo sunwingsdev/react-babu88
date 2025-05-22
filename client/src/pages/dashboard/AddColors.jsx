@@ -4,9 +4,9 @@ import { FaTrash, FaSave } from "react-icons/fa";
 
 export default function AddColors() {
   const { addToast } = useToasts();
-  const [colors, setColors] = useState({ mainColor: "", backgroundColor: "" });
+  const [colors, setColors] = useState({ mainColor: "", backgroundColor: "", textColor: "" });
   const [loading, setLoading] = useState(false);
-  const [updating, setUpdating] = useState({ mainColor: false, backgroundColor: false });
+  const [updating, setUpdating] = useState({ mainColor: false, backgroundColor: false, textColor: false });
   const [docId, setDocId] = useState(null);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
@@ -36,7 +36,7 @@ export default function AddColors() {
             }
             const initData = await initResponse.json();
             setDocId(initData.id);
-            setColors({ mainColor: "", backgroundColor: "" });
+            setColors({ mainColor: "", backgroundColor: "", textColor: "" });
           } else {
             throw new Error(errorData.error || "Failed to fetch colors");
           }
@@ -45,6 +45,7 @@ export default function AddColors() {
           setColors({
             mainColor: data.mainColor || "",
             backgroundColor: data.backgroundColor || "",
+            textColor: data.textColor || "",
           });
           setDocId(data._id || null);
         }
@@ -124,7 +125,7 @@ export default function AddColors() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {["mainColor", "backgroundColor"].map((field) => (
+            {["mainColor", "backgroundColor", "textColor"].map((field) => (
               <div key={field} className="border border-[#14805e] p-4 rounded-md relative">
                 <label className="block text-sm font-medium text-gray-700 capitalize mb-2">
                   {field.replace("Color", " Color")}

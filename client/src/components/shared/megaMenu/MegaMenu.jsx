@@ -1,8 +1,19 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 const MegaMenu = ({ items }) => {
   const { backgroundColor, mainColor } = useSelector((state) => state.themeColor);
+
+
+  useEffect(()=>{
+
+    console.log("this is itesm -> ",items)
+
+  },[items])
+
+
+
 
   // Fallback colors
   const menuBackgroundColor = backgroundColor || "#333333";

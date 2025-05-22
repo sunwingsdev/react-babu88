@@ -18,6 +18,7 @@ export const fetchThemeColors = createAsyncThunk(
       return {
         mainColor: data.mainColor || "",
         backgroundColor: data.backgroundColor || "",
+        textColor: data.textColor || "",
       };
     } catch (err) {
       return rejectWithValue(err.message || "Network error");
@@ -28,6 +29,7 @@ export const fetchThemeColors = createAsyncThunk(
 const initialState = {
   mainColor: "#EAB308",
   backgroundColor: "#333333",
+  textColor: "#fff",
   loading: false,
   error: null,
 };
@@ -42,9 +44,13 @@ const themeColorSlice = createSlice({
     setBackgroundColor: (state, action) => {
       state.backgroundColor = action.payload;
     },
+    setTextColor: (state, action) => {
+      state.textColor = action.payload;
+    },
     resetColors: (state) => {
       state.mainColor = "";
       state.backgroundColor = "";
+      state.textColor = "";
     },
   },
   extraReducers: (builder) => {
@@ -57,6 +63,7 @@ const themeColorSlice = createSlice({
         state.loading = false;
         state.mainColor = action.payload.mainColor;
         state.backgroundColor = action.payload.backgroundColor;
+        state.textColor = action.payload.textColor;
       })
       .addCase(fetchThemeColors.rejected, (state, action) => {
         state.loading = false;
@@ -65,5 +72,5 @@ const themeColorSlice = createSlice({
   },
 });
 
-export const { setMainColor, setBackgroundColor, resetColors } = themeColorSlice.actions;
+export const { setMainColor, setBackgroundColor, setTextColor, resetColors } = themeColorSlice.actions;
 export default themeColorSlice.reducer;

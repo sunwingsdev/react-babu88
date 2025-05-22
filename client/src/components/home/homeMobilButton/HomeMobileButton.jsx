@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 
 const HomeMobileButton = ({ image, title, isActive, onClick }) => {
-  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+  const { mainColor, backgroundColor , textColor } = useSelector((state) => state.themeColor);
 
   // Utility to darken a hex color for hover effect
   const darkenColor = (hex, amount) => {
@@ -39,7 +39,7 @@ const HomeMobileButton = ({ image, title, isActive, onClick }) => {
       }`}
       style={{
         backgroundColor: isActive ? buttonBgColor : bannerBgColor,
-        color: isActive ? inactiveTextColor  : activeTextColor,
+        color: textColor,
       }}
     >
       <style>
