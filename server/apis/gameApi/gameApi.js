@@ -50,6 +50,8 @@ const gameApi = (gamesCollection) => {
     res.send(result);
   });
 
+
+
   router.patch("/:id", async (req, res) => {
     const { id } = req.params;
     const gameData = req.body;

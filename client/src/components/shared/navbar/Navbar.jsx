@@ -18,6 +18,7 @@ import { useToasts } from "react-toast-notifications";
 import { logout } from "@/redux/slices/authSlice";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
 import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
+import { useGetCategoriesQuery } from "@/redux/features/allApis/categoriesApi/categoriesApi";
 import hotIcon from "@/assets/images/hot-icon.png";
 
 const data = [
@@ -69,50 +70,50 @@ const gamesData = [
   {
     id: 1,
     image: "https://www.babu88.app/static/svg/mobileMenu/cricket.svg",
-    title: " ক্রিকেট",
+    title: "ক্রিকেট",
     route: "/cricket",
     badge: "",
   },
   {
     id: 2,
     image: "https://www.babu88.app/static/svg/mobileMenu/ld.svg",
-    title: " ক্যাসিনো",
-    route: "/cricket",
+    title: "ক্যাসিনো",
+    route: "/casino",
     badge: "",
   },
   {
     id: 3,
     image: "https://www.babu88.app/static/svg/mobileMenu/rng.svg",
-    title: " স্লট গেম",
-    route: "/cricket",
+    title: "স্লট গেম",
+    route: "/slot",
     badge: "",
   },
   {
     id: 4,
     image: "https://www.babu88.app/static/svg/mobileMenu/table.svg",
-    title: " টেবিল গেম",
-    route: "/cricket",
+    title: "টেবিল গেম",
+    route: "/table-games",
     badge: "",
   },
   {
     id: 5,
     image: "https://www.babu88.app/static/svg/mobileMenu/sb.svg",
     title: "খেলার বই",
-    route: "/cricket",
+    route: "/sports-book",
     badge: "",
   },
   {
     id: 6,
     image: "https://www.babu88.app/static/svg/mobileMenu/fishing.svg",
     title: "মাছ ধরা",
-    route: "/cricket",
+    route: "/fishing",
     badge: "",
   },
   {
     id: 7,
     image: "https://www.babu88.app/static/svg/mobileMenu/crash.svg",
     title: "ক্র্যাশ",
-    route: "/cricket",
+    route: "/crash",
     badge: "new",
   },
   {
@@ -126,6 +127,7 @@ const gamesData = [
 
 const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
+  const { data: categories = [], isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { user, token } = useSelector((state) => state.auth);
   const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
   const dispatch = useDispatch();
@@ -135,6 +137,7 @@ const Navbar = () => {
   // Fallback colors
   const navBackgroundColor = backgroundColor || "#333333";
   const primaryColor = mainColor || "#FFCD03";
+
   // Utility to darken a hex color for hover effect
   const _darkenColor = (hex, amount) => {
     let color = hex.replace("#", "");
@@ -146,174 +149,28 @@ const Navbar = () => {
   };
 
   const darkenColor = (hex, amount) => _darkenColor(hex, amount);
-
   const primaryHoverColor = mainColor ? darkenColor(mainColor, 0.1) : "#e5be22";
 
-  // Cricket
-  const megaMenuCricket = [
-    {
-      route: "/cricket",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
-    },
-    {
-      route: "/cricket",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
-    },
-  ];
-  // Casino
-  const megaMenuCasino = [
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/evo_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/pp_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/royal_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/ezugi_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/pt_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/aura_new.png",
-    },
-  ];
-  // Slot
-  const megaMenuSlot = [
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/jili_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pp_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/haba_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pg_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/spg_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pt_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/rt_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/png_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/smart_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/jdb_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/one_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/relax_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
-    },
-  ];
-  // Table-games
-  const megaMenuTable = [
-    {
-      route: "/table-games",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
-    },
-    {
-      route: "/table-games",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
-    },
-    {
-      route: "/table-games",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/spg_new.png",
-    },
-  ];
-  // Sport
-  const megaMenuSportBook = [
-    {
-      route: "/sports-book",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/sb/ibc_new.png",
-    },
-  ];
-  // Fishing
-  const megaMenuFishing = [
-    {
-      route: "/fishing",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
-    },
-    {
-      route: "/fishing",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
-    },
-  ];
-  // Crash
-  const megaMenuCrash = [
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
-    },
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
-    },
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/pp_new.png",
-    },
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
-    },
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
-    },
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
-    },
-  ];
+  // Dynamic mega menu data
+  const getMegaMenuData = (category) => {
+    return categories
+      .filter((cat) => cat.category === category)
+      .map((cat) => ({
+        route: category === "sb" ? "/sports-book" : category === "table" ? "/table-games" : `/${category}`,
+        image: `${import.meta.env.VITE_BASE_API_URL}${cat?.image}`,
+        title: cat.title,
+      }));
+  };
+
+  const megaMenuData = {
+    cricket:getMegaMenuData("cricket"), // No data in provided MongoDB for cricket
+    casino: getMegaMenuData("casino"),
+    slot: getMegaMenuData("slot"), // No data in provided MongoDB for slot
+    table: getMegaMenuData("table"), // No data in provided MongoDB for table
+    sports_book: getMegaMenuData("sb"),
+    fishing: getMegaMenuData("fishing"), // No data in provided MongoDB for fishing
+    crash: getMegaMenuData("casino"), // No data in provided MongoDB for crash
+  };
 
   const modalData = [
     {
@@ -410,7 +267,7 @@ const Navbar = () => {
             background-color: ${darkenColor(mainColor, 0.1)};
           }
           .deposit-button:hover {
-            background-color:  ${mainColor};
+            background-color: ${mainColor};
           }
         `}
       </style>
@@ -425,8 +282,6 @@ const Navbar = () => {
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
-
-              
               <SheetContent
                 className="bg-slate-50 text-gray-600 w-64 p-2"
                 side="left"
@@ -465,6 +320,7 @@ const Navbar = () => {
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Games</p>
                   </div>
+                  
                   {gamesData?.map((item) => (
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
@@ -494,7 +350,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
                           alt="Language"
                         />
-                        <p className="text-black"> ভাষা</p>
+                        <p className="text-black">ভাষা</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -506,7 +362,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
                           alt="FAQ"
                         />
-                        <p className="text-black"> প্রায়শই জিজ্ঞাসিত প্রশ্নাবল</p>
+                        <p className="text-black">প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -518,7 +374,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
                           alt="Live Chat"
                         />
-                        <p className="text-black"> সরাসরি কথোপকথন</p>
+                        <p className="text-black">সরাসরি কথোপকথন</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -571,12 +427,12 @@ const Navbar = () => {
                 <div className="flex justify-center items-center gap-2 lg:gap-3">
                   <p className="text-lg font-bold">{user?.username}</p>
                   <Link to={"/profile"}>
-                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: backgroundColor,color: mainColor }}>
+                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
                       <FaUser />
                     </div>
                   </Link>
                   <Link to={"/profile/inbox"} className="relative">
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: backgroundColor,color: mainColor}}>
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
                       <IoMdNotifications />
                     </div>
                     <div className="absolute -top-1 -right-1 flex justify-center items-center w-5 h-5 text-xs text-white bg-blue-500 rounded-full">
@@ -587,7 +443,7 @@ const Navbar = () => {
                     <button
                       onClick={handleLogout}
                       className="flex justify-center items-center p-2.5 text-xl lg:text-2xl logout-button rounded-full"
-                      style={{backgroundColor: backgroundColor,color: mainColor }}
+                      style={{ backgroundColor: backgroundColor, color: mainColor }}
                     >
                       <RiLogoutCircleRFill />
                     </button>
@@ -605,7 +461,7 @@ const Navbar = () => {
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: backgroundColor,color: mainColor }}>
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
                       <FaPlus />
                     </div>
                   </Link>
@@ -614,12 +470,12 @@ const Navbar = () => {
             ) : (
               <ul className="md:flex items-center gap-4 hidden">
                 <Link to={"/login"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor , color: backgroundColor }}>
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor, color: backgroundColor }}>
                     প্রবেশ করুন
                   </li>
                 </Link>
                 <Link to={"/register"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: backgroundColor , color: mainColor}}>
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: backgroundColor, color: mainColor }}>
                     এখনি যোগদিন
                   </li>
                 </Link>
@@ -674,15 +530,14 @@ const Navbar = () => {
                 <p>ক্রিকেট</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
+                style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuCricket} />
+                <MegaMenu items={megaMenuData.cricket} />
               </div>
             </div>
 
@@ -698,15 +553,14 @@ const Navbar = () => {
                 <p>ক্যাসিনো</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: backgroundColor }}
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCasinoHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuCasino} />
+                <MegaMenu items={megaMenuData.casino} />
               </div>
             </div>
 
@@ -722,15 +576,14 @@ const Navbar = () => {
                 <p>স্লট গেম</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: backgroundColor }}
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSlotHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuSlot} />
+                <MegaMenu items={megaMenuData.slot} />
               </div>
             </div>
 
@@ -746,15 +599,14 @@ const Navbar = () => {
                 <p>টেবিল গেম</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: backgroundColor }}
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isTableHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuTable} />
+                <MegaMenu items={megaMenuData.table} />
               </div>
             </div>
 
@@ -770,15 +622,14 @@ const Navbar = () => {
                 <p>খেলার বই</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: backgroundColor }}
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSportHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuSportBook} />
+                <MegaMenu items={megaMenuData.sports_book} />
               </div>
             </div>
 
@@ -794,15 +645,14 @@ const Navbar = () => {
                 <p>মাছ ধরা</p>
               </NavLink>
               <div
-                  style={{ backgroundColor: `${backgroundColor}` }}
-
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: backgroundColor }}
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isFishingHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuFishing} />
+                <MegaMenu items={megaMenuData.fishing} />
               </div>
             </div>
 
@@ -818,15 +668,14 @@ const Navbar = () => {
                 <p>ক্র্যাশ</p>
               </NavLink>
               <div
-                style={{ backgroundColor: `${backgroundColor}` }}
-
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                style={{ backgroundColor: backgroundColor }}
+                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCrashHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuCrash} />
+                <MegaMenu items={megaMenuData.crash} />
               </div>
             </div>
 
