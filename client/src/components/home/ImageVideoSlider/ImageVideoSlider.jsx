@@ -3,32 +3,17 @@ import { useToasts } from "react-toast-notifications";
 
 const ImageVideoSlider = () => {
   const { addToast } = useToasts();
-  const slides = [
-    {
-      id: 1,
-      videoId: "https://youtu.be/UwnS-ATONek",
-    },
-    {
-      id: 2,
-      videoId: "https://youtu.be/dQw4w9WgXcQ",
-    },
-    {
-      id: 3,
-      videoId: "https://youtu.be/example3",
-    },
-    {
-      id: 4,
-      videoId: "https://youtu.be/example4",
-    },
-  ];
-
+  const [slides, setSlides] = useState([]);
+  const [featuresImage, setFeaturesImage] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(true);
-  const [featuresImage, setFeaturesImage] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
-  // Fetch features image
+  // Fallback image
+  const fallbackImage = "https://via.placeholder.com/800x320?text=No+Image";
+
+  // Fetch featuresImageMobile data
   useEffect(() => {
     const fetchFeaturesImage = async () => {
       setLoading(true);
@@ -43,11 +28,19 @@ const ImageVideoSlider = () => {
           throw new Error(errorData.error || "Failed to fetch features image");
         }
         const data = await response.json();
-        setFeaturesImage(data.features || "");
+        const mobileData = data.featuresImageMobile || { image: "", links: [] };
+        setFeaturesImage(mobileData.image ? `${baseURL}${mobileData.image}` : "");
+        // Map links to slides
+        const formattedSlides = mobileData.links.map((link, index) => ({
+          id: index + 1,
+          videoId: link || "",
+        }));
+        setSlides(formattedSlides);
       } catch (err) {
         console.error("Fetch error:", err);
         addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
         setFeaturesImage("");
+        setSlides([]);
       } finally {
         setLoading(false);
       }
@@ -57,6 +50,7 @@ const ImageVideoSlider = () => {
 
   // Auto-rotate every 5 seconds
   useEffect(() => {
+    if (slides.length === 0) return; // Skip if no slides
     const interval = setInterval(() => {
       setFade(false);
       setTimeout(() => {
@@ -84,7 +78,7 @@ const ImageVideoSlider = () => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
-  const currentSlide = slides[currentIndex];
+  const currentSlide = slides[currentIndex] || { id: 1, videoId: "" };
 
   return (
     <div className="relative w-full max-w-4xl mx-auto md:hidden">
@@ -95,11 +89,12 @@ const ImageVideoSlider = () => {
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : featuresImage ? (
-          <div className={`transition-opacity duration-300`}>
+          <div className={`transition-opacity duration-300 ${fade ? "opacity-100" : "opacity-90"}`}>
             <img
-              className="w-full  rounded-t-xl"
-              src={`${baseURL}${featuresImage}`}
+              className="w-full h-64 object-cover rounded-t-xl"
+              src={featuresImage}
               alt={`Slide ${currentSlide.id}`}
+              onError={(e) => (e.target.src = fallbackImage)} // Fallback on image error
             />
           </div>
         ) : (
@@ -109,18 +104,20 @@ const ImageVideoSlider = () => {
         )}
 
         {/* Navigation buttons positioned at bottom-left of image */}
-        <div className="absolute bottom-2 left-2 flex space-x-2">
-          {slides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                currentIndex === index ? "bg-yellow-500" : "bg-white"
-              }`}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+        {slides.length > 0 && (
+          <div className="absolute bottom-2 left-2 flex space-x-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  currentIndex === index ? "bg-yellow-500" : "bg-white"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Video section (bottom) */}
@@ -129,17 +126,23 @@ const ImageVideoSlider = () => {
           fade ? "opacity-100" : "opacity-0"
         }`}
       >
-        {currentSlide.videoId && (
-          <div className="aspect-w-16 aspect-h-9 rounded-xl">
+        {slides.length === 0 ? (
+          <div className="w-full h-64 flex items-center justify-center bg-gray-900 rounded-xl">
+            <p className="text-gray-400 text-sm">No videos available</p>
+          </div>
+        ) : currentSlide.videoId && extractYouTubeId(currentSlide.videoId) ? (
+          <div className="aspect-w-16 aspect-h-9">
             <iframe
               className="w-full h-64 rounded-xl"
-              src={`https://www.youtube.com/embed/${extractYouTubeId(
-                currentSlide.videoId
-              )}`}
+              src={`https://www.youtube.com/embed/${extractYouTubeId(currentSlide.videoId)}`}
               title={`YouTube video ${currentSlide.id}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             ></iframe>
+          </div>
+        ) : (
+          <div className="w-full h-64 flex items-center justify-center bg-gray-900 rounded-xl">
+            <p className="text-gray-400 text-sm">Invalid or no video available</p>
           </div>
         )}
       </div>

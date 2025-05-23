@@ -236,11 +236,7 @@ const GameUpload = () => {
             >
               <option value="">Select a subcategory</option>
               {filteredSubcategories.map((subcategory) => (
-<<<<<<< HEAD
-                <option key={subcategory._id} value={subcategory.value}>
-=======
-                <option key={subcategory._id} value={subcategory?.title}>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
+                <option key={subcategory._id} value={subcategory?.value}>
                   {subcategory.title}
                 </option>
               ))}

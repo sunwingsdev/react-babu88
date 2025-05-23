@@ -47,7 +47,8 @@ const featuresImageApi = (featuresImageCollection) => {
         return res.status(400).json({ error: "Features image document already exists" });
       }
       const newDoc = {
-        features: "",
+        featuresImageMobile: { image: "", links: [] },
+        featuresImageDesktop: [],
         download: "",
         downloadApk: "",
         publish: "",
@@ -100,25 +101,25 @@ const featuresImageApi = (featuresImageCollection) => {
     });
   });
 
-  // Update a specific image or APK
+  // Update a specific field
   router.put("/:id", async (req, res) => {
     const { id } = req.params;
-    const { field, fileLink } = req.body;
+    const updateData = req.body;
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-    if (!["features", "download", "downloadApk", "publish", "desktop"].includes(field) || !fileLink) {
-      return res.status(400).json({ error: "Valid field and file link are required" });
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: "Update data is required" });
     }
     try {
       const result = await featuresImageCollection.updateOne(
         { _id: new ObjectId(id) },
-        { $set: { [field]: fileLink, updatedAt: new Date() } }
+        { $set: { ...updateData, updatedAt: new Date() } }
       );
       if (result.matchedCount === 0) {
         return res.status(404).json({ error: "Document not found" });
       }
-      res.status(200).json({ message: `${field === "downloadApk" ? "APK" : "Image"} updated successfully` });
+      res.status(200).json({ message: "Updated successfully" });
     } catch (err) {
       console.error("Error in PUT /features-image:", err);
       res.status(500).json({ error: "Server error" });
@@ -131,7 +132,7 @@ const featuresImageApi = (featuresImageCollection) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-    if (!["features", "download", "downloadApk", "publish", "desktop"].includes(field)) {
+    if (!["featuresImageMobile", "download", "downloadApk", "publish", "desktop"].includes(field)) {
       return res.status(400).json({ error: "Invalid field" });
     }
     try {
@@ -139,13 +140,21 @@ const featuresImageApi = (featuresImageCollection) => {
       if (!doc) {
         return res.status(404).json({ error: "Document not found" });
       }
-      const filePath = doc[field];
+      let filePath;
+      if (field === "featuresImageMobile") {
+        filePath = doc.featuresImageMobile.image;
+      } else {
+        filePath = doc[field];
+      }
       if (filePath) {
         await deleteFile(filePath);
       }
+      const updateData = field === "featuresImageMobile"
+        ? { featuresImageMobile: { image: "", links: doc.featuresImageMobile.links } }
+        : { [field]: "" };
       const result = await featuresImageCollection.updateOne(
         { _id: new ObjectId(id) },
-        { $set: { [field]: "", updatedAt: new Date() } }
+        { $set: { ...updateData, updatedAt: new Date() } }
       );
       if (result.matchedCount === 0) {
         return res.status(404).json({ error: "Document not found" });
