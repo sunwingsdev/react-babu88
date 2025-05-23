@@ -20,68 +20,46 @@ import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi
 import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
 import { useGetCategoriesQuery } from "@/redux/features/allApis/categoriesApi/categoriesApi";
 import hotIcon from "@/assets/images/hot-icon.png";
-import promotion from "@/assets/icons/promotion.svg";
-import rewards from "@/assets/icons/rewards.svg";
-import referAndEarn from "@/assets/icons/referAndEarn.svg";
-import bettingPass from "@/assets/icons/bettingPass.svg";
-import bpass_ipl_icon from "@/assets/icons/bpass_ipl_icon.svg";
-import agentAff from "@/assets/icons/agentAff.svg";
-import cricket from "@/assets/icons/cricket.svg";
-import ld from "@/assets/icons/ld.svg";
-import rng from "@/assets/icons/rng.svg";
-import table from "@/assets/icons/table.svg";
-import sb from "@/assets/icons/sb.svg";
-import fishing from "@/assets/icons/fishing.svg";
-import crash from "@/assets/icons/crash.svg";
-import fastgames from "@/assets/icons/fastgames.svg";
-import language from "@/assets/icons/language.svg";
-import faq from "@/assets/icons/faq.svg";
-import liveChat from "@/assets/icons/liveChat.svg";
-import downloadApp from "@/assets/icons/downloadApp.svg";
-import logoutImage from "@/assets/icons/logout.svg";
-import bdFlag from "@/assets/icons/bdFlag.png";
-import inrFlag from "@/assets/icons/INR.svg";
-import nprFlag from "@/assets/icons/NPR.svg";
 
 const data = [
   {
     id: 1,
-    image: promotion,
+    image: "https://www.babu88.app/static/svg/mobileMenu/promotion.svg",
     title: "প্রমোশন",
     route: "/promotion",
     badge: "",
   },
   {
     id: 2,
-    image: rewards,
+    image: "https://www.babu88.app/static/svg/mobileMenu/rewards.svg",
     title: "পুরস্কার",
     route: "/profile/rewards",
     badge: "new",
   },
   {
     id: 3,
-    image: referAndEarn,
+    image: "https://www.babu88.app/static/svg/mobileMenu/referAndEarn.svg",
     title: "রেফারেল প্রোগ্রাম",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 4,
-    image: bettingPass,
+    image: "https://www.babu88.app/static/svg/mobileMenu/bettingPass.svg",
     title: "বেটিং পাস",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 5,
-    image: bpass_ipl_icon,
+    image: "https://www.babu88.app/static/svg/mobileMenu/bpass_ipl_icon.svg",
     title: "IPL 2025 বেটিং পাস",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 6,
-    image: agentAff,
+    image: "https://www.babu88.app/static/svg/mobileMenu/agentAff.svg",
     title: "অ্যাফিলিয়েট",
     route: "/profile/rewards",
     badge: "",
@@ -91,79 +69,56 @@ const data = [
 const gamesData = [
   {
     id: 1,
-<<<<<<< HEAD
-    image: cricket,
-    title: " ক্রিকেট",
-=======
     image: "https://www.babu88.app/static/svg/mobileMenu/cricket.svg",
     title: "ক্রিকেট",
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
     route: "/cricket",
     badge: "",
   },
   {
     id: 2,
-<<<<<<< HEAD
-    image: ld,
-    title: " ক্যাসিনো",
-    route: "/cricket",
-=======
     image: "https://www.babu88.app/static/svg/mobileMenu/ld.svg",
     title: "ক্যাসিনো",
     route: "/casino",
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
     badge: "",
   },
   {
     id: 3,
-<<<<<<< HEAD
-    image: rng,
-    title: " স্লট গেম",
-    route: "/cricket",
-=======
     image: "https://www.babu88.app/static/svg/mobileMenu/rng.svg",
     title: "স্লট গেম",
     route: "/slot",
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
     badge: "",
   },
   {
     id: 4,
-<<<<<<< HEAD
-    image: table,
-    title: " টেবিল গেম",
-    route: "/cricket",
-=======
     image: "https://www.babu88.app/static/svg/mobileMenu/table.svg",
     title: "টেবিল গেম",
     route: "/table-games",
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
     badge: "",
   },
   {
     id: 5,
-    image: sb,
+    image: "https://www.babu88.app/static/svg/mobileMenu/sb.svg",
     title: "খেলার বই",
     route: "/sports-book",
     badge: "",
   },
   {
     id: 6,
-    image: fishing,
+    image: "https://www.babu88.app/static/svg/mobileMenu/fishing.svg",
     title: "মাছ ধরা",
     route: "/fishing",
     badge: "",
   },
   {
     id: 7,
-    image: crash,
+    image: "https://www.babu88.app/static/svg/mobileMenu/crash.svg",
     title: "ক্র্যাশ",
     route: "/crash",
     badge: "new",
   },
   {
     id: 8,
-    image: fastgames,
+    image: "https://www.babu88.app/static/svg/mobileMenu/fastgames.svg",
     title: "দ্রুতগতির গেমস",
     route: "/cricket",
     badge: "",
@@ -174,9 +129,7 @@ const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
   const { data: categories = [], isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { user, token } = useSelector((state) => state.auth);
-  const { mainColor, backgroundColor } = useSelector(
-    (state) => state.themeColor
-  );
+  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addToast } = useToasts();
@@ -198,188 +151,6 @@ const Navbar = () => {
   const darkenColor = (hex, amount) => _darkenColor(hex, amount);
   const primaryHoverColor = mainColor ? darkenColor(mainColor, 0.1) : "#e5be22";
 
-<<<<<<< HEAD
-  // Cricket
-  const megaMenuCricket = [
-    {
-      route: "/cricket",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
-    },
-    {
-      route: "/cricket",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
-    },
-  ];
-  // Casino
-  const megaMenuCasino = [
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/evo_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/pp_new.png",
-    },
-    {
-      route: "/casino",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/royal_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/ezugi_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/pt_new.png",
-    },
-    {
-      route: "/casino",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/aura_new.png",
-    },
-  ];
-  // Slot
-  const megaMenuSlot = [
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/jili_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pp_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/haba_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pg_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/spg_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pt_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/rt_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/png_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/smart_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/jdb_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/one_new.png",
-    },
-    {
-      route: "/slot",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
-    },
-    {
-      route: "/slot",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
-    },
-    {
-      route: "/slot",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/relax_new.png",
-    },
-    {
-      route: "/slot",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
-    },
-  ];
-  // Table-games
-  const megaMenuTable = [
-    {
-      route: "/table-games",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
-    },
-    {
-      route: "/table-games",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
-    },
-    {
-      route: "/table-games",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/spg_new.png",
-    },
-  ];
-  // Sport
-  const megaMenuSportBook = [
-    {
-      route: "/sports-book",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/sb/ibc_new.png",
-    },
-  ];
-  // Fishing
-  const megaMenuFishing = [
-    {
-      route: "/fishing",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
-    },
-    {
-      route: "/fishing",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
-    },
-  ];
-  // Crash
-  const megaMenuCrash = [
-    {
-      route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
-    },
-    {
-      route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
-    },
-    {
-      route: "/crash",
-      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/pp_new.png",
-    },
-    {
-      route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
-    },
-    {
-      route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
-    },
-    {
-      route: "/crash",
-      image:
-        "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
-    },
-  ];
-=======
   // Dynamic mega menu data
   const getMegaMenuData = (category) => {
     return categories
@@ -400,28 +171,27 @@ const Navbar = () => {
     fishing: getMegaMenuData("fishing"), // No data in provided MongoDB for fishing
     crash: getMegaMenuData("casino"), // No data in provided MongoDB for crash
   };
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
 
   const modalData = [
     {
       id: 1,
       currency: "BDT",
       currencySymbol: "৳",
-      flagSrc: bdFlag,
+      flagSrc: "https://www.babu88.app/static/image/country/BDT.svg",
       languages: ["ENGLISH", "BENGALI"],
     },
     {
       id: 2,
       currency: "INR",
       currencySymbol: "₹",
-      flagSrc: inrFlag,
+      flagSrc: "https://www.babu88.app/static/image/country/INR.svg",
       languages: ["ENGLISH", "HINDI"],
     },
     {
       id: 3,
       currency: "NPR",
       currencySymbol: "₨",
-      flagSrc: nprFlag,
+      flagSrc: "https://www.babu88.app/static/image/country/NPR.svg",
       languages: ["ENGLISH", "NEPALESE"],
     },
   ];
@@ -512,10 +282,6 @@ const Navbar = () => {
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
-<<<<<<< HEAD
-
-=======
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
               <SheetContent
                 className="bg-slate-50 text-gray-600 w-64 p-2"
                 side="left"
@@ -524,9 +290,7 @@ const Navbar = () => {
                   <div className="w-40">
                     <Link to={"/"}>
                       <img
-                        src={`${import.meta.env.VITE_BASE_API_URL}${
-                          logo?.image
-                        }`}
+                        src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
                         alt="Logo"
                       />
                     </Link>
@@ -537,20 +301,12 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex items-center justify-start gap-3 mt-4 text-xs font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img
-                            className="w-6"
-                            src={item.image}
-                            alt={item.title}
-                          />
+                          <img className="w-6" src={item.image} alt={item.title} />
                           <p className="text-black">{item.title}</p>
                           {item?.badge &&
                             (item?.badge === "hot" ? (
                               <div className="w-8 animate-pulse">
-                                <img
-                                  className="w-full"
-                                  src={hotIcon}
-                                  alt="Hot"
-                                />
+                                <img className="w-full" src={hotIcon} alt="Hot" />
                               </div>
                             ) : (
                               <button className="animate-pulse rounded-full w-8 bg-[#04B22B] text-white">
@@ -569,11 +325,7 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img
-                            className="w-6"
-                            src={item.image}
-                            alt={item.title}
-                          />
+                          <img className="w-6" src={item.image} alt={item.title} />
                           <p className="text-black">{item.title}</p>
                           {item?.badge && (
                             <button className="animate-pulse rounded-full w-10 py-1 bg-[#04B22B] text-white">
@@ -593,54 +345,36 @@ const Navbar = () => {
                         onClick={handleModalOpen}
                         className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
                       >
-<<<<<<< HEAD
-                        <img className="w-4" src={language} alt="Language" />
-                        <p className="text-black"> ভাষা</p>
-=======
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
                           alt="Language"
                         />
                         <p className="text-black">ভাষা</p>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                       </li>
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
                     <Link to={"/faq"}>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-<<<<<<< HEAD
-                        <img className="w-4" src={faq} alt="FAQ" />
-                        <p className="text-black">
-                          {" "}
-                          প্রায়শই জিজ্ঞাসিত প্রশ্নাবল
-                        </p>
-=======
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
                           alt="FAQ"
                         />
                         <p className="text-black">প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী</p>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                       </li>
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
                     <Link to={"/faq"}>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-<<<<<<< HEAD
-                        <img className="w-4" src={liveChat} alt="Live Chat" />
-                        <p className="text-black"> সরাসরি কথোপকথন</p>
-=======
                         <img
                           className="w-4"
                           src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
                           alt="Live Chat"
                         />
                         <p className="text-black">সরাসরি কথোপকথন</p>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                       </li>
                     </Link>
                   </SheetClose>
@@ -649,7 +383,7 @@ const Navbar = () => {
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
                         <img
                           className="w-4"
-                          src={downloadApp}
+                          src="https://www.babu88.app/static/svg/mobileMenu/downloadApp.svg"
                           alt="Download App"
                         />
                         <p className="text-black">ডাউনলোড করুন</p>
@@ -662,7 +396,11 @@ const Navbar = () => {
                         onClick={handleLogout}
                         className="flex gap-4 mt-10 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
                       >
-                        <img className="w-4" src={logoutImage} alt="Logout" />
+                        <img
+                          className="w-4"
+                          src="https://babo88.com/static/svg/mobileMenu/logout.svg"
+                          alt="Logout"
+                        />
                         <p className="text-black">প্রস্থান</p>
                       </li>
                     </SheetClose>
@@ -689,32 +427,12 @@ const Navbar = () => {
                 <div className="flex justify-center items-center gap-2 lg:gap-3">
                   <p className="text-lg font-bold">{user?.username}</p>
                   <Link to={"/profile"}>
-<<<<<<< HEAD
-                    <div
-                      className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full"
-                      style={{
-                        backgroundColor: backgroundColor,
-                        color: mainColor,
-                      }}
-                    >
-=======
                     <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                       <FaUser />
                     </div>
                   </Link>
                   <Link to={"/profile/inbox"} className="relative">
-<<<<<<< HEAD
-                    <div
-                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full"
-                      style={{
-                        backgroundColor: backgroundColor,
-                        color: mainColor,
-                      }}
-                    >
-=======
                     <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                       <IoMdNotifications />
                     </div>
                     <div className="absolute -top-1 -right-1 flex justify-center items-center w-5 h-5 text-xs text-white bg-blue-500 rounded-full">
@@ -725,14 +443,7 @@ const Navbar = () => {
                     <button
                       onClick={handleLogout}
                       className="flex justify-center items-center p-2.5 text-xl lg:text-2xl logout-button rounded-full"
-<<<<<<< HEAD
-                      style={{
-                        backgroundColor: backgroundColor,
-                        color: mainColor,
-                      }}
-=======
                       style={{ backgroundColor: backgroundColor, color: mainColor }}
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                     >
                       <RiLogoutCircleRFill />
                     </button>
@@ -746,27 +457,11 @@ const Navbar = () => {
                       onClick={() => user && getUserDataAgain(user._id)}
                     >
                       <TbCurrencyTaka />
-                      <p>
-                        {(
-                          userData?.balance ||
-                          user?.balance ||
-                          0
-                        ).toLocaleString()}
-                      </p>
+                      <p>{(userData?.balance || user?.balance || 0).toLocaleString()}</p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
-<<<<<<< HEAD
-                    <div
-                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full"
-                      style={{
-                        backgroundColor: backgroundColor,
-                        color: mainColor,
-                      }}
-                    >
-=======
                     <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                       <FaPlus />
                     </div>
                   </Link>
@@ -775,32 +470,12 @@ const Navbar = () => {
             ) : (
               <ul className="md:flex items-center gap-4 hidden">
                 <Link to={"/login"}>
-<<<<<<< HEAD
-                  <li
-                    className="text-sm font-semibold px-3 py-2 rounded-lg login-button"
-                    style={{
-                      backgroundColor: primaryColor,
-                      color: backgroundColor,
-                    }}
-                  >
-=======
                   <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor, color: backgroundColor }}>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                     প্রবেশ করুন
                   </li>
                 </Link>
                 <Link to={"/register"}>
-<<<<<<< HEAD
-                  <li
-                    className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button"
-                    style={{
-                      backgroundColor: backgroundColor,
-                      color: mainColor,
-                    }}
-                  >
-=======
                   <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: backgroundColor, color: mainColor }}>
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                     এখনি যোগদিন
                   </li>
                 </Link>
@@ -816,7 +491,10 @@ const Navbar = () => {
               >
                 <div className="flex items-center">
                   <div className="w-6 md:w-7">
-                    <img src={bdFlag} alt="BD flag" />
+                    <img
+                      src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-bangladesh-flag-icon-in-modern-neomorphism-style-png-image_4872074.png"
+                      alt="BD flag"
+                    />
                   </div>
                   <FaCaretDown />
                 </div>
@@ -827,10 +505,7 @@ const Navbar = () => {
       </div>
 
       {/* Bottom navbar */}
-      <div
-        className="md:flex hidden relative"
-        style={{ backgroundColor: navBackgroundColor }}
-      >
+      <div className="md:flex hidden relative" style={{ backgroundColor: navBackgroundColor }}>
         <div className="container mx-auto px-4">
           <ul className="flex whitespace-nowrap overflow-x-auto">
             {/* Single menu */}
@@ -855,11 +530,7 @@ const Navbar = () => {
                 <p>ক্রিকেট</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-=======
                 style={{ backgroundColor: backgroundColor }}
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isHovered
                     ? "translate-y-0 opacity-100"
@@ -882,13 +553,8 @@ const Navbar = () => {
                 <p>ক্যাসিনো</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
-=======
                 style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   isCasinoHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -910,13 +576,8 @@ const Navbar = () => {
                 <p>স্লট গেম</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
-=======
                 style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   isSlotHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -938,13 +599,8 @@ const Navbar = () => {
                 <p>টেবিল গেম</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
-=======
                 style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   isTableHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -966,13 +622,8 @@ const Navbar = () => {
                 <p>খেলার বই</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
-=======
                 style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   isSportHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -994,13 +645,8 @@ const Navbar = () => {
                 <p>মাছ ধরা</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
-=======
                 style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   isFishingHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
@@ -1022,13 +668,8 @@ const Navbar = () => {
                 <p>ক্র্যাশ</p>
               </NavLink>
               <div
-<<<<<<< HEAD
-                style={{ backgroundColor: `${backgroundColor}` }}
-                className={`absolute left-0 top-full w-full  z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
-=======
                 style={{ backgroundColor: backgroundColor }}
                 className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
->>>>>>> d8da507dc8a92c2ffc08e0af0edfb15b26cc2390
                   isCrashHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
