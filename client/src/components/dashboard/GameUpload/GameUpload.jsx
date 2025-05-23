@@ -89,6 +89,7 @@ const GameUpload = () => {
       subcategory: formData.subcategory,
       image: filePath,
       link: formData.link,
+      badge: formData.badge,
     };
 
     console.log("this is info => ",info);
@@ -235,7 +236,7 @@ const GameUpload = () => {
             >
               <option value="">Select a subcategory</option>
               {filteredSubcategories.map((subcategory) => (
-                <option key={subcategory._id} value={subcategory?.title}>
+                <option key={subcategory._id} value={subcategory?.value}>
                   {subcategory.title}
                 </option>
               ))}

@@ -128,10 +128,10 @@ async function run() {
       .db("babu88")
       .collection("depositTransactions");
     const gamesCollection = client.db("babu88").collection("games");
-    const featuresImageCollection = client.db("babu88").collection("FeaturesImage");
- const themeColorCollection = client.db("babu88").collection("ThemeColor");
-
-
+    const featuresImageCollection = client
+      .db("babu88")
+      .collection("FeaturesImage");
+    const themeColorCollection = client.db("babu88").collection("ThemeColor");
 
     // APIs
     app.use(
@@ -208,9 +208,8 @@ async function run() {
         withdrawTransactionsCollection
       )
     ); // New router
-        app.use("/features-image", featuresImageApi(featuresImageCollection));
+    app.use("/features-image", featuresImageApi(featuresImageCollection));
     app.use("/theme-color", themeColorApi(themeColorCollection));
-
 
     app.use("/games", gameApi(gamesCollection));
 

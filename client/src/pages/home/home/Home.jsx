@@ -29,6 +29,7 @@ const Home = () => {
   const [downloadApk, setDownloadApk] = useState(""); // New state for APK URL
   const [secondaryBannerImage, setSecondaryBannerImage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
   // Fetch publish, download images, and APK URL
@@ -52,7 +53,10 @@ const Home = () => {
         setSecondaryBannerImage(data.desktop || "");
       } catch (err) {
         console.error("Fetch error:", err);
-        addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
+        addToast(`Error: ${err.message}`, {
+          appearance: "error",
+          autoDismiss: true,
+        });
         setPublishImage("");
         setDownloadImage("");
         setDownloadApk("");
@@ -122,6 +126,8 @@ const Home = () => {
   ];
 
   const filteredGames = games?.filter((game) => {
+    if (!isMobile) return true; // Show all games on desktop
+
     if (activeFilter === "hot") {
       return game.badge === "hot";
     } else {
@@ -136,17 +142,19 @@ const Home = () => {
         <SecondaryBanner image={secondaryBannerImage} baseURL={baseURL} />
 
         {/* Mobile Filter Buttons - Only shown on mobile */}
-        <div className="md:hidden py-2 flex gap-3 overflow-x-auto">
-          {buttons.map((button) => (
-            <HomeMobileButton
-              key={button.value}
-              image={button.image}
-              title={button.title}
-              isActive={activeFilter === button.value}
-              onClick={() => setActiveFilter(button.value)}
-            />
-          ))}
-        </div>
+        {isMobile && (
+          <div className="py-2 flex gap-3 overflow-x-auto">
+            {buttons.map((button) => (
+              <HomeMobileButton
+                key={button.value}
+                image={button.image}
+                title={button.title}
+                isActive={activeFilter === button.value}
+                onClick={() => setActiveFilter(button.value)}
+              />
+            ))}
+          </div>
+        )}
 
         <AnimationBanner />
 
@@ -172,6 +180,7 @@ const Home = () => {
         <div className="pb-4 md:pb-0">
           <Matches />
         </div>
+
         {/* Video Slider */}
         <div className="pb-4 md:pb-0">
           <ImageVideoSlider />
@@ -193,7 +202,9 @@ const Home = () => {
           />
         ) : (
           <div className="md:hidden w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
-            <p className="text-gray-600 text-sm">No promotion image available</p>
+            <p className="text-gray-600 text-sm">
+              No promotion image available
+            </p>
           </div>
         )}
 
