@@ -18,18 +18,20 @@ import ImageVideoSlider from "@/components/home/ImageVideoSlider/ImageVideoSlide
 import referBannerImage from "@/assets/refer_banner.jpg";
 import bettingPassImage from "@/assets/betting-pass.jpg";
 import Matches from "@/components/home/Matches/Matches";
-import bannerImage from "@/assets/register_banner.jpg";
 import AnimationBanner from "../AnimationBanner/AnimationBanner";
+
 const Home = () => {
   const { addToast } = useToasts();
   const { data: games } = useGetGamesQuery();
   const [activeFilter, setActiveFilter] = useState("hot");
   const [publishImage, setPublishImage] = useState("");
   const [downloadImage, setDownloadImage] = useState("");
+  const [downloadApk, setDownloadApk] = useState(""); // New state for APK URL
+  const [secondaryBannerImage, setSecondaryBannerImage] = useState("");
   const [loading, setLoading] = useState(false);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
-  // Fetch publish and download images
+  // Fetch publish, download images, and APK URL
   useEffect(() => {
     const fetchImages = async () => {
       setLoading(true);
@@ -46,20 +48,35 @@ const Home = () => {
         const data = await response.json();
         setPublishImage(data.publish || "");
         setDownloadImage(data.download || "");
+        setDownloadApk(data.downloadApk || ""); // Set APK URL
+        setSecondaryBannerImage(data.desktop || "");
       } catch (err) {
         console.error("Fetch error:", err);
         addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
         setPublishImage("");
         setDownloadImage("");
+        setDownloadApk("");
+        setSecondaryBannerImage("");
       } finally {
         setLoading(false);
       }
     };
     fetchImages();
-  }, []);
+  }, [addToast]);
 
-
-  
+  // Function to handle APK download
+  const handleDownload = () => {
+    if (downloadApk) {
+      const link = document.createElement("a");
+      link.href = `${baseURL}${downloadApk}`; // Prepend baseURL to the downloadApk path
+      link.download = "babu88.apk"; // Specify the filename for download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link); // Clean up
+    } else {
+      addToast("No APK file available for download", { appearance: "error", autoDismiss: true });
+    }
+  };
 
   const buttons = [
     {
@@ -116,7 +133,7 @@ const Home = () => {
     <div>
       <BannerSlider />
       <div className="container mx-auto mt-6 md:mt-0 px-4 sm:px-10 lg:px-24">
-        <SecondaryBanner image={bannerImage} />
+        <SecondaryBanner image={secondaryBannerImage} baseURL={baseURL} />
 
         {/* Mobile Filter Buttons - Only shown on mobile */}
         <div className="md:hidden py-2 flex gap-3 overflow-x-auto">
@@ -131,7 +148,7 @@ const Home = () => {
           ))}
         </div>
 
-       <AnimationBanner />
+        <AnimationBanner />
 
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
@@ -219,9 +236,10 @@ const Home = () => {
           </div>
         ) : downloadImage ? (
           <SecondaryBanner
-            zipFile={"/babu88.apk"}
+            zipFile={downloadApk} // Pass the APK URL
             image={`${baseURL}${downloadImage}`}
             imageMobil={`${baseURL}${downloadImage}`}
+            onClick={handleDownload} // Pass the download handler
           />
         ) : (
           <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
