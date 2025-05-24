@@ -4,6 +4,8 @@ import newIcon from "@/assets/images/game-icon-new.svg";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
+
+
 const GameCard = ({
   gameCardImg,
   badge,
@@ -14,6 +16,7 @@ const GameCard = ({
 }) => {
   const { user, token } = useSelector((state) => state.auth);
   const [isModalOpen, setIsModalOpen] = useState(false);
+    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
 
   // Auto-close modal after 3 seconds
   useEffect(() => {
@@ -92,9 +95,16 @@ const GameCard = ({
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 transition-opacity duration-300">
-          <div className="bg-slate-900 rounded-[20px] p-6 w-11/12 max-w-md shadow-lg">
-            <p className="text-gray-300 mb-6">Please login</p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300">
+          <div className="bg-white rounded-lg p-8 w-10/12 max-w-sm shadow-xl">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">Authentication Required</h2>
+            <p className="text-gray-600 mb-6">Please log in to continue accessing this feature.</p>
+            <button className={`bg-[${backgroundColor}] hover:bg-[${backgroundColor}] text-[${mainColor}] font-semibold py-2 px-4 rounded float-right transition-colors duration-300`}>
+              <Link to={"/login"} 
+                className={`text-[${mainColor}] px-2 py-1 rounded-full bg-[${backgroundColor}] mt-2 text-sm font-semibold hover:bg-[${backgroundColor}] transition-colors`}>
+                Login
+              </Link>
+            </button>
           </div>
         </div>
       )}
