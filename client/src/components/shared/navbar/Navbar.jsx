@@ -3,7 +3,7 @@ import { FaCaretDown, FaPlus, FaUser } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { TbCurrencyTaka } from "react-icons/tb";
 import { IoHome, IoMenuOutline } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Modal from "../modal/Modal";
 import {
   Sheet,
@@ -17,49 +17,69 @@ import { RiLogoutCircleRFill } from "react-icons/ri";
 import { useToasts } from "react-toast-notifications";
 import { logout } from "@/redux/slices/authSlice";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
-import { useLazyGetUserByIdQuery } from "@/redux/features/allApis/usersApi/usersApi";
-import { useGetCategoriesQuery } from "@/redux/features/allApis/categoriesApi/categoriesApi";
 import hotIcon from "@/assets/images/hot-icon.png";
+import promotion from "@/assets/icons/promotion.svg";
+import rewards from "@/assets/icons/rewards.svg";
+import referAndEarn from "@/assets/icons/referAndEarn.svg";
+import bettingPass from "@/assets/icons/bettingPass.svg";
+import bpass_ipl_icon from "@/assets/icons/bpass_ipl_icon.svg";
+import agentAff from "@/assets/icons/agentAff.svg";
+import cricket from "@/assets/icons/cricket.svg";
+import ld from "@/assets/icons/ld.svg";
+import rng from "@/assets/icons/rng.svg";
+import table from "@/assets/icons/table.svg";
+import sb from "@/assets/icons/sb.svg";
+import fishing from "@/assets/icons/fishing.svg";
+import crash from "@/assets/icons/crash.svg";
+import fastgames from "@/assets/icons/fastgames.svg";
+import language from "@/assets/icons/language.svg";
+import faq from "@/assets/icons/faq.svg";
+import liveChat from "@/assets/icons/liveChat.svg";
+import downloadApp from "@/assets/icons/downloadApp.svg";
+import logoutImage from "@/assets/icons/logout.svg";
+import bdFlag from "@/assets/icons/bdFlag.png";
+import inrFlag from "@/assets/icons/INR.svg";
+import nprFlag from "@/assets/icons/NPR.svg";
 
 const data = [
   {
     id: 1,
-    image: "https://www.babu88.app/static/svg/mobileMenu/promotion.svg",
+    image: promotion,
     title: "প্রমোশন",
     route: "/promotion",
     badge: "",
   },
   {
     id: 2,
-    image: "https://www.babu88.app/static/svg/mobileMenu/rewards.svg",
+    image: rewards,
     title: "পুরস্কার",
     route: "/profile/rewards",
     badge: "new",
   },
   {
     id: 3,
-    image: "https://www.babu88.app/static/svg/mobileMenu/referAndEarn.svg",
+    image: referAndEarn,
     title: "রেফারেল প্রোগ্রাম",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 4,
-    image: "https://www.babu88.app/static/svg/mobileMenu/bettingPass.svg",
+    image: bettingPass,
     title: "বেটিং পাস",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 5,
-    image: "https://www.babu88.app/static/svg/mobileMenu/bpass_ipl_icon.svg",
+    image: bpass_ipl_icon,
     title: "IPL 2025 বেটিং পাস",
     route: "/profile/rewards",
     badge: "hot",
   },
   {
     id: 6,
-    image: "https://www.babu88.app/static/svg/mobileMenu/agentAff.svg",
+    image: agentAff,
     title: "অ্যাফিলিয়েট",
     route: "/profile/rewards",
     badge: "",
@@ -69,56 +89,56 @@ const data = [
 const gamesData = [
   {
     id: 1,
-    image: "https://www.babu88.app/static/svg/mobileMenu/cricket.svg",
-    title: "ক্রিকেট",
+    image: cricket,
+    title: " ক্রিকেট",
     route: "/cricket",
     badge: "",
   },
   {
     id: 2,
-    image: "https://www.babu88.app/static/svg/mobileMenu/ld.svg",
-    title: "ক্যাসিনো",
-    route: "/casino",
+    image: ld,
+    title: " ক্যাসিনো",
+    route: "/cricket",
     badge: "",
   },
   {
     id: 3,
-    image: "https://www.babu88.app/static/svg/mobileMenu/rng.svg",
-    title: "স্লট গেম",
-    route: "/slot",
+    image: rng,
+    title: " স্লট গেম",
+    route: "/cricket",
     badge: "",
   },
   {
     id: 4,
-    image: "https://www.babu88.app/static/svg/mobileMenu/table.svg",
-    title: "টেবিল গেম",
-    route: "/table-games",
+    image: table,
+    title: " টেবিল গেম",
+    route: "/cricket",
     badge: "",
   },
   {
     id: 5,
-    image: "https://www.babu88.app/static/svg/mobileMenu/sb.svg",
+    image: sb,
     title: "খেলার বই",
-    route: "/sports-book",
+    route: "/cricket",
     badge: "",
   },
   {
     id: 6,
-    image: "https://www.babu88.app/static/svg/mobileMenu/fishing.svg",
+    image: fishing,
     title: "মাছ ধরা",
-    route: "/fishing",
+    route: "/cricket",
     badge: "",
   },
   {
     id: 7,
-    image: "https://www.babu88.app/static/svg/mobileMenu/crash.svg",
+    image: crash,
     title: "ক্র্যাশ",
-    route: "/crash",
+    route: "/cricket",
     badge: "new",
   },
   {
     id: 8,
-    image: "https://www.babu88.app/static/svg/mobileMenu/fastgames.svg",
+    image: fastgames,
     title: "দ্রুতগতির গেমস",
     route: "/cricket",
     badge: "",
@@ -127,78 +147,221 @@ const gamesData = [
 
 const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
-  const { data: categories = [], isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { user, token } = useSelector((state) => state.auth);
-  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addToast } = useToasts();
+  // cricket
+  const megaMenuCricket = [
+    {
+      route: "/cricket",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/betswiz_new.png",
+    },
+    {
+      route: "/cricket",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/cricket/sap_new.png",
+    },
+  ];
+  // casino
+  const megaMenuCasino = [
+    {
+      route: "/casino",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/evo_new.png",
+    },
+    {
+      route: "/casino",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/pp_new.png",
+    },
+    {
+      route: "/casino",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/ld/sexy_v2_new.png",
+    },
+    {
+      route: "/casino",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/royal_new.png",
+    },
+    {
+      route: "/casino",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/ezugi_new.png",
+    },
+    {
+      route: "/casino",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/pt_new.png",
+    },
+    {
+      route: "/casino",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/ld/aura_new.png",
+    },
+  ];
+  // slot
+  const megaMenuSlot = [
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/jili_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pp_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/haba_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pg_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/spg_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/pt_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/rt_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/png_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/smart_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/jdb_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/one_new.png",
+    },
+    {
+      route: "/slot",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/rng/netent_new.png",
+    },
+    {
+      route: "/slot",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/rng/nolimit_new.png",
+    },
+    {
+      route: "/slot",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/rng/relax_new.png",
+    },
+    {
+      route: "/slot",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/rng/booongo_new.png",
+    },
+  ];
+  // table-games
+  const megaMenuTable = [
+    {
+      route: "/table-games",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/table/jili_new.png",
+    },
+    {
+      route: "/table-games",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/table/sexy_v2_new.png",
+    },
+    {
+      route: "/table-games",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/table/spg_new.png",
+    },
+  ];
+  // sport
+  const megaMenuSportBook = [
+    {
+      route: "/sports-book",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/sb/ibc_new.png",
+    },
+  ];
+  // fishing
+  const megaMenuFishing = [
+    {
+      route: "/fishing",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/jili_new.png",
+    },
+    {
+      route: "/fishing",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/fishing/spg_new.png",
+    },
+  ];
+  // Crash
+  const megaMenuCrash = [
+    {
+      route: "/crash",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/aviatrix_new.png",
+    },
+    {
+      route: "/crash",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/jili_new.png",
+    },
+    {
+      route: "/crash",
+      image: "https://jiliwin.9terawolf.com/images/babu/menu/crash/pp_new.png",
+    },
+    {
+      route: "/crash",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/spribe_new.png",
+    },
+    {
+      route: "/crash",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/smart_new.png",
+    },
+    {
+      route: "/crash",
+      image:
+        "https://jiliwin.9terawolf.com/images/babu/menu/crash/bslt_new.png",
+    },
+  ];
 
-  // Fallback colors
-  const navBackgroundColor = backgroundColor || "#333333";
-  const primaryColor = mainColor || "#FFCD03";
-
-  // Utility to darken a hex color for hover effect
-  const _darkenColor = (hex, amount) => {
-    let color = hex.replace("#", "");
-    const num = parseInt(color, 16);
-    const r = Math.max(0, (num >> 16) - Math.round(255 * amount));
-    const g = Math.max(0, ((num >> 8) & 0x00ff) - Math.round(255 * amount));
-    const b = Math.max(0, (num & 0x0000ff) - Math.round(255 * amount));
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
-  };
-
-  const darkenColor = (hex, amount) => _darkenColor(hex, amount);
-  const primaryHoverColor = mainColor ? darkenColor(mainColor, 0.1) : "#e5be22";
-
-  // Dynamic mega menu data
-  const getMegaMenuData = (category) => {
-    return categories
-      .filter((cat) => cat.category === category)
-      .map((cat) => ({
-        route: category === "sb" ? "/sports-book" : category === "table" ? "/table-games" : `/${category}`,
-        image: `${import.meta.env.VITE_BASE_API_URL}${cat?.image}`,
-        title: cat.title,
-      }));
-  };
-
-  const megaMenuData = {
-    cricket:getMegaMenuData("cricket"), // No data in provided MongoDB for cricket
-    casino: getMegaMenuData("casino"),
-    slot: getMegaMenuData("slot"), // No data in provided MongoDB for slot
-    table: getMegaMenuData("table"), // No data in provided MongoDB for table
-    sports_book: getMegaMenuData("sb"),
-    fishing: getMegaMenuData("fishing"), // No data in provided MongoDB for fishing
-    crash: getMegaMenuData("casino"), // No data in provided MongoDB for crash
-  };
-
+  {
+    /* মডাল ডেটা */
+  }
   const modalData = [
     {
       id: 1,
       currency: "BDT",
       currencySymbol: "৳",
-      flagSrc: "https://www.babu88.app/static/image/country/BDT.svg",
+      flagSrc: bdFlag,
       languages: ["ENGLISH", "BENGALI"],
     },
     {
       id: 2,
       currency: "INR",
       currencySymbol: "₹",
-      flagSrc: "https://www.babu88.app/static/image/country/INR.svg",
+      flagSrc: inrFlag,
       languages: ["ENGLISH", "HINDI"],
     },
     {
       id: 3,
       currency: "NPR",
       currencySymbol: "₨",
-      flagSrc: "https://www.babu88.app/static/image/country/NPR.svg",
+      flagSrc: nprFlag,
       languages: ["ENGLISH", "NEPALESE"],
     },
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isHovered, setIsHovered] = useState(false); // State for hover
   const [isCasinoHovered, setIsCasinoHovered] = useState(false);
   const [isSlotHovered, setIsSlotHovered] = useState(false);
   const [isTableHovered, setIsTableHovered] = useState(false);
@@ -228,49 +391,8 @@ const Navbar = () => {
     (control) => control.category === "logo" && control.isSelected
   );
 
-  const [triggerGetUserById, { data: userData, isLoading, isError }] =
-    useLazyGetUserByIdQuery();
-
-  const getUserDataAgain = (props) => {
-    if (props) {
-      triggerGetUserById(props);
-    }
-  };
-
-  useEffect(() => {
-    if (user) {
-      triggerGetUserById(user._id);
-    }
-  }, [user, triggerGetUserById]);
-
   return (
     <div className="z-20">
-      <style>
-        {`
-          .nav-link:hover {
-            color: ${mainColor};
-            background-color: #424242;
-            border-bottom: 4px solid ${mainColor};
-          }
-          .login-button:hover {
-            background-color: ${darkenColor(mainColor, 0.1)};
-          }
-          .signup-button:hover {
-            background-color: #2f9bff;
-          }
-          .language-button:hover {
-            background-color: #c2c2c2;
-          }
-          .profile-button:hover,
-          .notification-button:hover,
-          .logout-button:hover {
-            background-color: ${darkenColor(mainColor, 0.1)};
-          }
-          .deposit-button:hover {
-            background-color: ${mainColor};
-          }
-        `}
-      </style>
       {/* Start top navbar */}
       <div className="container mx-auto px-4 py-2">
         <div className="flex justify-between items-center">
@@ -278,20 +400,22 @@ const Navbar = () => {
           <div className="md:hidden">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
               <SheetTrigger asChild>
-                <button className="ml-auto">
+                <button>
                   <IoMenuOutline size={30} />
                 </button>
               </SheetTrigger>
               <SheetContent
-                className="bg-slate-50 text-gray-600 w-64 p-2"
                 side="left"
+                className=" bg-slate-50 text-gray-600 w-64 p-2"
               >
                 <SheetClose asChild className="border-b-2 pb-2">
                   <div className="w-40">
                     <Link to={"/"}>
                       <img
-                        src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
-                        alt="Logo"
+                        src={`${import.meta.env.VITE_BASE_API_URL}${
+                          logo?.image
+                        }`}
+                        alt=""
                       />
                     </Link>
                   </div>
@@ -301,12 +425,12 @@ const Navbar = () => {
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex items-center justify-start gap-3 mt-4 text-xs font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img className="w-6" src={item.image} alt={item.title} />
-                          <p className="text-black">{item.title}</p>
+                          <img className="w-6" src={item.image} alt="" />
+                          <p className="text-[#9b9b9b]">{item.title}</p>
                           {item?.badge &&
                             (item?.badge === "hot" ? (
                               <div className="w-8 animate-pulse">
-                                <img className="w-full" src={hotIcon} alt="Hot" />
+                                <img className="w-full" src={hotIcon} alt="" />
                               </div>
                             ) : (
                               <button className="animate-pulse rounded-full w-8 bg-[#04B22B] text-white">
@@ -317,16 +441,16 @@ const Navbar = () => {
                       </Link>
                     </SheetClose>
                   ))}
+
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Games</p>
                   </div>
-                  
                   {gamesData?.map((item) => (
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                          <img className="w-6" src={item.image} alt={item.title} />
-                          <p className="text-black">{item.title}</p>
+                          <img className="w-6" src={item.image} alt="" />
+                          <p className="text-[#9b9b9b]">{item.title}</p>
                           {item?.badge && (
                             <button className="animate-pulse rounded-full w-10 py-1 bg-[#04B22B] text-white">
                               new
@@ -336,6 +460,7 @@ const Navbar = () => {
                       </Link>
                     </SheetClose>
                   ))}
+
                   <div className="border-b-2 pb-2">
                     <p className="text-sm font-semibold">Others</p>
                   </div>
@@ -345,48 +470,36 @@ const Navbar = () => {
                         onClick={handleModalOpen}
                         className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
                       >
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
-                          alt="Language"
-                        />
-                        <p className="text-black">ভাষা</p>
+                        <img className="w-4" src={language} alt="" />
+                        <p className="text-[#9b9b9b]"> ভাষা</p>
                       </li>
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
                     <Link to={"/faq"}>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
-                          alt="FAQ"
-                        />
-                        <p className="text-black">প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী</p>
+                        <img className="w-4" src={faq} alt="" />
+                        <p className="text-[#9b9b9b]">
+                          {" "}
+                          প্রায়শই জিজ্ঞাসিত প্রশ্নাবল
+                        </p>
                       </li>
                     </Link>
                   </SheetClose>
                   <SheetClose asChild>
                     <Link to={"/faq"}>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
-                          alt="Live Chat"
-                        />
-                        <p className="text-black">সরাসরি কথোপকথন</p>
+                        <img className="w-4" src={liveChat} alt="" />
+                        <p className="text-[#9b9b9b]"> সরাসরি কথোপকথন</p>
                       </li>
                     </Link>
                   </SheetClose>
+
                   <SheetClose asChild>
                     <Link to={"./babu88.apk"} target={"_blank"} download>
                       <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
-                        <img
-                          className="w-4"
-                          src="https://www.babu88.app/static/svg/mobileMenu/downloadApp.svg"
-                          alt="Download App"
-                        />
-                        <p className="text-black">ডাউনলোড করুন</p>
+                        <img className="w-4" src={downloadApp} alt="" />
+                        <p className="text-[#9b9b9b]">ডাউনলোড করুন</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -396,11 +509,7 @@ const Navbar = () => {
                         onClick={handleLogout}
                         className="flex gap-4 mt-10 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg"
                       >
-                        <img
-                          className="w-4"
-                          src="https://babo88.com/static/svg/mobileMenu/logout.svg"
-                          alt="Logout"
-                        />
+                        <img className="w-4" src={logoutImage} alt="Logout" />
                         <p className="text-black">প্রস্থান</p>
                       </li>
                     </SheetClose>
@@ -415,24 +524,26 @@ const Navbar = () => {
             <Link to={"/"}>
               <img
                 src={`${import.meta.env.VITE_BASE_API_URL}${logo?.image}`}
-                alt="Logo"
+                alt=""
               />
             </Link>
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Dashboard */}
+            {/* Sign up */}
+
+            {/* dashboard */}
             {token && user ? (
               <div className="md:flex justify-center items-center gap-3 hidden">
                 <div className="flex justify-center items-center gap-2 lg:gap-3">
                   <p className="text-lg font-bold">{user?.username}</p>
                   <Link to={"/profile"}>
-                    <div className="flex justify-center items-center p-3 text-base lg:text-xl profile-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
+                    <div className="flex justify-center items-center p-3 text-base lg:text-xl bg-yellow-400 hover:bg-yellow-500 duration-300 rounded-full">
                       <FaUser />
                     </div>
                   </Link>
                   <Link to={"/profile/inbox"} className="relative">
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl notification-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl bg-yellow-400 hover:bg-yellow-500 duration-300 rounded-full">
                       <IoMdNotifications />
                     </div>
                     <div className="absolute -top-1 -right-1 flex justify-center items-center w-5 h-5 text-xs text-white bg-blue-500 rounded-full">
@@ -442,8 +553,7 @@ const Navbar = () => {
                   <div>
                     <button
                       onClick={handleLogout}
-                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl logout-button rounded-full"
-                      style={{ backgroundColor: backgroundColor, color: mainColor }}
+                      className="flex justify-center items-center p-2.5 text-xl lg:text-2xl bg-yellow-400 hover:bg-yellow-500 duration-300 rounded-full"
                     >
                       <RiLogoutCircleRFill />
                     </button>
@@ -452,16 +562,13 @@ const Navbar = () => {
                 </div>
                 <div className="flex gap-2 items-center pl-4 rounded-full bg-gray-200">
                   <Link>
-                    <div
-                      className="flex items-center text-xl lg:text-2xl"
-                      onClick={() => user && getUserDataAgain(user._id)}
-                    >
+                    <div className="flex items-center text-xl lg:text-2xl">
                       <TbCurrencyTaka />
-                      <p>{(userData?.balance || user?.balance || 0).toLocaleString()}</p>
+                      <p>*.**</p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
-                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white deposit-button rounded-full" style={{ backgroundColor: backgroundColor, color: mainColor }}>
+                    <div className="flex justify-center items-center p-2.5 text-xl lg:text-2xl text-white bg-blue-500 hover:bg-blue-600 duration-300 rounded-full">
                       <FaPlus />
                     </div>
                   </Link>
@@ -470,12 +577,12 @@ const Navbar = () => {
             ) : (
               <ul className="md:flex items-center gap-4 hidden">
                 <Link to={"/login"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg login-button" style={{ backgroundColor: primaryColor, color: backgroundColor }}>
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg bg-[#FFCD03] hover:bg-[#e5be22] transition-all duration-500">
                     প্রবেশ করুন
                   </li>
                 </Link>
                 <Link to={"/register"}>
-                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white signup-button" style={{ backgroundColor: backgroundColor, color: mainColor }}>
+                  <li className="text-sm font-semibold px-3 py-2 rounded-lg text-white bg-[#0083FB] hover:bg-[#2f9bff] transition-all duration-500">
                     এখনি যোগদিন
                   </li>
                 </Link>
@@ -486,13 +593,14 @@ const Navbar = () => {
             <ul>
               <li
                 onClick={handleModalOpen}
-                className="cursor-pointer text-sm lg:text-base font-semibold px-2 py-1 rounded-lg language-button"
-                style={{ backgroundColor: "#d6d6d6" }}
+                className="cursor-pointer text-sm lg:text-base font-semibold px-2 py-1 rounded-lg bg-[#d6d6d6] hover:bg-[#c2c2c2] transition-all duration-500"
               >
                 <div className="flex items-center">
                   <div className="w-6 md:w-7">
                     <img
-                      src="https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-bangladesh-flag-icon-in-modern-neomorphism-style-png-image_4872074.png"
+                      src={
+                        "https://png.pngtree.com/png-vector/20220606/ourmid/pngtree-bangladesh-flag-icon-in-modern-neomorphism-style-png-image_4872074.png"
+                      }
                       alt="BD flag"
                     />
                   </div>
@@ -505,208 +613,221 @@ const Navbar = () => {
       </div>
 
       {/* Bottom navbar */}
-      <div className="md:flex hidden relative" style={{ backgroundColor: navBackgroundColor }}>
+      <div className="bg-[#333] md:flex hidden relative">
         <div className="container mx-auto px-4">
           <ul className="flex whitespace-nowrap overflow-x-auto">
-            {/* Single menu */}
+            {/* single menu */}
             <NavLink
               to={"/"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center py-3 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center py-3 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
             >
               <p className="py-1 px-5 border-r-[1px]">
                 <IoHome size={20} />
               </p>
             </NavLink>
 
-            {/* Single cricket menu */}
+            {/* single cricket menu */}
             <div
+              className=""
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
             >
               <NavLink
                 to={"/cricket"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>ক্রিকেট</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.cricket} />
+                <MegaMenu items={megaMenuCricket} />
               </div>
             </div>
 
-            {/* Single casino menu */}
+            {/* single casino menu */}
             <div
+              className=""
               onMouseEnter={() => setIsCasinoHovered(true)}
               onMouseLeave={() => setIsCasinoHovered(false)}
             >
               <NavLink
                 to={"/casino"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>ক্যাসিনো</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCasinoHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.casino} />
+                <div className="">
+                  <MegaMenu items={megaMenuCasino} />
+                </div>
               </div>
             </div>
 
-            {/* Single slot menu */}
+            {/* single slot menu */}
             <div
+              className=""
               onMouseEnter={() => setIsSlotHovered(true)}
               onMouseLeave={() => setIsSlotHovered(false)}
             >
               <NavLink
                 to={"/slot"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>স্লট গেম</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSlotHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.slot} />
+                <div className="">
+                  <MegaMenu items={megaMenuSlot} />
+                </div>
               </div>
             </div>
 
-            {/* Single table game menu */}
+            {/* single table game menu */}
             <div
+              className=""
               onMouseEnter={() => setIsTableHovered(true)}
               onMouseLeave={() => setIsTableHovered(false)}
             >
               <NavLink
                 to={"/table-games"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>টেবিল গেম</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isTableHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.table} />
+                <MegaMenu items={megaMenuTable} />
               </div>
             </div>
 
-            {/* Single sports-book menu */}
+            {/* single sports-book menu */}
             <div
+              className=""
               onMouseEnter={() => setIsSportHovered(true)}
               onMouseLeave={() => setIsSportHovered(false)}
             >
               <NavLink
                 to={"/sports-book"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>খেলার বই</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isSportHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.sports_book} />
+                <MegaMenu items={megaMenuSportBook} />
               </div>
             </div>
 
-            {/* Single fishing menu */}
+            {/* single fishing menu */}
             <div
+              className=""
               onMouseEnter={() => setIsFishingHovered(true)}
               onMouseLeave={() => setIsFishingHovered(false)}
             >
               <NavLink
-                to={"/fishing"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                to={"/sports-book"}
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>মাছ ধরা</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isFishingHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.fishing} />
+                <MegaMenu items={megaMenuFishing} />
               </div>
             </div>
 
-            {/* Single Crash menu */}
+            {/* single Crash menu */}
             <div
+              className=""
               onMouseEnter={() => setIsCrashHovered(true)}
               onMouseLeave={() => setIsCrashHovered(false)}
             >
               <NavLink
                 to={"/crash"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
               >
                 <p>ক্র্যাশ</p>
               </NavLink>
+              {/* MegaMenu */}
               <div
-                style={{ backgroundColor: backgroundColor }}
-                className={`absolute left-0 top-full w-full z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
+                className={`absolute left-0 top-full w-full bg-[#313131] z-20 text-black p-5 transform transition-transform duration-300 ease-in-out ${
                   isCrashHovered
                     ? "translate-y-0 opacity-100"
                     : "-translate-y-10 opacity-0 pointer-events-none"
                 }`}
               >
-                <MegaMenu items={megaMenuData.crash} />
+                <MegaMenu items={megaMenuCrash} />
               </div>
             </div>
 
-            {/* Single promotion menu */}
+            {/* single promotion menu */}
             <NavLink
               to={"/promotion"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
             >
               <p>প্রমোশন</p>
             </NavLink>
 
-            {/* Single betting-pass menu */}
+            {/* single betting-pass menu */}
             <NavLink
               to={"/betting-pass"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
             >
               <p>বেটিং পাস</p>
             </NavLink>
 
-            {/* Single referral menu */}
+            {/* single referral menu */}
             <NavLink
               to={"/referral"}
-              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+              className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white hover:text-[#FFCD03] hover:bg-[#424242] border-b-[4px] border-b-[#333] hover:border-b-[4px] hover:border-b-[#ffb300] transition-colors duration-200 ease-linear"
             >
               <p>সুপারিশ</p>
             </NavLink>
+
+            {/* Add other menu items */}
           </ul>
         </div>
       </div>
 
-      {/* Modal */}
+      {/* মডাল */}
       <Modal
         isOpen={isModalOpen}
         onOpenChange={handleModalClose}
@@ -715,12 +836,14 @@ const Navbar = () => {
         <div className="space-y-4">
           {modalData.map((item) => (
             <div key={item.id} className="flex gap-2 md:gap-6">
+              {/* মুদ্রা তথ্য */}
               <div className="flex items-center gap-1 md:gap-2 w-full">
                 <img className="w-10" src={item.flagSrc} alt={item.currency} />
                 <p className="text-sm md:text-base font-semibold text-gray-400">
                   {item.currencySymbol} {item.currency}
                 </p>
               </div>
+              {/* ভাষা বাটন */}
               {item.languages.map((language) => (
                 <button
                   key={language}
