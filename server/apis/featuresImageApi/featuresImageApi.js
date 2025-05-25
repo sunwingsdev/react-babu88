@@ -9,7 +9,7 @@ const { upload, deleteFile } = require("../../utils");
 // Multer storage for APK files
 const apkStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = path.join(__dirname, "../../Uploads/apks");
+    const uploadDir = path.join(__dirname, "../../uploads/apks");
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
@@ -85,7 +85,7 @@ const featuresImageApi = (featuresImageCollection) => {
     }
     res.status(200).json({
       message: "Image uploaded successfully",
-      filePath: `/Uploads/images/${req.file.filename}`,
+      filePath: `/uploads/images/${req.file.filename}`,
     });
   });
 
@@ -94,7 +94,7 @@ const featuresImageApi = (featuresImageCollection) => {
     if (!req.file) {
       return res.status(400).json({ error: "No APK file uploaded" });
     }
-    const filePath = `/Uploads/apks/${req.file.filename}`;
+    const filePath = `/uploads/apks/${req.file.filename}`;
     res.status(200).json({
       message: "APK uploaded successfully",
       filePath,
