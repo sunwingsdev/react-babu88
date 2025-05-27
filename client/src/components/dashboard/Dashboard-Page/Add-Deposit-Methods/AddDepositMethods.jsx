@@ -381,7 +381,7 @@ const AddDepositMethods = () => {
     if (
       window.confirm("Are you sure you want to delete this deposit method?")
     ) {
-      console.log("click delete ", paymentPageImage, methodImage, id);
+     // console.log("click delete ", paymentPageImage, methodImage, id);
 
       if (paymentPageImage || methodImage) {
         try {

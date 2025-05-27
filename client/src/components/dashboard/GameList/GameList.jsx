@@ -128,8 +128,8 @@ const GamesList = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting edit with ID:", editFormData.id);
-    console.log("editFormData:", editFormData);
+    //console.log("Submitting edit with ID:", editFormData.id);
+   // console.log("editFormData:", editFormData);
 
     if (!editFormData.id) {
       addToast("Invalid game ID", { appearance: "error", autoDismiss: true });
