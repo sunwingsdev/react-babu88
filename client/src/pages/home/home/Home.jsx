@@ -53,10 +53,6 @@ const Home = () => {
         setSecondaryBannerImage(data.desktop || "");
       } catch (err) {
         console.error("Fetch error:", err);
-        addToast(`Error: ${err.message}`, {
-          appearance: "error",
-          autoDismiss: true,
-        });
         setPublishImage("");
         setDownloadImage("");
         setDownloadApk("");
@@ -66,7 +62,7 @@ const Home = () => {
       }
     };
     fetchImages();
-  }, [addToast]);
+  }, [baseURL]);
 
   // Function to handle APK download
   const handleDownload = () => {
@@ -78,7 +74,10 @@ const Home = () => {
       link.click();
       document.body.removeChild(link); // Clean up
     } else {
-      addToast("No APK file available for download", { appearance: "error", autoDismiss: true });
+      addToast("No APK file available for download", {
+        appearance: "error",
+        autoDismiss: true,
+      });
     }
   };
 
