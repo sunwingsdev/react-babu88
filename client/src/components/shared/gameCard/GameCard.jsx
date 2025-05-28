@@ -66,7 +66,7 @@ const GameCard = ({
               className="filter-none grayscale hover:filter w-12 h-12"
               src="https://www.babu88.app/static/svg/play_btn.svg"
               alt="Play Button"
-            /> hlw
+            />
           </Link>
           {(user && token) && demoId && (
             <Link
