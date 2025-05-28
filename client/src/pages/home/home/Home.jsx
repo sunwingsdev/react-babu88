@@ -142,8 +142,10 @@ const Home = () => {
         <SecondaryBanner image={secondaryBannerImage} baseURL={baseURL} />
 
         {/* Mobile Filter Buttons - Only shown on mobile */}
-        {isMobile && (
+
+        {window.innerWidth < 768 && (
           <div className="py-2 flex gap-3 overflow-x-auto">
+      
             {buttons.map((button) => (
               <HomeMobileButton
                 key={button.value}
@@ -155,20 +157,27 @@ const Home = () => {
             ))}
           </div>
         )}
+        
+
 
         <AnimationBanner />
 
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
+        {
+          console.log("this is all game -> ",filteredGames)
+          
+        }
           {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
-            <GameCard
+            
+              <GameCard
               key={game._id}
               gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game?.image}`}
               badge={game?.badge}
               gameHeading={game?.title}
               gameText={"EVOLUTION GAMING"}
               demoId={game?._id}
-            />
+            />       
           ))}
         </div>
 

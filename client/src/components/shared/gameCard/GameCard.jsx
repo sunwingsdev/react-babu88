@@ -24,7 +24,7 @@ const GameCard = ({
     if (isModalOpen) {
       timer = setTimeout(() => {
         setIsModalOpen(false);
-        console.log("Modal auto-closed, isModalOpen set to false");
+       // console.log("Modal auto-closed, isModalOpen set to false");
       }, 3000);
     }
     return () => clearTimeout(timer); // Cleanup timer on unmount or modal close
@@ -33,7 +33,7 @@ const GameCard = ({
   // Function to handle play button click
   const handlePlayClick = (e) => {
     e.preventDefault(); // Prevent default Link behavior
-    console.log("Play button clicked", { user, token, isModalOpen }); // Debugging
+  //  console.log("Play button clicked", { user, token, isModalOpen }); // Debugging
   };
 
   return (
@@ -42,10 +42,11 @@ const GameCard = ({
       onClick={() => {
         if (!user || !token) {
           setIsModalOpen(true); // Show modal
-          console.log("Modal should open, isModalOpen set to true");
+       //   console.log("Modal should open, isModalOpen set to true");
         }
       }}
     >
+
       {/* Game Card Content */}
       <div className="relative group overflow-hidden">
         <img
@@ -108,6 +109,8 @@ const GameCard = ({
           </div>
         </div>
       )}
+
+
     </div>
   );
 };

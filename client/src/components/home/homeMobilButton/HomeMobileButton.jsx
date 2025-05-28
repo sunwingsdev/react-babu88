@@ -22,6 +22,9 @@ const HomeMobileButton = ({ image, title, isActive, onClick }) => {
     return luminance < 0.5;
   };
 
+  console.log("isActive:", isActive);
+  
+
   // Fallback colors if not loaded or error occurs
   const bannerBgColor = backgroundColor || "#BFDBFE"; // Default to blue-100 if backgroundColor is not set
   const buttonBgColor = mainColor || "#FFCD03"; // Default to original button color if mainColor is not set

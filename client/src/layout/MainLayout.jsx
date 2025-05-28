@@ -66,7 +66,7 @@ const MainLayout = () => {
   let buttonHoverBgColor = mainColor ? darkenColor(mainColor, 0.1) : "#e5be22"; // Darken mainColor for hover or use original hover
 
   useEffect(() => {
-    console.log("router: ", location.pathname);
+    // console.log("router: ", location.pathname);
     setPath(location.pathname);
   }, [location]);
 

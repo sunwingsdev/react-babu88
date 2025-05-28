@@ -32,7 +32,7 @@ const Crash = () => {
   useEffect(() => {
 
 
-    console.log("buttons:", buttons,fishingSubcategories,subcategories);
+   // console.log("buttons:", buttons,fishingSubcategories,subcategories);
     
 
   }, [buttons,fishingSubcategories,subcategories]);
