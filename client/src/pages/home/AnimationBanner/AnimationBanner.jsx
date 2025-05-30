@@ -54,6 +54,8 @@ export default function AnimationBanner() {
 
   const formatNumber = (num) => num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
+  if (!jackpotImage) return null;
+
   return (
     <div
       style={{
@@ -68,17 +70,11 @@ export default function AnimationBanner() {
       className="md:hidden"
     >
       {/* Banner Image */}
-      {jackpotImage ? (
-        <img
-          src={`${baseURL}${jackpotImage}`}
-          alt="Jackpot Banner"
-          style={{ width: "100%", height: "auto" }}
-        />
-      ) : (
-        <div style={{ width: "100%", height: "200px", backgroundColor: "#ccc", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span>No Jackpot Image Available</span>
-        </div>
-      )}
+      <img
+        src={`${baseURL}${jackpotImage}`}
+        alt="Jackpot Banner"
+        style={{ width: "100%", height: "auto" }}
+      />
 
       {/* Overlay Numbers */}
       <div
