@@ -245,7 +245,7 @@ const DepositPromotion = () => {
     e.preventDefault();
 
     // Log formData for debugging
-    console.log("Form Data before submission:", formData);
+   // console.log("Form Data before submission:", formData);
 
     // Validate required fields
     if (descriptionCharCount > maxLength || descriptionBDCharCount > maxLength) {

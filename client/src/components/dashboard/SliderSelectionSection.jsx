@@ -32,7 +32,7 @@ const SliderSelectionSection = () => {
       }
       refetch();
     } catch (error) {
-      console.log(error);
+   //   console.log(error);
     }
   };
 
