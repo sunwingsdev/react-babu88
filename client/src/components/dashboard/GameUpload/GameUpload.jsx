@@ -37,7 +37,7 @@ const GameUpload = () => {
 
   const handleInputChange = (e) => {
 
-    console.log(e.target.value);
+   // console.log(e.target.value);
     
 
     const { name, value } = e.target;
@@ -92,7 +92,7 @@ const GameUpload = () => {
       badge: formData.badge,
     };
 
-    console.log("this is info => ",info);
+   // console.log("this is info => ",info);
     
 
     const result = await addGame(info);

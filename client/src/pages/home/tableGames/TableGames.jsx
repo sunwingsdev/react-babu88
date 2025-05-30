@@ -29,13 +29,7 @@ const TableGames = () => {
   ];
 
 
-  useEffect(() => {
 
-
-    console.log("buttons:", buttons,fishingSubcategories,subcategories);
-    
-
-  }, [buttons,fishingSubcategories,subcategories]);
 
 
 

@@ -6,11 +6,6 @@ const MegaMenu = ({ items }) => {
   const { backgroundColor, mainColor } = useSelector((state) => state.themeColor);
 
 
-  useEffect(()=>{
-
-    console.log("this is itesm -> ",items)
-
-  },[items])
 
 
 

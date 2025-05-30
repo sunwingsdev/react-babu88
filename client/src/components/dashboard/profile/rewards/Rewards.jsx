@@ -38,7 +38,7 @@ const Rewards = () => {
   // Handle change
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
-    console.log("Selected Option:", event.target.value);
+  //  console.log("Selected Option:", event.target.value);
   };
 
   const items = [

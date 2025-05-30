@@ -54,7 +54,7 @@ const Login = () => {
       });
       setFormData({ username: "", password: "" });
       navigate("/");
-      console.log("navigated");
+    //  console.log("navigated");
     } else {
       addToast("Something went wrong", {
         appearance: "error",

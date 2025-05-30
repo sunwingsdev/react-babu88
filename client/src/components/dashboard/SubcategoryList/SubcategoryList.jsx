@@ -102,8 +102,8 @@ const SubcategoryList = () => {
 
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting with ID:", editFormData.id);
-    console.log("editFormData:", editFormData);
+    // console.log("Submitting with ID:", editFormData.id);
+    // console.log("editFormData:", editFormData);
 
     if (!editFormData.id) {
       addToast("Invalid category ID", { appearance: "error", autoDismiss: true });
@@ -119,7 +119,7 @@ const SubcategoryList = () => {
     try {
       // Upload new images and delete old ones if provided
       if (editFormData.image && editFormData.oldImage) {
-        console.log("Deleting old image:", editFormData.oldImage);
+     //   console.log("Deleting old image:", editFormData.oldImage);
         try {
           const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/delete`, {
             method: "DELETE",
@@ -140,9 +140,9 @@ const SubcategoryList = () => {
         updateData.image = filePath;
       }
       if (editFormData.iconImage) {
-        console.log("Uploading new iconImage");
+      //  console.log("Uploading new iconImage");
         if (editFormData.oldIconImage) {
-          console.log("Deleting old iconImage:", editFormData.oldIconImage);
+       //   console.log("Deleting old iconImage:", editFormData.oldIconImage);
           try {
             const response = await fetch(`${import.meta.env.VITE_BASE_API_URL}/delete`, {
               method: "DELETE",
@@ -164,7 +164,7 @@ const SubcategoryList = () => {
         updateData.iconImage = filePath;
       }
 
-      console.log("Sending update request with:", { id: editFormData.id, ...updateData });
+     // console.log("Sending update request with:", { id: editFormData.id, ...updateData });
       const result = await updateCategory({ id: editFormData.id, ...updateData }).unwrap();
       if (result.modifiedCount > 0) {
         addToast("Subcategory updated successfully", {
