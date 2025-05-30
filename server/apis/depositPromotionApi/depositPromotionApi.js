@@ -65,7 +65,7 @@ module.exports = (depositPromotionsCollection, depositPaymentMethodCollection) =
   // Create a new deposit promotion
   router.post("/deposit-promotion", async (req, res) => {
     try {
-      console.log("Incoming request body:", req.body); // Debug log
+    //  console.log("Incoming request body:", req.body); // Debug log
 
       const { title, title_bd, description, description_bd, promotion_bonuses, img } = req.body;
 

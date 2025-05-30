@@ -199,10 +199,7 @@ const Deposit = () => {
         formData.append(`userInputs[${name}]`, JSON.stringify(value));
       }
 
-      // Debug: Log FormData contents
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+  
 
       // Step 4: Send request to backend
       const response = await fetch(

@@ -1,48 +1,58 @@
 import { useState, useEffect } from "react";
-import AnimationBannerImage from "../../../assets/jackpot_background_en.jpg";
 import GrandBoxBg from "../../../assets/grand_box.png";
 import MajorBoxBg from "../../../assets/major_box.png";
 import MiniBoxBg from "../../../assets/mini_box.png";
 
 export default function AnimationBanner() {
-  // State for jackpot values, starting at the given values
   const [jackpots, setJackpots] = useState({
     mini: 1182.23,
     grand: 177923.66,
     major: 12037.73,
   });
-
-  // State for mobile version
   const [isMobile, setIsMobile] = useState(false);
+  const [jackpotImage, setJackpotImage] = useState(null); // নতুন স্টেট
+  const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
+
+  // ফেচ জ্যাকপট ইমেজ
+  useEffect(() => {
+    const fetchJackpotImage = async () => {
+      try {
+        const response = await fetch(`${baseURL}/features-image`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (!response.ok) {
+          throw new Error("Failed to fetch jackpot image");
+        }
+        const data = await response.json();
+        setJackpotImage(data.jackpotImage || null);
+      } catch (err) {
+        console.error("Fetch jackpot image error:", err);
+      }
+    };
+    fetchJackpotImage();
+  }, [baseURL]);
 
   useEffect(() => {
-    // Check if mobile version
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     if (/android/i.test(userAgent) || /iPad|iPhone|iPod/.test(userAgent)) {
       setIsMobile(true);
     }
-  }, []); // Empty dependency array to run once on mount
-
+  }, []);
 
   useEffect(() => {
-    // Increment each jackpot by 0.01 every 100ms
     const interval = setInterval(() => {
       setJackpots((prev) => ({
         mini: prev.mini + 0.03,
         grand: prev.grand + 0.06,
         major: prev.major + 0.08,
       }));
-    }, 50); // 100ms for faster updates
-
-    // Cleanup interval on component unmount
+    }, 50);
     return () => clearInterval(interval);
-  }, []); // Empty dependency array to run once on mount
+  }, []);
 
-  // Format numbers with commas and 2 decimal places
   const formatNumber = (num) => num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-
-
-
 
   return (
     <div
@@ -58,11 +68,17 @@ export default function AnimationBanner() {
       className="md:hidden"
     >
       {/* Banner Image */}
-      <img
-        src={AnimationBannerImage}
-        alt="Jackpot Banner"
-        style={{ width: "100%", height: "auto" }}
-      />
+      {jackpotImage ? (
+        <img
+          src={`${baseURL}${jackpotImage}`}
+          alt="Jackpot Banner"
+          style={{ width: "100%", height: "auto" }}
+        />
+      ) : (
+        <div style={{ width: "100%", height: "200px", backgroundColor: "#ccc", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span>No Jackpot Image Available</span>
+        </div>
+      )}
 
       {/* Overlay Numbers */}
       <div

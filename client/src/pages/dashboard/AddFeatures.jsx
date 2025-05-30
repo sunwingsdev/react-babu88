@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useToasts } from "react-toast-notifications";
-import { FaTrash, FaUpload, FaPlus, FaLink } from "react-icons/fa";
+import { FaTrash, FaUpload, FaPlus, FaLink, FaSave } from "react-icons/fa";
 
 export default function AddFeatures() {
   const { addToast } = useToasts();
@@ -11,9 +11,10 @@ export default function AddFeatures() {
     downloadApk: "",
     publish: "",
     desktop: "",
+    jackpotImage: "",
   });
   const [newLink, setNewLink] = useState(""); // For featuresImageMobile links
-  const [desktopEntries, setDesktopEntries] = useState([{ image: "", link: "" }]); // For featuresImageDesktop entries
+  const [desktopEntries, setDesktopEntries] = useState([]); // For temporary desktop entries
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState({
     featuresImageMobile: false,
@@ -22,6 +23,7 @@ export default function AddFeatures() {
     publish: false,
     desktop: false,
     featuresImageDesktop: false,
+    jackpotImage: false,
   });
   const [docId, setDocId] = useState(null);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
@@ -58,6 +60,7 @@ export default function AddFeatures() {
               downloadApk: "",
               publish: "",
               desktop: "",
+              jackpotImage: "",
             });
           } else {
             throw new Error(errorData.error || "Failed to fetch data");
@@ -71,6 +74,7 @@ export default function AddFeatures() {
             downloadApk: fetchedData.downloadApk || "",
             publish: fetchedData.publish || "",
             desktop: fetchedData.desktop || "",
+            jackpotImage: fetchedData.jackpotImage || "",
           });
           setDocId(fetchedData._id || null);
         }
@@ -108,40 +112,34 @@ export default function AddFeatures() {
       const uploadData = await uploadResponse.json();
       const fileLink = uploadData.filePath;
 
-      const updatePayload = {};
-      if (field === "featuresImageMobile") {
-        updatePayload.featuresImageMobile = { ...data.featuresImageMobile, image: fileLink };
-      } else if (field === "featuresImageDesktop") {
-        const updatedDesktopEntries = [...data.featuresImageDesktop];
+      if (field === "featuresImageDesktop") {
+        const updatedDesktopEntries = [...desktopEntries];
         updatedDesktopEntries[index] = { ...updatedDesktopEntries[index], image: fileLink };
-        updatePayload.featuresImageDesktop = updatedDesktopEntries;
+        setDesktopEntries(updatedDesktopEntries);
       } else {
-        updatePayload[field] = fileLink;
-      }
+        const updatePayload = {};
+        if (field === "featuresImageMobile") {
+          updatePayload.featuresImageMobile = { ...data.featuresImageMobile, image: fileLink };
+        } else {
+          updatePayload[field] = fileLink;
+        }
 
-      const updateResponse = await fetch(`${baseURL}/features-image/${docId}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatePayload),
-      });
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        throw new Error(errorData.error || "Failed to update file");
-      }
-      if (isApk) {
-        setData((prev) => ({ ...prev, downloadApk: fileLink }));
-      } else if (field === "featuresImageMobile") {
-        setData((prev) => ({ ...prev, featuresImageMobile: { ...prev.featuresImageMobile, image: fileLink } }));
-      } else if (field === "featuresImageDesktop") {
+        const updateResponse = await fetch(`${baseURL}/features-image/${docId}`, {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updatePayload),
+        });
+        if (!updateResponse.ok) {
+          const errorData = await updateResponse.json();
+          throw new Error(errorData.error || "Failed to update file");
+        }
         setData((prev) => ({
           ...prev,
-          featuresImageDesktop: updatePayload.featuresImageDesktop,
+          [field]: field === "featuresImageMobile" ? { ...prev.featuresImageMobile, image: fileLink } : fileLink,
         }));
-      } else {
-        setData((prev) => ({ ...prev, [field]: fileLink }));
       }
       addToast(`${isApk ? "APK" : "Image"} uploaded successfully`, { appearance: "success", autoDismiss: true });
     } catch (err) {
@@ -210,17 +208,26 @@ export default function AddFeatures() {
 
   // Handle desktop entry addition
   const handleAddDesktopEntry = () => {
-    setData((prev) => ({
-      ...prev,
-      featuresImageDesktop: [...prev.featuresImageDesktop, { image: "", link: "" }],
-    }));
+    setDesktopEntries((prev) => [...prev, { image: "", link: "" }]);
   };
 
   // Handle desktop entry update
-  const handleUpdateDesktopEntry = async (index, field, value) => {
-    const updatedDesktopEntries = [...data.featuresImageDesktop];
+  const handleUpdateDesktopEntry = (index, field, value) => {
+    const updatedDesktopEntries = [...desktopEntries];
     updatedDesktopEntries[index] = { ...updatedDesktopEntries[index], [field]: value };
+    setDesktopEntries(updatedDesktopEntries);
+  };
+
+  // Save desktop entry to database
+  const handleSaveDesktopEntry = async (index) => {
+    const entry = desktopEntries[index];
+    if (!entry.image || !entry.link) {
+      addToast("Both image and link are required to save the entry", { appearance: "error", autoDismiss: true });
+      return;
+    }
+
     try {
+      const updatedDesktopEntries = [...data.featuresImageDesktop, entry];
       const updateResponse = await fetch(`${baseURL}/features-image/${docId}`, {
         method: "PUT",
         headers: {
@@ -231,12 +238,13 @@ export default function AddFeatures() {
       });
       if (!updateResponse.ok) {
         const errorData = await updateResponse.json();
-        throw new Error(errorData.error || "Failed to update desktop entry");
+        throw new Error(errorData.error || "Failed to save desktop entry");
       }
       setData((prev) => ({ ...prev, featuresImageDesktop: updatedDesktopEntries }));
-      addToast("Desktop entry updated successfully", { appearance: "success", autoDismiss: true });
+      setDesktopEntries((prev) => prev.filter((_, i) => i !== index)); // Remove from temporary entries
+      addToast("Desktop entry saved successfully", { appearance: "success", autoDismiss: true });
     } catch (err) {
-      console.error("Desktop entry update error:", err);
+      console.error("Desktop entry save error:", err);
       addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
     }
   };
@@ -338,6 +346,11 @@ export default function AddFeatures() {
     }
   };
 
+  // Handle temporary desktop entry deletion
+  const handleDeleteTempDesktopEntry = (index) => {
+    setDesktopEntries((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="container mx-auto p-4 sm:p-6 bg-gray-100">
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
@@ -425,6 +438,45 @@ export default function AddFeatures() {
               </div>
             </div>
 
+            {/* Jackpot Image */}
+            <div className="border border-[#14805e] p-4 rounded-md relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Jackpot Image</label>
+              {data.jackpotImage ? (
+                <>
+                  <img
+                    className="w-full h-40 object-cover rounded-md"
+                    src={`${baseURL}${data.jackpotImage}`}
+                    alt="Jackpot Image"
+                  />
+                  <button
+                    onClick={() => handleDelete("jackpotImage")}
+                    className="absolute top-2 right-2 p-2 group rounded-full bg-red-600 hover:bg-white duration-200"
+                  >
+                    <FaTrash className="text-xl text-white group-hover:text-red-600 duration-200" />
+                  </button>
+                </>
+              ) : (
+                <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-md">
+                  <label className="cursor-pointer flex flex-col items-center">
+                    <FaUpload className="text-2xl text-gray-500" />
+                    <span className="text-sm text-gray-600 mt-2">Upload Jackpot Image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, "jackpotImage")}
+                      disabled={uploading.jackpotImage || !docId}
+                    />
+                  </label>
+                </div>
+              )}
+              {uploading.jackpotImage && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                </div>
+              )}
+            </div>
+
             {/* Features Image Desktop */}
             <div className="border border-[#14805e] p-4 rounded-md">
               <label className="block text-sm font-medium text-gray-700 mb-2">Features Image Desktop</label>
@@ -488,6 +540,71 @@ export default function AddFeatures() {
                   >
                     Delete Entry
                   </button>
+                </div>
+              ))}
+              {/* Temporary Desktop Entries */}
+              {desktopEntries.map((entry, index) => (
+                <div key={`temp-${index}`} className="mb-4 p-4 border rounded-md">
+                  <div className="relative">
+                    {entry.image ? (
+                      <>
+                        <img
+                          className="w-full h-40 object-cover rounded-md"
+                          src={`${baseURL}${entry.image}`}
+                          alt={`Temporary Desktop Image ${index + 1}`}
+                        />
+                        <button
+                          onClick={() => handleUpdateDesktopEntry(index, "image", "")}
+                          className="absolute top-2 right-2 p-2 group rounded-full bg-red-600 hover:bg-white duration-200"
+                        >
+                          <FaTrash className="text-xl text-white group-hover:text-red-600 duration-200" />
+                        </button>
+                      </>
+                    ) : (
+                      <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-md">
+                        <label className="cursor-pointer flex flex-col items-center">
+                          <FaUpload className="text-2xl text-gray-500" />
+                          <span className="text-sm text-gray-600 mt-2">Upload Image</span>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleFileUpload(e, "featuresImageDesktop", false, index)}
+                            disabled={uploading.featuresImageDesktop || !docId}
+                          />
+                        </label>
+                      </div>
+                    )}
+                    {uploading.featuresImageDesktop && (
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                        <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="mt-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Link</label>
+                    <input
+                      type="url"
+                      value={entry.link}
+                      onChange={(e) => handleUpdateDesktopEntry(index, "link", e.target.value)}
+                      placeholder="Enter link"
+                      className="w-full p-2 border rounded-md"
+                    />
+                  </div>
+                  <div className="mt-2 flex gap-2">
+                    <button
+                      onClick={() => handleSaveDesktopEntry(index)}
+                      className="p-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                    >
+                      <FaSave /> Save Entry
+                    </button>
+                    <button
+                      onClick={() => handleDeleteTempDesktopEntry(index)}
+                      className="p-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                    >
+                      <FaTrash /> Cancel
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

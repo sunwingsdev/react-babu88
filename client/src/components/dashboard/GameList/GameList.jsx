@@ -147,7 +147,7 @@ const GamesList = () => {
     try {
       // Handle image upload and delete old image if necessary
       if (editFormData.image && editFormData.oldImage) {
-        console.log("Deleting old image:", editFormData.oldImage);
+    //    console.log("Deleting old image:", editFormData.oldImage);
         try {
           await deleteImage(editFormData.oldImage);
         } catch (err) {
@@ -161,10 +161,10 @@ const GamesList = () => {
         updateData.image = filePath;
       }
 
-      console.log("Sending update request with:", {
-        id: editFormData.id,
-        ...updateData,
-      });
+      // console.log("Sending update request with:", {
+      //   id: editFormData.id,
+      //   ...updateData,
+      // });
       const result = await updateGame({
         id: editFormData.id,
         data: updateData,
