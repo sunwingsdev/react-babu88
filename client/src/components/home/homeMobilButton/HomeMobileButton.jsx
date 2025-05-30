@@ -22,7 +22,7 @@ const HomeMobileButton = ({ image, title, isActive, onClick }) => {
     return luminance < 0.5;
   };
 
-  console.log("isActive:", isActive);
+ // console.log("isActive:", isActive);
   
 
   // Fallback colors if not loaded or error occurs

@@ -163,10 +163,7 @@ const Home = () => {
 
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-        {
-          console.log("this is all game -> ",filteredGames)
-          
-        }
+        
           {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
             
               <GameCard
