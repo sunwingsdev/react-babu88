@@ -9,7 +9,7 @@ import { useState } from "react";
 import DeleteModal from "../shared/modal/DeleteModal";
 import { deleteImage } from "../../hooks/files";
 
-const LogoSelection = () => {
+const LoadingImageSelection = () => {
   const { data: homeControls, refetch } = useGetHomeControlsQuery();
   const [deleteHomeControl] = useDeleteHomeControlMutation();
   const [item, setItem] = useState(null);
@@ -18,7 +18,7 @@ const LogoSelection = () => {
   const { addToast } = useToasts();
 
   const logoHomeControls = homeControls?.filter(
-    (control) => control.category === "logo"
+    (control) => control.category === "loading-image"
   );
 
   const handleDeleteButtonClick = (item) => {
@@ -33,7 +33,7 @@ const LogoSelection = () => {
         try {
           const result = await deleteHomeControl(item?._id);
           if (result.data.deletedCount > 0) {
-            addToast("Logo deleted successfully", {
+            addToast("Image deleted successfully", {
               appearance: "success",
               autoDismiss: true,
             });
@@ -42,15 +42,14 @@ const LogoSelection = () => {
           }
           // eslint-disable-next-line no-unused-vars
         } catch (error) {
-          addToast("Failed to delete logo", {
+          addToast("Failed to delete image", {
             appearance: "error",
             autoDismiss: true,
           });
         }
       }
-    // eslint-disable-next-line no-unused-vars
     } catch (error) {
-     // console.log(error);
+      console.log(error);
     }
   };
 
@@ -107,4 +106,4 @@ const LogoSelection = () => {
   );
 };
 
-export default LogoSelection;
+export default LoadingImageSelection;
