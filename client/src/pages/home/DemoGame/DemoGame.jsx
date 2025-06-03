@@ -9,13 +9,14 @@ const DemoGame = () => {
   if (isLoading) return <div>Loading...</div>;
   if (!selectedGame) return <div>Game not found</div>;
   return (
-    <div>
-      <iframe
-        className="w-full max-h-[700px] h-[700px]"
-        src={selectedGame?.link}
-        frameBorder="0"
-      ></iframe>
-    </div>
+    <div className="relative w-full max-h-[650px] h-[650px] overflow-hidden">
+  <iframe
+    className="relative -mt-[30px] w-full h-[700px]"
+    src={selectedGame?.link}
+    frameBorder="0"
+  ></iframe>
+</div>
+
   );
 };
 

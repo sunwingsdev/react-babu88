@@ -7,6 +7,7 @@ import GameCard from "../../../components/shared/gameCard/GameCard";
 import HomeMobileButton from "@/components/home/homeMobilButton/HomeMobileButton";
 import { useGetGamesQuery } from "@/redux/features/allApis/gameApi/gameApi";
 import hotImage from "@/assets/homepageHot.svg";
+import jackpotImage from "@/assets/homeJackpot.svg";
 import cricketImage from "@/assets/cricket.svg";
 import casinoImage from "@/assets/ld.svg";
 import slotImage from "@/assets/rng.svg";
@@ -15,8 +16,6 @@ import sbImage from "@/assets/sb.svg";
 import fishingImage from "@/assets/fishing.svg";
 import crashImage from "@/assets/crash.svg";
 import ImageVideoSlider from "@/components/home/ImageVideoSlider/ImageVideoSlider";
-import referBannerImage from "@/assets/refer_banner.jpg";
-import bettingPassImage from "@/assets/betting-pass.jpg";
 import Matches from "@/components/home/Matches/Matches";
 import AnimationBanner from "../AnimationBanner/AnimationBanner";
 
@@ -26,10 +25,11 @@ const Home = () => {
   const [activeFilter, setActiveFilter] = useState("hot");
   const [publishImage, setPublishImage] = useState("");
   const [downloadImage, setDownloadImage] = useState("");
-  const [downloadApk, setDownloadApk] = useState(""); // New state for APK URL
+  const [downloadApk, setDownloadApk] = useState("");
   const [secondaryBannerImage, setSecondaryBannerImage] = useState("");
+  const [referImage, setReferImage] = useState({});
+  const [exclusiveImage, setExclusiveImage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
   // Fetch publish, download images, and APK URL
@@ -49,8 +49,10 @@ const Home = () => {
         const data = await response.json();
         setPublishImage(data.publish || "");
         setDownloadImage(data.download || "");
-        setDownloadApk(data.downloadApk || ""); // Set APK URL
+        setDownloadApk(data.downloadApk || "");
         setSecondaryBannerImage(data.desktop || "");
+        setReferImage(data.referImage || {});
+        setExclusiveImage(data.exclusiveImage || "");
       } catch (err) {
         console.error("Fetch error:", err);
         addToast(`Error: ${err.message}`, {
@@ -72,68 +74,41 @@ const Home = () => {
   const handleDownload = () => {
     if (downloadApk) {
       const link = document.createElement("a");
-      link.href = `${baseURL}${downloadApk}`; // Prepend baseURL to the downloadApk path
-      link.download = "babu88.apk"; // Specify the filename for download
+      link.href = `${baseURL}${downloadApk}`;
+      link.download = "babu88.apk";
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link); // Clean up
+      document.body.removeChild(link);
     } else {
-      addToast("No APK file available for download", { appearance: "error", autoDismiss: true });
+      addToast("No APK file available for download", {
+        appearance: "error",
+        autoDismiss: true,
+      });
     }
   };
 
   const buttons = [
-    {
-      image: hotImage,
-      title: "হট গেমস",
-      value: "hot",
-    },
-    {
-      image: cricketImage,
-      title: "ক্রিকেট",
-      value: "cricket",
-    },
-    {
-      image: casinoImage,
-      title: "ক্যাসিনো",
-      value: "casino",
-    },
-    {
-      image: slotImage,
-      title: "স্লট",
-      value: "slot",
-    },
-    {
-      image: tableImage,
-      title: "টেবিল খেলা",
-      value: "table",
-    },
-    {
-      image: sbImage,
-      title: "এসবি",
-      value: "sb",
-    },
-    {
-      image: fishingImage,
-      title: "মাছ ধরা",
-      value: "fishing",
-    },
-    {
-      image: crashImage,
-      title: "ক্র্যাশ",
-      value: "crash",
-    },
+    { image: jackpotImage, title: "Jackpot", value: "all" },
+    { image: hotImage, title: "হট গেমস", value: "hot" },
+    { image: cricketImage, title: "ক্রিকেট", value: "cricket" },
+    { image: casinoImage, title: "ক্যাসিনো", value: "casino" },
+    { image: slotImage, title: "স্লট", value: "slot" },
+    { image: tableImage, title: "টেবিল খেলা", value: "table" },
+    { image: sbImage, title: "এসবি", value: "sb" },
+    { image: fishingImage, title: "মাছ ধরা", value: "fishing" },
+    { image: crashImage, title: "ক্র্যাশ", value: "crash" },
   ];
 
+  // Filter games based on activeFilter
   const filteredGames = games?.filter((game) => {
-    if (!isMobile) return true; // Show all games on desktop
-
-    if (activeFilter === "hot") {
-      return game.badge === "hot";
-    } else {
-      return game.category === activeFilter;
-    }
+    if (activeFilter === "all") return true; // Show all games when "all" is selected
+    if (activeFilter === "hot") return game.badge === "new";
+    return game.category === activeFilter;
   });
+
+  useEffect(() => {
+    console.log("Active filter changed:", activeFilter);
+  }, [activeFilter]);
 
   return (
     <div>
@@ -142,10 +117,8 @@ const Home = () => {
         <SecondaryBanner image={secondaryBannerImage} baseURL={baseURL} />
 
         {/* Mobile Filter Buttons - Only shown on mobile */}
-
         {window.innerWidth < 768 && (
           <div className="py-2 flex gap-3 overflow-x-auto">
-      
             {buttons.map((button) => (
               <HomeMobileButton
                 key={button.value}
@@ -157,29 +130,26 @@ const Home = () => {
             ))}
           </div>
         )}
-        
-
 
         <AnimationBanner />
 
         {/* Games Grid */}
         <div className="mt-3 md:mt-0 pb-10 grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
-        
-          {(window.innerWidth < 768 ? filteredGames : games)?.map((game) => (
-            
-              <GameCard
+          {filteredGames?.map((game) => (
+            <GameCard
               key={game._id}
               gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game?.image}`}
               badge={game?.badge}
               gameHeading={game?.title}
-              gameText={"EVOLUTION GAMING"}
+              gameText={game?.category}
+              gameLink={game?.link ? game?.link : null}
               demoId={game?._id}
-            />       
+            />
           ))}
         </div>
 
         {/* Video Slider */}
-        <div className="pb-4 md:pb-0">
+        <div className="pb-4 md:pb-0 md:block hidden">
           <VideoSlider />
         </div>
 
@@ -187,15 +157,17 @@ const Home = () => {
           <Matches />
         </div>
 
-        {/* Video Slider */}
+        {/* Image Video Slider */}
         <div className="pb-4 md:pb-0">
           <ImageVideoSlider />
         </div>
 
         {/* Promotion Section */}
-        <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
-          প্রচার
-        </h2>
+        {publishImage && (
+          <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
+            প্রচার
+          </h2>
+        )}
         {loading ? (
           <div className="md:hidden w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
@@ -206,63 +178,72 @@ const Home = () => {
             src={`${baseURL}${publishImage}`}
             alt="Promotion"
           />
-        ) : (
-          <div className="md:hidden w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
-            <p className="text-gray-600 text-sm">
-              No promotion image available
-            </p>
-          </div>
-        )}
+        ) : null}
 
         {/* Desktop Promotion Section */}
         <div className="hidden md:flex flex-col lg:flex-row gap-3 my-3">
-          <div className="relative w-3/5">
+          {referImage && (
+            <div className="relative w-3/5">
+              <img
+                className="w-full h-52 object-fill rounded-2xl overflow-hidden"
+                src={`${baseURL}${referImage.image}`}
+                alt=""
+              />
+              <div className="text-white absolute top-0 p-4 space-y-3">
+                <h2
+                  className="text-xl font-semibold"
+                  style={{ color: referImage?.referTextColor }}
+                >
+                  {referImage?.title}
+                </h2>
+                <p
+                  className="text-sm"
+                  style={{ color: referImage?.referTextColor }}
+                >
+                  {referImage?.description}
+                </p>
+              </div>
+              <a
+                href={referImage?.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="absolute bottom-6 left-10 px-4 py-1 text-lg font-bold text-black bg-yellow-400 hover:bg-yellow-600 rounded-full transition-all duration-500"
+                style={{
+                  backgroundColor: referImage?.btnColor,
+                  color: referImage?.btnTextColor,
+                }}
+              >
+                {referImage?.text}
+              </a>
+            </div>
+          )}
+          {exclusiveImage && (
             <img
-              className="w-full h-52 object-fill rounded-2xl overflow-hidden"
-              src={referBannerImage}
+              className="w-2/5 object-fill rounded-2xl overflow-hidden"
+              src={`${baseURL}${exclusiveImage}`}
               alt=""
             />
-            <div className="text-white absolute top-0 p-4 space-y-3 ">
-              <h2 className="text-xl font-semibold">
-                Refer friends and start earning
-              </h2>
-              <p className="text-sm">
-                The No.1 friend referral program in Bangladesh is here! Earn
-                free ৳500 when your refer a friend and also earn lifetime
-                commission of up to 2% for every deposit your friend makes!
-              </p>
-            </div>
-            <button className="absolute bottom-6 left-10 px-4 py-1 text-lg font-bold text-black bg-yellow-400 hover:bg-yellow-600 rounded-full transition-all duration-500">
-              Refer Now
-            </button>
-          </div>
-          <img
-            className="w-2/5 object-fill rounded-2xl overflow-hidden"
-            src={bettingPassImage}
-            alt=""
-          />
+          )}
         </div>
 
         {/* Download Section */}
-        <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
-          ডাউনলোড করুন
-        </h2>
+        {downloadImage && (
+          <h2 className="block md:hidden pt-4 pb-1 text-base font-semibold text-gray-800">
+            ডাউনলোড করুন
+          </h2>
+        )}
         {loading ? (
           <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         ) : downloadImage ? (
           <SecondaryBanner
-            zipFile={downloadApk} // Pass the APK URL
+            zipFile={downloadApk}
             image={`${baseURL}${downloadImage}`}
             imageMobil={`${baseURL}${downloadImage}`}
-            onClick={handleDownload} // Pass the download handler
+            onClick={handleDownload}
           />
-        ) : (
-          <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-2xl">
-            <p className="text-gray-600 text-sm">No download image available</p>
-          </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

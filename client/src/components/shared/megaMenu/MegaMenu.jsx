@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
 const MegaMenu = ({ items }) => {
-  const { backgroundColor, mainColor } = useSelector((state) => state.themeColor);
+  const { backgroundColor, mainColor , mainBackgroundColor } = useSelector((state) => state.themeColor);
 
 
 
@@ -11,7 +11,7 @@ const MegaMenu = ({ items }) => {
 
 
   // Fallback colors
-  const menuBackgroundColor = backgroundColor || "#333333";
+  const menuBackgroundColor = mainBackgroundColor || "#333333";
   const hoverColor = mainColor || "#FFCD03";
 
   return (

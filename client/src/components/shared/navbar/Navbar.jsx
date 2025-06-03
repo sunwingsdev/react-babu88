@@ -129,10 +129,14 @@ const Navbar = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
   const { data: categories = [], isLoading: isCategoriesLoading } = useGetCategoriesQuery();
   const { user, token } = useSelector((state) => state.auth);
-  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+  const {   mainBackgroundTextColor ,  mainBackgroundColor,  mobileSidebarMenuBackgroundColor ,mobileSidebarMenuTextColor,mobileSidebarMenuIconColor } = useSelector((state) => state.themeColor);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { addToast } = useToasts();
+
+  const [mainColor,setMainColor] = useState( mainBackgroundTextColor );
+  const [backgroundColor,setBackgroundColor] = useState(mainBackgroundColor);
+
 
   // Fallback colors
   const navBackgroundColor = backgroundColor || "#333333";
@@ -277,14 +281,15 @@ const Navbar = () => {
           {/* Mobile menu icon */}
           <div className="md:hidden">
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-              <SheetTrigger asChild>
-                <button className="ml-auto">
-                  <IoMenuOutline size={30} />
+              <SheetTrigger asChild style={{border:"none"}}>
+                <button className="ml-auto border-none" style={{border:"none"}}>
+                  <IoMenuOutline size={30} style={{border:"none"}} />
                 </button>
               </SheetTrigger>
               <SheetContent
-                className="bg-slate-50 text-gray-600 w-64 p-2"
+                className=" w-64 p-2"
                 side="left"
+                style={{ backgroundColor: mobileSidebarMenuBackgroundColor}}
               >
                 <SheetClose asChild className="border-b-2 pb-2">
                   <div className="w-40">
@@ -295,14 +300,17 @@ const Navbar = () => {
                       />
                     </Link>
                   </div>
+                   
                 </SheetClose>
+              
                 <ul className="space-y-6 overflow-y-auto h-[92%]">
                   {data?.map((item) => (
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex items-center justify-start gap-3 mt-4 text-xs font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
                           <img className="w-6" src={item.image} alt={item.title} />
-                          <p className="text-black">{item.title}</p>
+                         
+                          <p style={{color : mobileSidebarMenuTextColor}} className="">{item.title}</p>
                           {item?.badge &&
                             (item?.badge === "hot" ? (
                               <div className="w-8 animate-pulse">
@@ -318,15 +326,16 @@ const Navbar = () => {
                     </SheetClose>
                   ))}
                   <div className="border-b-2 pb-2">
-                    <p className="text-sm font-semibold">Games</p>
+                    <p className="text-sm font-semibold" style={{color : mobileSidebarMenuTextColor}}>Games</p>
                   </div>
                   
+                 
                   {gamesData?.map((item) => (
                     <SheetClose key={item.id} asChild>
                       <Link to={item.route}>
                         <li className="flex gap-4 mt-1 text-sm font-medium px-3 py-2 hover:bg-slate-200 rounded-lg">
                           <img className="w-6" src={item.image} alt={item.title} />
-                          <p className="text-black">{item.title}</p>
+                          <p  style={{color : mobileSidebarMenuTextColor}}>{item.title}</p>
                           {item?.badge && (
                             <button className="animate-pulse rounded-full w-10 py-1 bg-[#04B22B] text-white">
                               new
@@ -337,7 +346,7 @@ const Navbar = () => {
                     </SheetClose>
                   ))}
                   <div className="border-b-2 pb-2">
-                    <p className="text-sm font-semibold">Others</p>
+                    <p className="text-sm font-semibold" style={{color : mobileSidebarMenuTextColor}}>Others</p>
                   </div>
                   <SheetClose asChild>
                     <Link to={"/"}>
@@ -350,7 +359,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/language.svg"
                           alt="Language"
                         />
-                        <p className="text-black">ভাষা</p>
+                        <p  style={{color : mobileSidebarMenuTextColor}}>ভাষা</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -362,7 +371,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/faq.svg"
                           alt="FAQ"
                         />
-                        <p className="text-black">প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী</p>
+                        <p  style={{color : mobileSidebarMenuTextColor}}>প্রায়শই জিজ্ঞাসিত প্রশ্নাবলী</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -374,7 +383,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/liveChat.svg"
                           alt="Live Chat"
                         />
-                        <p className="text-black">সরাসরি কথোপকথন</p>
+                        <p  style={{color : mobileSidebarMenuTextColor}}>সরাসরি কথোপকথন</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -386,7 +395,7 @@ const Navbar = () => {
                           src="https://www.babu88.app/static/svg/mobileMenu/downloadApp.svg"
                           alt="Download App"
                         />
-                        <p className="text-black">ডাউনলোড করুন</p>
+                        <p  style={{color : mobileSidebarMenuTextColor}}>ডাউনলোড করুন</p>
                       </li>
                     </Link>
                   </SheetClose>
@@ -401,7 +410,7 @@ const Navbar = () => {
                           src="https://babo88.com/static/svg/mobileMenu/logout.svg"
                           alt="Logout"
                         />
-                        <p className="text-black">প্রস্থান</p>
+                        <p  style={{color : mobileSidebarMenuTextColor}}>প্রস্থান</p>
                       </li>
                     </SheetClose>
                   )}
@@ -457,7 +466,7 @@ const Navbar = () => {
                       onClick={() => user && getUserDataAgain(user._id)}
                     >
                       <TbCurrencyTaka />
-                      <p>{(userData?.balance || user?.balance || 0).toLocaleString()}</p>
+                      <p>{(userData?.balance || user?.balance || 0).toLocaleString()} {!userData?.balance && 0}</p>
                     </div>
                   </Link>
                   <Link to={"/profile/deposit"}>
@@ -505,7 +514,7 @@ const Navbar = () => {
       </div>
 
       {/* Bottom navbar */}
-      <div className="md:flex hidden relative" style={{ backgroundColor: navBackgroundColor }}>
+      <div className="md:flex hidden relative" style={{ backgroundColor: navBackgroundColor  , color: mainBackgroundTextColor}}>
         <div className="container mx-auto px-4">
           <ul className="flex whitespace-nowrap overflow-x-auto">
             {/* Single menu */}
@@ -514,7 +523,7 @@ const Navbar = () => {
               className="text-sm font-semibold flex items-center gap-1 justify-center py-3 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
             >
               <p className="py-1 px-5 border-r-[1px]">
-                <IoHome size={20} />
+                <IoHome size={20}  style={{ color: mainBackgroundTextColor }} />
               </p>
             </NavLink>
 
@@ -525,7 +534,8 @@ const Navbar = () => {
             >
               <NavLink
                 to={"/cricket"}
-                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4  nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                style={{ color: mainBackgroundTextColor }}
               >
                 <p>ক্রিকেট</p>
               </NavLink>
@@ -549,6 +559,7 @@ const Navbar = () => {
               <NavLink
                 to={"/casino"}
                 className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                 style={{ color: mainBackgroundTextColor }}
               >
                 <p>ক্যাসিনো</p>
               </NavLink>
@@ -572,6 +583,7 @@ const Navbar = () => {
               <NavLink
                 to={"/slot"}
                 className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                 style={{ color: mainBackgroundTextColor }}
               >
                 <p>স্লট গেম</p>
               </NavLink>
@@ -595,6 +607,7 @@ const Navbar = () => {
               <NavLink
                 to={"/table-games"}
                 className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                 style={{ color: mainBackgroundTextColor }}
               >
                 <p>টেবিল গেম</p>
               </NavLink>
@@ -618,6 +631,7 @@ const Navbar = () => {
               <NavLink
                 to={"/sports-book"}
                 className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                 style={{ color: mainBackgroundTextColor }}
               >
                 <p>খেলার বই</p>
               </NavLink>
@@ -641,6 +655,7 @@ const Navbar = () => {
               <NavLink
                 to={"/fishing"}
                 className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                 style={{ color: mainBackgroundTextColor }}
               >
                 <p>মাছ ধরা</p>
               </NavLink>
@@ -664,6 +679,7 @@ const Navbar = () => {
               <NavLink
                 to={"/crash"}
                 className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                 style={{ color: mainBackgroundTextColor }}
               >
                 <p>ক্র্যাশ</p>
               </NavLink>
@@ -683,6 +699,7 @@ const Navbar = () => {
             <NavLink
               to={"/promotion"}
               className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+               style={{ color: mainBackgroundTextColor }}
             >
               <p>প্রমোশন</p>
             </NavLink>
@@ -691,6 +708,7 @@ const Navbar = () => {
             <NavLink
               to={"/betting-pass"}
               className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+                    style={{ color: mainBackgroundTextColor }}
             >
               <p>বেটিং পাস</p>
             </NavLink>
@@ -699,6 +717,7 @@ const Navbar = () => {
             <NavLink
               to={"/referral"}
               className="text-sm font-semibold flex items-center gap-1 justify-center px-5 py-4 text-white nav-link border-b-[4px] border-b-transparent transition-colors duration-200 ease-linear"
+               style={{ color: mainBackgroundTextColor }}
             >
               <p>সুপারিশ</p>
             </NavLink>

@@ -138,9 +138,13 @@ const Cricket = () => {
             <div className="text-center text-gray-500">No games available</div>
           ) : (
             <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
+            
               {cricketGames.map((game) => (
                 <GameCard
+                
+                demoId={game._id}
                   key={game._id}
+                    gameLink={game?.link ? game?.link : null }
                   gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game.image}`}
                   gameHot={
                     game.badge

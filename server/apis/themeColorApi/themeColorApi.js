@@ -13,9 +13,16 @@ const themeColorApi = (themeColorCollection) => {
         return res.status(400).json({ error: "Theme color document already exists" });
       }
       const newDoc = {
-        mainColor: "",
-        backgroundColor: "",
-        textColor: "#fff",
+        mainBackgroundColor: "",
+        mainBackgroundTextColor: "",
+        secondaryButtonBackgroundColor: "",
+        secondaryButtonTextColor: "",
+        secondaryColor: "",
+        noticeBackgroundColor: "",
+        noticeTextColor: "",
+        mobileSidebarMenuBackgroundColor: "",
+        mobileSidebarMenuTextColor: "",
+        mobileSidebarMenuIconColor: "",
         createdAt: new Date(),
         updatedAt: new Date(),
       };
@@ -48,7 +55,21 @@ const themeColorApi = (themeColorCollection) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-    if (!["mainColor", "backgroundColor", "textColor"].includes(field) || !color) {
+    if (
+      ![
+        "mainBackgroundColor",
+        "mainBackgroundTextColor",
+        "secondaryButtonBackgroundColor",
+        "secondaryButtonTextColor",
+        "secondaryColor",
+        "noticeBackgroundColor",
+        "noticeTextColor",
+        "mobileSidebarMenuBackgroundColor",
+        "mobileSidebarMenuTextColor",
+        "mobileSidebarMenuIconColor",
+      ].includes(field) ||
+      !color
+    ) {
       return res.status(400).json({ error: "Valid field and color are required" });
     }
     if (!/^#[0-9A-F]{6}$/i.test(color)) {
@@ -75,7 +96,20 @@ const themeColorApi = (themeColorCollection) => {
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ error: "Invalid ID format" });
     }
-    if (!["mainColor", "backgroundColor", "textColor"].includes(field)) {
+    if (
+      ![
+        "mainBackgroundColor",
+        "mainBackgroundTextColor",
+        "secondaryButtonBackgroundColor",
+        "secondaryButtonTextColor",
+        "secondaryColor",
+        "noticeBackgroundColor",
+        "noticeTextColor",
+        "mobileSidebarMenuBackgroundColor",
+        "mobileSidebarMenuTextColor",
+        "mobileSidebarMenuIconColor",
+      ].includes(field)
+    ) {
       return res.status(400).json({ error: "Invalid field" });
     }
     try {

@@ -135,8 +135,11 @@ const Slot = () => {
             <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2 md:gap-4 lg:gap-6">
               {slotGames.map((game) => (
                 <GameCard
+              demoId={game._id}
+
                   key={game._id}
                   gameCardImg={`${import.meta.env.VITE_BASE_API_URL}${game.image}`}
+                    gameLink={game?.link ? game?.link : null }
                   gameHot={
                     game.badge
                       ? game.badge === "hot"
