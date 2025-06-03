@@ -70,7 +70,7 @@ const GameUpload = () => {
     if (!formData.title.trim()) validationErrors.title = "Title is required";
     if (!formData.category) validationErrors.category = "Category is required";
     if (!formData.image) validationErrors.image = "Image is required";
-    if (!formData.link.trim()) validationErrors.link = "Link is required";
+   // if (!formData.link.trim()) validationErrors.link = "Link is required";
 
     // Validate subcategory if there are filtered subcategories
     if (filteredSubcategories.length > 0 && !formData.subcategory) {

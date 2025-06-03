@@ -4,9 +4,31 @@ import { FaTrash, FaSave } from "react-icons/fa";
 
 export default function AddColors() {
   const { addToast } = useToasts();
-  const [colors, setColors] = useState({ mainColor: "", backgroundColor: "", textColor: "" });
+  const [colors, setColors] = useState({
+    mainBackgroundColor: "",
+    mainBackgroundTextColor: "",
+    secondaryButtonBackgroundColor: "",
+    secondaryButtonTextColor: "",
+    secondaryColor: "",
+    noticeBackgroundColor: "",
+    noticeTextColor: "",
+    mobileSidebarMenuBackgroundColor: "",
+    mobileSidebarMenuTextColor: "",
+    mobileSidebarMenuIconColor: "",
+  });
   const [loading, setLoading] = useState(false);
-  const [updating, setUpdating] = useState({ mainColor: false, backgroundColor: false, textColor: false });
+  const [updating, setUpdating] = useState({
+    mainBackgroundColor: false,
+    mainBackgroundTextColor: false,
+    secondaryButtonBackgroundColor: false,
+    secondaryButtonTextColor: false,
+    secondaryColor: false,
+    noticeBackgroundColor: false,
+    noticeTextColor: false,
+    mobileSidebarMenuBackgroundColor: false,
+    mobileSidebarMenuTextColor: false,
+    mobileSidebarMenuIconColor: false,
+  });
   const [docId, setDocId] = useState(null);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
 
@@ -36,16 +58,34 @@ export default function AddColors() {
             }
             const initData = await initResponse.json();
             setDocId(initData.id);
-            setColors({ mainColor: "", backgroundColor: "", textColor: "" });
+            setColors({
+              mainBackgroundColor: "",
+              mainBackgroundTextColor: "",
+              secondaryButtonBackgroundColor: "",
+              secondaryButtonTextColor: "",
+              secondaryColor: "",
+              noticeBackgroundColor: "",
+              noticeTextColor: "",
+              mobileSidebarMenuBackgroundColor: "",
+              mobileSidebarMenuTextColor: "",
+              mobileSidebarMenuIconColor: "",
+            });
           } else {
             throw new Error(errorData.error || "Failed to fetch colors");
           }
         } else {
           const data = await response.json();
           setColors({
-            mainColor: data.mainColor || "",
-            backgroundColor: data.backgroundColor || "",
-            textColor: data.textColor || "",
+            mainBackgroundColor: data.mainBackgroundColor || "",
+            mainBackgroundTextColor: data.mainBackgroundTextColor || "",
+            secondaryButtonBackgroundColor: data.secondaryButtonBackgroundColor || "",
+            secondaryButtonTextColor: data.secondaryButtonTextColor || "",
+            secondaryColor: data.secondaryColor || "",
+            noticeBackgroundColor: data.noticeBackgroundColor || "",
+            noticeTextColor: data.noticeTextColor || "",
+            mobileSidebarMenuBackgroundColor: data.mobileSidebarMenuBackgroundColor || "",
+            mobileSidebarMenuTextColor: data.mobileSidebarMenuTextColor || "",
+            mobileSidebarMenuIconColor: data.mobileSidebarMenuIconColor || "",
           });
           setDocId(data._id || null);
         }
@@ -57,7 +97,7 @@ export default function AddColors() {
       }
     };
     fetchColors();
-  }, []);
+  }, [addToast]);
 
   // Handle color update
   const handleColorUpdate = async (field, color) => {
@@ -114,6 +154,14 @@ export default function AddColors() {
     }
   };
 
+  // Format field names for display
+  const formatFieldName = (field) => {
+    return field
+      .replace(/([A-Z])/g, " $1")
+      .replace(/^./, (str) => str.toUpperCase())
+      .trim();
+  };
+
   return (
     <div className="container mx-auto p-4 sm:p-6 bg-gray-100">
       <div className="bg-white rounded-xl shadow-lg p-4 sm:p-6">
@@ -125,10 +173,21 @@ export default function AddColors() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {["mainColor", "backgroundColor", "textColor"].map((field) => (
+            {[
+              "mainBackgroundColor",
+              "mainBackgroundTextColor",
+              "secondaryButtonBackgroundColor",
+              "secondaryButtonTextColor",
+              "secondaryColor",
+              "noticeBackgroundColor",
+              "noticeTextColor",
+              "mobileSidebarMenuBackgroundColor",
+              "mobileSidebarMenuTextColor",
+              "mobileSidebarMenuIconColor",
+            ].map((field) => (
               <div key={field} className="border border-[#14805e] p-4 rounded-md relative">
-                <label className="block text-sm font-medium text-gray-700 capitalize mb-2">
-                  {field.replace("Color", " Color")}
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  { field === "secondaryColor" ? "Menu selected background color" :  formatFieldName(field)}
                 </label>
                 <div className="flex items-center gap-4">
                   <input

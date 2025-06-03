@@ -7,9 +7,11 @@ const AppStrength = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [downloadAPK, setDownloadAPK] = useState("");
 
-  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+  const { mainColor, backgroundColor , mainBackgroundTextColor , mainBackgroundColor ,secondaryButtonBackgroundColor,secondaryButtonTextColor } = useSelector((state) => state.themeColor);
 
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
+
+  
 
   // Fetch publish and download images
   useEffect(() => {
@@ -66,23 +68,24 @@ const AppStrength = () => {
       {isVisible && (
         <div
           className="md:hidden text-black flex justify-between items-center px-4 py-2"
-          style={{ backgroundColor: bannerBgColor }}
+          style={{ backgroundColor: mainBackgroundColor }}
         >
+       
           <IoClose
             onClick={() => setIsVisible(false)}
             className="text-3xl w-1/8"
           />
           <div className="flex gap-2">
             <img className="size-10" src={image} alt="Download app" />
-            <p className="leading-4" style={{ color: mainColor }}>
+            <p className="leading-4" style={{ color: mainBackgroundTextColor }}>
               এখনই আমাদের APP সংস্করণ ডাউনলোড করুন!
             </p>
           </div>
           <button
             className="px-1 py-2 text-base rounded-md text-center transition-all duration-500"
             style={{
-              backgroundColor: mainColor,
-              color: backgroundColor,
+              backgroundColor: secondaryButtonBackgroundColor,
+              color: secondaryButtonTextColor,
             }}
             onClick={handleDownload} // Add onClick event handler
           >

@@ -72,7 +72,7 @@ const Matches = () => {
       teamImage2: lq,
     },
   ];
-const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+const { mainColor, backgroundColor , mainBackgroundColor,mainBackgroundTextColor } = useSelector((state) => state.themeColor);
 
 
 
@@ -89,16 +89,16 @@ const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
           className="min-w-[280px] rounded-lg shadow-sm shadow-gray-500 pb-3 "
         >
           <div 
-          style={{ backgroundColor :backgroundColor }}
+          style={{ backgroundColor :mainBackgroundColor }}
           className="flex items-center gap-2 p-2 rounded-t-lg text-sm">
             <p className="bg-black px-1 rounded-lg" 
-            style={{ color :mainColor }}
+            style={{ color :mainBackgroundTextColor }}
             >Upcoming</p>
-            <h2      style={{ color :mainColor }} className="font-medium">{match.league}</h2>
+            <h2      style={{ color :mainBackgroundTextColor }} className="font-medium">{match.league}</h2>
           </div>
           <div className="px-2 text-sm">
             <p 
-            style={{ color :mainColor }}
+            style={{ color :mainBackgroundTextColor }}
             className=" text-base py-1">{match.date}</p>
             <div className="flex items-center gap-2 mb-2">
               <img className="size-10" src={match?.teamImage1} alt="" />

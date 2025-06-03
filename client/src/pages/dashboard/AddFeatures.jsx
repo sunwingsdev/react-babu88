@@ -12,6 +12,9 @@ export default function AddFeatures() {
     publish: "",
     desktop: "",
     jackpotImage: "",
+    secondaryBannerImage: "", // New field
+    referImage: { image: "", title: "", description: "", btnColor: "", btnTextColor: "", text: "", referTextColor: "" }, // New field
+    exclusiveImage: "", // New field
   });
   const [newLink, setNewLink] = useState(""); // For featuresImageMobile links
   const [desktopEntries, setDesktopEntries] = useState([]); // For temporary desktop entries
@@ -24,6 +27,9 @@ export default function AddFeatures() {
     desktop: false,
     featuresImageDesktop: false,
     jackpotImage: false,
+    secondaryBannerImage: false, // New field
+    referImage: false, // New field
+    exclusiveImage: false, // New field
   });
   const [docId, setDocId] = useState(null);
   const baseURL = import.meta.env.VITE_BASE_API_URL || "http://localhost:5000";
@@ -61,6 +67,9 @@ export default function AddFeatures() {
               publish: "",
               desktop: "",
               jackpotImage: "",
+              secondaryBannerImage: "", // New field
+              referImage: { image: "", title: "", description: "", btnColor: "", btnTextColor: "", text: "", referTextColor: "" }, // New field
+              exclusiveImage: "", // New field
             });
           } else {
             throw new Error(errorData.error || "Failed to fetch data");
@@ -75,6 +84,9 @@ export default function AddFeatures() {
             publish: fetchedData.publish || "",
             desktop: fetchedData.desktop || "",
             jackpotImage: fetchedData.jackpotImage || "",
+            secondaryBannerImage: fetchedData.secondaryBannerImage || "", // New field
+            referImage: fetchedData.referImage || { image: "", title: "", description: "", btnColor: "", btnTextColor: "", text: "", referTextColor: "" }, // New field
+            exclusiveImage: fetchedData.exclusiveImage || "", // New field
           });
           setDocId(fetchedData._id || null);
         }
@@ -120,6 +132,8 @@ export default function AddFeatures() {
         const updatePayload = {};
         if (field === "featuresImageMobile") {
           updatePayload.featuresImageMobile = { ...data.featuresImageMobile, image: fileLink };
+        } else if (field === "referImage") {
+          updatePayload.referImage = { ...data.referImage, image: fileLink };
         } else {
           updatePayload[field] = fileLink;
         }
@@ -138,7 +152,7 @@ export default function AddFeatures() {
         }
         setData((prev) => ({
           ...prev,
-          [field]: field === "featuresImageMobile" ? { ...prev.featuresImageMobile, image: fileLink } : fileLink,
+          [field]: field === "featuresImageMobile" ? { ...prev.featuresImageMobile, image: fileLink } : field === "referImage" ? { ...prev.referImage, image: fileLink } : fileLink,
         }));
       }
       addToast(`${isApk ? "APK" : "Image"} uploaded successfully`, { appearance: "success", autoDismiss: true });
@@ -147,6 +161,35 @@ export default function AddFeatures() {
       addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
     } finally {
       setUploading((prev) => ({ ...prev, [field]: false }));
+    }
+  };
+
+  // Handle text field updates for referImage
+  const handleReferTextUpdate = async (field, value) => {
+    const updatePayload = {
+      referImage: { ...data.referImage, [field]: value },
+    };
+    try {
+      const updateResponse = await fetch(`${baseURL}/features-image/${docId}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatePayload),
+      });
+      if (!updateResponse.ok) {
+        const errorData = await updateResponse.json();
+        throw new Error(errorData.error || "Failed to update refer image data");
+      }
+      setData((prev) => ({
+        ...prev,
+        referImage: { ...prev.referImage, [field]: value },
+      }));
+      addToast("Refer image data updated successfully", { appearance: "success", autoDismiss: true });
+    } catch (err) {
+      console.error("Refer image update error:", err);
+      addToast(`Error: ${err.message}`, { appearance: "error", autoDismiss: true });
     }
   };
 
@@ -261,6 +304,8 @@ export default function AddFeatures() {
         filePath = doc.featuresImageMobile.image;
       } else if (field === "featuresImageDesktop" && index !== null) {
         filePath = doc.featuresImageDesktop[index].image;
+      } else if (field === "referImage") {
+        filePath = doc.referImage.image;
       } else {
         filePath = doc[field];
       }
@@ -281,6 +326,8 @@ export default function AddFeatures() {
         const updatedDesktopEntries = [...data.featuresImageDesktop];
         updatedDesktopEntries[index] = { ...updatedDesktopEntries[index], image: "" };
         updatePayload.featuresImageDesktop = updatedDesktopEntries;
+      } else if (field === "referImage") {
+        updatePayload.referImage = { image: "", title: data.referImage.title, description: data.referImage.description, btnColor: data.referImage.btnColor, btnTextColor: data.referImage.btnTextColor, text: data.referImage.text, referTextColor: data.referImage.referTextColor };
       } else {
         updatePayload[field] = "";
       }
@@ -302,6 +349,8 @@ export default function AddFeatures() {
         setData((prev) => ({ ...prev, featuresImageMobile: { ...prev.featuresImageMobile, image: "" } }));
       } else if (field === "featuresImageDesktop" && index !== null) {
         setData((prev) => ({ ...prev, featuresImageDesktop: updatePayload.featuresImageDesktop }));
+      } else if (field === "referImage") {
+        setData((prev) => ({ ...prev, referImage: updatePayload.referImage }));
       } else {
         setData((prev) => ({ ...prev, [field]: "" }));
       }
@@ -364,7 +413,8 @@ export default function AddFeatures() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Features Image Mobile */}
             <div className="border border-[#14805e] p-4 rounded-md">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Features Image Mobile</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">OFFICIAL BRAND
+AMBASSADOR Mobile</label>
               {data.featuresImageMobile.image ? (
                 <div className="relative">
                   <img
@@ -471,6 +521,191 @@ export default function AddFeatures() {
                 </div>
               )}
               {uploading.jackpotImage && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                </div>
+              )}
+            </div>
+
+            {/* Secondary Banner Image */}
+            <div className="border border-[#14805e] p-4 rounded-md relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Secondary Banner Image</label>
+              {data.secondaryBannerImage ? (
+                <>
+                  <img
+                    className="w-full h-40 object-cover rounded-md"
+                    src={`${baseURL}${data.secondaryBannerImage}`}
+                    alt="Secondary Banner Image"
+                  />
+                  <button
+                    onClick={() => handleDelete("secondaryBannerImage")}
+                    className="absolute top-2 right-2 p-2 group rounded-full bg-red-600 hover:bg-white duration-200"
+                  >
+                    <FaTrash className="text-xl text-white group-hover:text-red-600 duration-200" />
+                  </button>
+                </>
+              ) : (
+                <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-md">
+                  <label className="cursor-pointer flex flex-col items-center">
+                    <FaUpload className="text-2xl text-gray-500" />
+                    <span className="text-sm text-gray-600 mt-2">Upload Secondary Banner Image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, "secondaryBannerImage")}
+                      disabled={uploading.secondaryBannerImage || !docId}
+                    />
+                  </label>
+                </div>
+              )}
+              {uploading.secondaryBannerImage && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                </div>
+              )}
+            </div>
+
+            {/* Refer Image */}
+            <div className="border border-[#14805e] p-4 rounded-md relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Refer Image</label>
+              {data.referImage.image ? (
+                <>
+                  <img
+                    className="w-full h-40 object-cover rounded-md"
+                    src={`${baseURL}${data.referImage.image}`}
+                    alt="Refer Image"
+                  />
+                  <button
+                    onClick={() => handleDelete("referImage")}
+                    className="absolute top-2 right-2 p-2 group rounded-full bg-red-600 hover:bg-white duration-200"
+                  >
+                    <FaTrash className="text-xl text-white group-hover:text-red-600 duration-200" />
+                  </button>
+                </>
+              ) : (
+                <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-md">
+                  <label className="cursor-pointer flex flex-col items-center">
+                    <FaUpload className="text-2xl text-gray-500" />
+                    <span className="text-sm text-gray-600 mt-2">Upload Refer Image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, "referImage")}
+                      disabled={uploading.referImage || !docId}
+                    />
+                  </label>
+                </div>
+              )}
+              {uploading.referImage && (
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
+                  <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
+                </div>
+              )}
+              <div className="mt-4 grid grid-cols-1 gap-2">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                  <input
+                    type="text"
+                    value={data.referImage.title}
+                    onChange={(e) => handleReferTextUpdate("title", e.target.value)}
+                    placeholder="Enter title"
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                  <textarea
+                    value={data.referImage.description}
+                    onChange={(e) => handleReferTextUpdate("description", e.target.value)}
+                    placeholder="Enter description"
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Button Color</label>
+                  <input
+                    type="color"
+                    value={data.referImage.btnColor}
+                    onChange={(e) => handleReferTextUpdate("btnColor", e.target.value)}
+                    className="w-full h-10 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Button Text Color</label>
+                  <input
+                    type="color"
+                    value={data.referImage.btnTextColor}
+                    onChange={(e) => handleReferTextUpdate("btnTextColor", e.target.value)}
+                    className="w-full h-10 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">ButtonText</label>
+                  <input
+                    type="text"
+                    value={data.referImage.text}
+                    onChange={(e) => handleReferTextUpdate("text", e.target.value)}
+                    placeholder="Enter text"
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Link</label>
+                  <input
+                    type="text"
+                    value={data.referImage.link}
+                    onChange={(e) => handleReferTextUpdate("link", e.target.value)}
+                    placeholder="Enter text"
+                    className="w-full p-2 border rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Refer Text Color</label>
+                  <input
+                    type="color"
+                    value={data.referImage.referTextColor}
+                    onChange={(e) => handleReferTextUpdate("referTextColor", e.target.value)}
+                    className="w-full h-10 border rounded-md"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Exclusive Image */}
+            <div className="border border-[#14805e] p-4 rounded-md relative">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Exclusive Image</label>
+              {data.exclusiveImage ? (
+                <>
+                  <img
+                    className="w-full h-40 object-cover rounded-md"
+                    src={`${baseURL}${data.exclusiveImage}`}
+                    alt="Exclusive Image"
+                  />
+                  <button
+                    onClick={() => handleDelete("exclusiveImage")}
+                    className="absolute top-2 right-2 p-2 group rounded-full bg-red-600 hover:bg-white duration-200"
+                  >
+                    <FaTrash className="text-xl text-white group-hover:text-red-600 duration-200" />
+                  </button>
+                </>
+              ) : (
+                <div className="w-full h-40 flex items-center justify-center bg-gray-200 rounded-md">
+                  <label className="cursor-pointer flex flex-col items-center">
+                    <FaUpload className="text-2xl text-gray-500" />
+                    <span className="text-sm text-gray-600 mt-2">Upload Exclusive Image</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, "exclusiveImage")}
+                      disabled={uploading.exclusiveImage || !docId}
+                    />
+                  </label>
+                </div>
+              )}
+              {uploading.exclusiveImage && (
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-md">
                   <div className="animate-spin rounded-full h-6 w-6 border-t-2 border-b-2 border-white"></div>
                 </div>

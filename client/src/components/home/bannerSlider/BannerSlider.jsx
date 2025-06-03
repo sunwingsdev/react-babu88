@@ -7,6 +7,7 @@ import {
 import { HiMiniSpeakerWave } from "react-icons/hi2";
 import Marquee from "react-fast-marquee";
 import { useGetHomeControlsQuery } from "@/redux/features/allApis/homeControlApi/homeControlApi";
+import { useSelector } from "react-redux";
 
 const BannerSlider = () => {
   const { data: homeControls } = useGetHomeControlsQuery();
@@ -16,6 +17,11 @@ const BannerSlider = () => {
   const notice = homeControls?.find(
     (control) => control.category === "notice" && control.isSelected
   );
+
+
+const {  noticeBackgroundColor, noticeTextColor } = useSelector((state) => state.themeColor);
+
+
   const bannerImages = [
     {
       id: 1,
@@ -107,9 +113,9 @@ const BannerSlider = () => {
           />
         ))}
       </div>
-      <div className="bg-[#595959] opacity-90 text-white absolute -bottom-7 md:bottom-0 w-full py-1">
+      <div className="bg-[`${noticeBackgroundColor}`] opacity-90 text-white absolute -bottom-7 md:bottom-0 w-full py-1">
         {/* <Container> */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4" style={{color : noticeTextColor , backgroundColor : noticeBackgroundColor}}>
           <HiMiniSpeakerWave className="text-xl md:text-3xl" />
           <Marquee className="text-xs md:text-sm">{notice?.title}</Marquee>
         </div>

@@ -45,28 +45,52 @@ const navItems = [
 
 const MainLayout = () => {
   const { user, token } = useSelector((state) => state.auth);
-  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+  const { 
+    mainBackgroundColor, // Default: Deep blue
+    mainBackgroundTextColor , // Default: White
+    secondaryButtonBackgroundColor , // Default: Amber
+    secondaryButtonTextColor  // Default: Dark gray
+  } = useSelector((state) => state.themeColor);
   const location = useLocation();
-
   const [path, setPath] = useState("");
 
   // Utility to darken a hex color for hover effect
   const darkenColor = (hex, amount) => {
-    let color = hex.replace("#", "");
-    const num = parseInt(color, 16);
-    const r = Math.max(0, (num >> 16) - Math.round(255 * amount));
-    const g = Math.max(0, ((num >> 8) & 0x00ff) - Math.round(255 * amount));
-    const b = Math.max(0, (num & 0x0000ff) - Math.round(255 * amount));
-    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+    try {
+      let color = hex.replace("#", "");
+      const num = parseInt(color, 16);
+      const r = Math.max(0, (num >> 16) - Math.round(255 * amount));
+      const g = Math.max(0, ((num >> 8) & 0x00ff) - Math.round(255 * amount));
+      const b = Math.max(0, (num & 0x0000ff) - Math.round(255 * amount));
+      return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+    } catch (error) {
+      return hex; // Fallback to original color on error
+    }
   };
 
-  // Fallback colors if not loaded or error occurs
-  const bannerBgColor = backgroundColor || "#BFDBFE"; // Default to blue-100 if backgroundColor is not set
-  const buttonBgColor = mainColor || "#FFCD03"; // Default to original button color if mainColor is not set
-  let buttonHoverBgColor = mainColor ? darkenColor(mainColor, 0.1) : "#e5be22"; // Darken mainColor for hover or use original hover
+  // Utility to lighten a hex color for active state
+  const lightenColor = (hex, amount) => {
+    try {
+      let color = hex.replace("#", "");
+      const num = parseInt(color, 16);
+      const r = Math.min(255, (num >> 16) + Math.round(255 * amount));
+      const g = Math.min(255, ((num >> 8) & 0x00ff) + Math.round(255 * amount));
+      const b = Math.min(255, (num & 0x0000ff) + Math.round(255 * amount));
+      return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, "0")}`;
+    } catch (error) {
+      return hex; // Fallback to original color on error
+    }
+  };
+
+  // Define colors
+  const bannerBgColor = mainBackgroundColor;
+  const buttonBgColor = secondaryButtonBackgroundColor;
+  const buttonTextColor = secondaryButtonTextColor;
+  const buttonHoverBgColor = darkenColor(buttonBgColor, 0.1);
+  const navHoverBgColor = darkenColor(bannerBgColor, 0.1);
+  const activeIconColor = lightenColor(mainBackgroundTextColor, 0.15);
 
   useEffect(() => {
-    // console.log("router: ", location.pathname);
     setPath(location.pathname);
   }, [location]);
 
@@ -74,14 +98,15 @@ const MainLayout = () => {
     <div>
       <style>
         {`
-          .register-button:hover {
+          .register-button:hover, .login-button:hover {
             background-color: ${buttonHoverBgColor};
-          }
-          .login-button:hover {
-            background-color: ${buttonHoverBgColor};
+            color: ${buttonTextColor};
           }
           .nav-item:hover {
-            background-color: ${darkenColor(bannerBgColor, 0.1)};
+            background-color: ${navHoverBgColor};
+          }
+          .nav-item.active {
+            background-color: ${darkenColor(bannerBgColor, 0.05)};
           }
         `}
       </style>
@@ -95,15 +120,15 @@ const MainLayout = () => {
           <Link to={"/register"} className="w-1/2">
             <p
               className="p-3 text-base text-center font-semibold register-button"
-              style={{ backgroundColor: backgroundColor , color:mainColor }}
+              style={{ backgroundColor: mainBackgroundColor, color: mainBackgroundTextColor }}
             >
               নিবন্ধন করুন
             </p>
           </Link>
           <Link to={"/login"} className="w-1/2">
             <p
-              className="p-3 text-base text-center font-semibold  login-button"
-              style={{ backgroundColor: mainColor , color:backgroundColor }}
+              className="p-3 text-base text-center font-semibold login-button"
+              style={{ backgroundColor: secondaryButtonBackgroundColor, color: secondaryButtonTextColor  }}
             >
               প্রবেশ করুন
             </p>
@@ -116,17 +141,27 @@ const MainLayout = () => {
         >
           {navItems.map((item) => (
             <Link key={item.id} to={item.to}>
-              <div className="w-full py-3 px-2 flex flex-col items-center justify-center text-sm gap-0.5 nav-item">
+              <div
+                className={`w-full py-3 px-2 flex flex-col items-center justify-center text-sm gap-0.5 nav-item ${
+                  (path === item.to ||
+                    (item.to === "/profile/deposit" &&
+                      path.includes("/profile/deposit")) ||
+                    (item.to === "/profile/deposit" &&
+                      path.includes("/profile/withdrawal")))
+                    ? "active"
+                    : ""
+                }`}
+              >
                 {(path === item.to ||
                   (item.to === "/profile/deposit" &&
                     path.includes("/profile/deposit")) ||
                   (item.to === "/profile/deposit" &&
                     path.includes("/profile/withdrawal"))) ? (
-                  <div style={{ color: buttonBgColor }}>{item.icon}</div>
+                  <div style={{ color: activeIconColor }}>{item.icon}</div>
                 ) : (
-                  item.icon
+                  <div style={{ color: mainBackgroundTextColor }}>{item.icon}</div>
                 )}
-                <p>{item.label}</p>
+                <p style={{ color: mainBackgroundTextColor }}>{item.label}</p>
               </div>
             </Link>
           ))}

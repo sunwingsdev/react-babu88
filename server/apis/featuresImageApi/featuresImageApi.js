@@ -40,30 +40,33 @@ const featuresImageApi = (featuresImageCollection) => {
   const router = express.Router();
 
   // Initialize features image document
-router.post("/init", async (req, res) => {
-  try {
-    const existingDoc = await featuresImageCollection.findOne();
-    if (existingDoc) {
-      return res.status(400).json({ error: "Features image document already exists" });
+  router.post("/init", async (req, res) => {
+    try {
+      const existingDoc = await featuresImageCollection.findOne();
+      if (existingDoc) {
+        return res.status(400).json({ error: "Features image document already exists" });
+      }
+      const newDoc = {
+        featuresImageMobile: { image: "", links: [] },
+        featuresImageDesktop: [],
+        download: "",
+        downloadApk: "",
+        publish: "",
+        desktop: "",
+        jackpotImage: "",
+        secondaryBannerImage: "", // New field
+        referImage: { image: "", title: "", description: "", btnColor: "", btnTextColor: "", text: "", referTextColor: "" ,link : ""}, // New field
+        exclusiveImage: "", // New field
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      const result = await featuresImageCollection.insertOne(newDoc);
+      res.status(201).json({ message: "Features image document initialized", id: result.insertedId });
+    } catch (err) {
+      console.error("Error in POST /features-image/init:", err);
+      res.status(500).json({ error: "Server error" });
     }
-    const newDoc = {
-      featuresImageMobile: { image: "", links: [] },
-      featuresImageDesktop: [],
-      download: "",
-      downloadApk: "",
-      publish: "",
-      desktop: "",
-      jackpotImage: "", // নতুন ফিল্ড
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    const result = await featuresImageCollection.insertOne(newDoc);
-    res.status(201).json({ message: "Features image document initialized", id: result.insertedId });
-  } catch (err) {
-    console.error("Error in POST /features-image/init:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+  });
 
   // Get features images
   router.get("/", async (req, res) => {
@@ -127,44 +130,49 @@ router.post("/init", async (req, res) => {
     }
   });
 
-router.delete("/:id/:field", async (req, res) => {
-  const { id, field } = req.params;
-  if (!ObjectId.isValid(id)) {
-    return res.status(400).json({ error: "Invalid ID format" });
-  }
-  if (!["featuresImageMobile", "download", "downloadApk", "publish", "desktop", "jackpotImage"].includes(field)) {
-    return res.status(400).json({ error: "Invalid field" });
-  }
-  try {
-    const doc = await featuresImageCollection.findOne({ _id: new ObjectId(id) });
-    if (!doc) {
-      return res.status(404).json({ error: "Document not found" });
+  router.delete("/:id/:field", async (req, res) => {
+    const { id, field } = req.params;
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid ID format" });
     }
-    let filePath;
-    if (field === "featuresImageMobile") {
-      filePath = doc.featuresImageMobile.image;
-    } else {
-      filePath = doc[field];
+    if (!["featuresImageMobile", "download", "downloadApk", "publish", "desktop", "jackpotImage", "secondaryBannerImage", "referImage", "exclusiveImage"].includes(field)) {
+      return res.status(400).json({ error: "Invalid field" });
     }
-    if (filePath) {
-      await deleteFile(filePath);
+    try {
+      const doc = await featuresImageCollection.findOne({ _id: new ObjectId(id) });
+      if (!doc) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      let filePath;
+      if (field === "featuresImageMobile") {
+        filePath = doc.featuresImageMobile.image;
+      } else if (field === "referImage") {
+        filePath = doc.referImage.image;
+      } else {
+        filePath = doc[field];
+      }
+      if (filePath) {
+        await deleteFile(filePath);
+      }
+      const updateData = field === "featuresImageMobile"
+        ? { featuresImageMobile: { image: "", links: doc.featuresImageMobile.links } }
+        : field === "referImage"
+        ? { referImage: { image: "", title: doc.referImage.title, description: doc.referImage.description, btnColor: doc.referImage.btnColor, btnTextColor: doc.referImage.btnTextColor, text: doc.referImage.text, referTextColor: doc.referImage.referTextColor , links: doc.referImage.links } }
+        : { [field]: "" };
+      const result = await featuresImageCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: { ...updateData, updatedAt: new Date() } }
+      );
+      if (result.matchedCount === 0) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      res.status(200).json({ message: `${field === "downloadApk" ? "APK" : "Image"} deleted successfully` });
+    } catch (err) {
+      console.error("Error in DELETE /features-image:", err);
+      res.status(500).json({ error: "Server error" });
     }
-    const updateData = field === "featuresImageMobile"
-      ? { featuresImageMobile: { image: "", links: doc.featuresImageMobile.links } }
-      : { [field]: "" };
-    const result = await featuresImageCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: { ...updateData, updatedAt: new Date() } }
-    );
-    if (result.matchedCount === 0) {
-      return res.status(404).json({ error: "Document not found" });
-    }
-    res.status(200).json({ message: `${field === "downloadApk" ? "APK" : "Image"} deleted successfully` });
-  } catch (err) {
-    console.error("Error in DELETE /features-image:", err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+  });
+
   return router;
 };
 

@@ -81,17 +81,19 @@ const VideoSlider = () => {
   };
 
   return (
-    <div className="relative w-full h-80 hidden md:block">
+    <div
+
+
+      style={{ display: bannerImages.length !== 0 ? "block" : "none" }}
+    
+      
+    className="relative w-full h-80 hidden md:block">
       {loading ? (
         <div className="flex items-center justify-center h-full">
           <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           <p className="ml-2 text-gray-600">Loading...</p>
         </div>
-      ) : bannerImages.length === 0 ? (
-        <div className="flex items-center justify-center h-full bg-gray-200 rounded-lg">
-          <p className="text-gray-600">No slides available</p>
-        </div>
-      ) : (
+      ) : bannerImages.length !== 0 && (
         <>
           {/* Main content with fade transition */}
           <div

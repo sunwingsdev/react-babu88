@@ -98,8 +98,8 @@ const ImageVideoSlider = () => {
             />
           </div>
         ) : (
-          <div className="w-full h-64 flex items-center justify-center bg-gray-200 rounded-t-xl">
-            <p className="text-gray-600 text-sm">No features image available</p>
+          <div>
+            
           </div>
         )}
 
@@ -127,8 +127,8 @@ const ImageVideoSlider = () => {
         }`}
       >
         {slides.length === 0 ? (
-          <div className="w-full h-64 flex items-center justify-center bg-gray-900 rounded-xl">
-            <p className="text-gray-400 text-sm">No videos available</p>
+          <div>
+          
           </div>
         ) : currentSlide.videoId && extractYouTubeId(currentSlide.videoId) ? (
           <div className="aspect-w-16 aspect-h-9">

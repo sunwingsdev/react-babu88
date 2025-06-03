@@ -4,8 +4,6 @@ import newIcon from "@/assets/images/game-icon-new.svg";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
-
-
 const GameCard = ({
   gameCardImg,
   badge,
@@ -13,10 +11,12 @@ const GameCard = ({
   gameText,
   headingCenter,
   demoId,
+  gameLink,
 }) => {
   const { user, token } = useSelector((state) => state.auth);
+  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
   const [isModalOpen, setIsModalOpen] = useState(false);
-    const { mainColor , backgroundColor } = useSelector((state) => state.themeColor);
+  const [modalMessage, setModalMessage] = useState(""); // New state to track modal message
 
   // Auto-close modal after 3 seconds
   useEffect(() => {
@@ -24,7 +24,6 @@ const GameCard = ({
     if (isModalOpen) {
       timer = setTimeout(() => {
         setIsModalOpen(false);
-       // console.log("Modal auto-closed, isModalOpen set to false");
       }, 3000);
     }
     return () => clearTimeout(timer); // Cleanup timer on unmount or modal close
@@ -33,20 +32,31 @@ const GameCard = ({
   // Function to handle play button click
   const handlePlayClick = (e) => {
     e.preventDefault(); // Prevent default Link behavior
-  //  console.log("Play button clicked", { user, token, isModalOpen }); // Debugging
+
+    console.log("gameLink ", gameLink);
+
+    if (!gameLink) {
+      // Show modal instead of toast
+      setModalMessage("Do not have any API link. Please contact Oracle Technology to get the API key.");
+      setIsModalOpen(true);
+      return;
+    } else {
+      // Navigate to demo game if demoId is available
+      window.location.href = `/demogame/${demoId}`;
+    }
   };
+
 
   return (
     <div
       className=""
       onClick={() => {
         if (!user || !token) {
-          setIsModalOpen(true); // Show modal
-       //   console.log("Modal should open, isModalOpen set to true");
+          setModalMessage("Please log in to continue accessing this feature.");
+          setIsModalOpen(true); // Show modal for unauthenticated users
         }
       }}
     >
-
       {/* Game Card Content */}
       <div className="relative group overflow-hidden">
         <img
@@ -60,7 +70,6 @@ const GameCard = ({
           <Link
             className="hidden sm:block"
             onClick={handlePlayClick} // Handle click
-            to={user && token ? "/play" : "#"} // Conditional link destination
           >
             <img
               className="filter-none grayscale hover:filter w-12 h-12"
@@ -68,13 +77,13 @@ const GameCard = ({
               alt="Play Button"
             />
           </Link>
-          {(user && token) && demoId && (
-            <Link
-              to={`/demogame/${demoId}`}
+          {user && token && demoId && (
+            <button
+              onClick={handlePlayClick}
               className="text-white px-2 py-1 rounded-full bg-slate-900 mt-2 text-sm font-semibold hover:bg-slate-800 transition-colors"
             >
               Demo
-            </Link>
+            </button>
           )}
         </div>
         <img
@@ -98,19 +107,25 @@ const GameCard = ({
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300">
           <div className="bg-white rounded-lg p-8 w-10/12 max-w-sm shadow-xl">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">Authentication Required</h2>
-            <p className="text-gray-600 mb-6">Please log in to continue accessing this feature.</p>
-            <button className={`bg-[${backgroundColor}] hover:bg-[${backgroundColor}] text-[${mainColor}] font-semibold py-2 px-4 rounded float-right transition-colors duration-300`}>
-              <Link to={"/login"} 
-                className={`text-[${mainColor}] px-2 py-1 rounded-full bg-[${backgroundColor}] mt-2 text-sm font-semibold hover:bg-[${backgroundColor}] transition-colors`}>
-                Login
-              </Link>
-            </button>
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              {modalMessage.includes("log in") ? "Authentication Required" : "Opps!!"}
+            </h2>
+            <p className="text-gray-600 mb-6">{modalMessage}</p>
+            {modalMessage.includes("log in") && (
+              <button
+                className={`bg-[${backgroundColor}] hover:bg-[${backgroundColor}] text-[${mainColor}] font-semibold py-2 px-4 rounded float-right transition-colors duration-300`}
+              >
+                <Link
+                  to={"/login"}
+                  className={`text-[${mainColor}] px-2 py-1 rounded-full bg-[${backgroundColor}] mt-2 text-sm font-semibold hover:bg-[${backgroundColor}] transition-colors`}
+                >
+                  Login
+                </Link>
+              </button>
+            )}
           </div>
         </div>
       )}
-
-
     </div>
   );
 };
