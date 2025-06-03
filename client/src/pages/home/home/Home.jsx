@@ -55,10 +55,6 @@ const Home = () => {
         setExclusiveImage(data.exclusiveImage || "");
       } catch (err) {
         console.error("Fetch error:", err);
-        addToast(`Error: ${err.message}`, {
-          appearance: "error",
-          autoDismiss: true,
-        });
         setPublishImage("");
         setDownloadImage("");
         setDownloadApk("");
@@ -68,7 +64,7 @@ const Home = () => {
       }
     };
     fetchImages();
-  }, [addToast]);
+  }, [baseURL]);
 
   // Function to handle APK download
   const handleDownload = () => {

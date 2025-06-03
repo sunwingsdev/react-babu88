@@ -22,7 +22,6 @@ const homeControlApi = (homeControlCollection) => {
   router.patch("/:id", async (req, res) => {
     const { id } = req.params;
 
-    // ObjectId চেক করা হচ্ছে
     if (!ObjectId.isValid(id)) {
       return res.status(400).send({ error: "Invalid ObjectId format" });
     }
@@ -37,29 +36,24 @@ const homeControlApi = (homeControlCollection) => {
       }
 
       const { category, isSelected } = selectedObject;
-      if (category === "logo") {
+      const exclusiveCategories = [
+        "logo",
+        "login-image",
+        "notice",
+        "loading-image",
+      ];
+      const toggleCategories = ["slider", "favorite", "featured-game"];
+
+      if (exclusiveCategories.includes(category)) {
         await homeControlCollection.updateMany(
-          { category: "logo" },
+          { category },
           { $set: { isSelected: false } }
         );
         await homeControlCollection.updateOne(
           { _id: new ObjectId(id) },
           { $set: { isSelected: true } }
         );
-      } else if (category === "notice") {
-        await homeControlCollection.updateMany(
-          { category: "notice" },
-          { $set: { isSelected: false } }
-        );
-        await homeControlCollection.updateOne(
-          { _id: new ObjectId(id) },
-          { $set: { isSelected: true } }
-        );
-      } else if (
-        category === "slider" ||
-        category === "favorite" ||
-        category === "featured-game"
-      ) {
+      } else if (toggleCategories.includes(category)) {
         await homeControlCollection.updateOne(
           { _id: new ObjectId(id) },
           { $set: { isSelected: !isSelected } }
@@ -67,6 +61,7 @@ const homeControlApi = (homeControlCollection) => {
       } else {
         return res.status(400).send({ error: "Invalid category" });
       }
+
       res.send({ success: true, message: "Update successful" });
     } catch (error) {
       console.error(error);
