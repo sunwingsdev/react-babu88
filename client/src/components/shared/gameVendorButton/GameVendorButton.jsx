@@ -1,7 +1,13 @@
-const GameVendorButton = ({ gameVendorImg, gameVendorText, isFirst }) => {
+import { useSelector } from "react-redux";
+
+const GameVendorButton = ({ gameVendorImg, gameVendorText, isFirst, onClick }) => {
+
+
+  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+
   return (
     <div>
-      <button className="w-full mx-auto md:p-2 text-xs lg:text-sm font-semibold md:hover:bg-[#FFCD03] cursor-pointer md:border-2 md:border-[#FFCD03] md:rounded-full transition-all duration-500">
+      <button onClick={() => onClick(gameVendorText)} className="w-full mx-auto md:p-2 text-xs lg:text-sm font-semibold  cursor-pointer md:border-2 md:border-[#FFCD03] md:rounded-full transition-all duration-500">
         <div className="flex gap-0 md:gap-1 flex-col md:flex-row justify-center items-center">
           {gameVendorImg && (
             <div className="size-14 md:size-5 p-2 md:p-0 rounded-lg md:rounded-none bg-slate-200 hover:bg-gray-700 md:hover:bg-inherit md:bg-inherit">
@@ -11,7 +17,7 @@ const GameVendorButton = ({ gameVendorImg, gameVendorText, isFirst }) => {
           <p
             className={`${
               isFirst &&
-              "border-2 md:border-none rounded-lg md:rounded-lg border-gray-300 hover:bg-gray-700 md:hover:bg-inherit md:border-gray-500 p-[18px] md:p-0"
+              `border-2 md:border-none rounded-lg md:rounded-lg border-${mainColor} hover:bg-${backgroundColor} md:hover:bg-inherit md:border-${mainColor} p-[18px] md:p-0`
             }`}
           >
             {gameVendorText}
@@ -23,3 +29,5 @@ const GameVendorButton = ({ gameVendorImg, gameVendorText, isFirst }) => {
 };
 
 export default GameVendorButton;
+
+

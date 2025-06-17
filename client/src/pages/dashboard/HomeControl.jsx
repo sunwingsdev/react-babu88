@@ -8,6 +8,10 @@ import LogoUpload from "../../components/dashboard/LogoUpload";
 import SliderSelectionSection from "@/components/dashboard/SliderSelectionSection";
 import NoticeUploadSection from "@/components/dashboard/NoticeUploadSection";
 import NoticeSelectionSection from "@/components/dashboard/NoticeSelectionSection";
+import AddFeatures from "./AddFeatures";
+import AddColors from "./AddColors";
+import LoadingImageUpload from "@/components/dashboard/LoadingImageUpload";
+import LoadingImageSelection from "@/components/dashboard/LoadingImageSelection";
 // import NoticeSelectionSection from "../../components/dashboard/NoticeSelectionSection";
 // import NoticeUploadSection from "../../components/dashboard/NoticeUploadSection";
 // import SliderSelectionSection from "../../components/dashboard/SliderSelectionSection";
@@ -20,12 +24,17 @@ const HomeControl = () => {
       <LogoSelection />
       <SliderUploadSection />
       <SliderSelectionSection />
+      <LoadingImageUpload />
+      <LoadingImageSelection />
+
       {/* <FavoriteUploadSection />
       <FavoriteSelectionSection />
       <FeaturedUploadSection />
       <FeaturedSelectionSection /> */}
       <NoticeUploadSection />
       <NoticeSelectionSection />
+      <AddFeatures />
+      <AddColors />
     </div>
   );
 };

@@ -4,7 +4,11 @@ const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 const sendEmail = require("../../emailService");
 
-const usersApi = (usersCollection, homeControlsCollection) => {
+const usersApi = (
+  usersCollection,
+  homeControlsCollection,
+  withdrawTransactionsCollection
+) => {
   const router = express.Router();
   const jwtSecret = process.env.JWT_SECRET;
 
@@ -183,7 +187,18 @@ const usersApi = (usersCollection, homeControlsCollection) => {
         _id: new ObjectId(req.user.userId),
       });
       if (!user) return res.status(404).json({ error: "User not found" });
+
+      const pendingTransactions = await withdrawTransactionsCollection
+        .find({ userId: new ObjectId(req.user.userId), status: "pending" })
+        .toArray();
+      const totalPendingAmount = pendingTransactions.reduce(
+        (acc, curr) => acc + curr.amount,
+        0
+      );
+
       const { password: _, ...userInfo } = user;
+      userInfo.balance -= totalPendingAmount;
+      userInfo.withdraw += totalPendingAmount;
       res.status(200).json(userInfo);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch profile" });
@@ -327,11 +342,27 @@ const usersApi = (usersCollection, homeControlsCollection) => {
     if (!id) {
       return;
     }
+
+    const pendingTransactions = await withdrawTransactionsCollection
+      .find({ userId: new ObjectId(id), status: "pending" })
+      .toArray();
+    const totalPendingAmount = pendingTransactions.reduce(
+      (acc, curr) => acc + curr.amount,
+      0
+    );
+
     const result = await usersCollection.findOne(
       { _id: new ObjectId(id) },
       { projection: { password: 0 } }
     );
-    res.send(result);
+    if (result) {
+      const userInfo = { ...result };
+      userInfo.balance -= totalPendingAmount;
+      userInfo.withdraw += totalPendingAmount;
+      res.send(userInfo);
+    } else {
+      res.status(404).json({ error: "User not found" });
+    }
   });
 
   // get a agent by ID
@@ -473,6 +504,104 @@ const usersApi = (usersCollection, homeControlsCollection) => {
       res.status(500).json({ error: "Login as agent failed." });
     }
   });
+
+  // GET /users - Fetch all users (for admin)
+  router.get("/admin/get-users", async (req, res) => {
+    try {
+      const users = await usersCollection.find().toArray();
+      // Remove password field for security
+      const sanitizedUsers = users.map((user) => {
+        const { password, ...rest } = user;
+        return rest;
+      });
+      res.status(200).json({ data: sanitizedUsers });
+    } catch (err) {
+      console.error("Error in GET /users:", err);
+      res.status(500).json({ error: err.message || "Server error" });
+    }
+  });
+
+
+  router.put("/admin/update-user/:id", async (req, res) => {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    if (!ObjectId.isValid(id)) {
+      return res.status(400).json({ error: "Invalid ID format" });
+    }
+
+    if (!updateData || Object.keys(updateData).length === 0) {
+      return res.status(400).json({ error: "No data provided to update" });
+    }
+
+    try {
+      // Validate required fields
+      if (updateData.username) {
+        const existingUser = await usersCollection.findOne({
+          username: updateData.username,
+          _id: { $ne: new ObjectId(id) },
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Username already exists" });
+        }
+      }
+
+      if (updateData.number) {
+        const existingUser = await usersCollection.findOne({
+          number: updateData.number,
+          _id: { $ne: new ObjectId(id) },
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Number already exists" });
+        }
+      }
+
+      if (updateData.email && updateData.email !== "") {
+        const existingUser = await usersCollection.findOne({
+          email: updateData.email,
+          _id: { $ne: new ObjectId(id) },
+        });
+        if (existingUser) {
+          return res.status(400).json({ error: "Email already exists" });
+        }
+      }
+
+      if (updateData.balance !== undefined && updateData.balance < 0) {
+        return res.status(400).json({ error: "Balance cannot be negative" });
+      }
+
+      if (updateData.role && !["user", "agent"].includes(updateData.role)) {
+        return res.status(400).json({ error: "Invalid role. Must be 'user' or 'agent'" });
+      }
+
+      const updateDoc = {
+        $set: {
+          ...updateData,
+          updatedAt: new Date(),
+          primaryNumber: updateData.number || undefined,
+        },
+      };
+
+      const result = await usersCollection.updateOne(
+        { _id: new ObjectId(id) },
+        updateDoc
+      );
+
+      if (result.matchedCount === 0) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      if (result.modifiedCount === 0) {
+        return res.status(200).json({ message: "No changes made" });
+      }
+
+      res.status(200).json({ message: "User updated successfully" });
+    } catch (error) {
+      console.error("Error updating user:", error);
+      res.status(500).json({ error: "Failed to update user" });
+    }
+  });
+
 
   return router;
 };

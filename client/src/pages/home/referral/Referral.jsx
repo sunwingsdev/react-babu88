@@ -1,4 +1,9 @@
+import { useSelector } from "react-redux";
+
 const Referral = () => {
+
+  const { mainColor, backgroundColor } = useSelector((state) => state.themeColor);
+
   return (
     <div className="bg-gray-200 py-10">
       <div className="container mx-auto px-4 sm:px-10 lg:px-24 space-y-4">
@@ -29,10 +34,12 @@ const Referral = () => {
             আপনার রেফারেল কোড পেতে লগইন করুন বা সদস্য হিসাবে নিবন্ধন করুন
           </h2>
           <div className="flex gap-5">
-            <button className="p-2 px-5 text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all duration-300">
+            <button className="p-2 px-5 text-white bg-blue-600 hover:bg-blue-500 rounded-lg transition-all duration-300" 
+            style={{ backgroundColor: mainColor, color: backgroundColor }}
+            >
               আরও পড়ুন
             </button>
-            <button className="p-2 px-5 text-black bg-yellow-400 hover:bg-yellow-500 rounded-lg transition-all duration-300">
+            <button className="p-2 px-5 text-black bg-yellow-400 hover:bg-yellow-500 rounded-lg transition-all duration-300"   style={{ color: mainColor, backgroundColor: backgroundColor }}>
               প্রবেশ করুন
             </button>
           </div>
@@ -42,23 +49,26 @@ const Referral = () => {
             <h2 className="text-base md:text-lg font-semibold">
               আজীবন রেফারেল কমিশন
             </h2>
-            <p className="text-sm md:text-base text-blue-600">
+            <p className="text-sm md:text-base text-blue-600"
+            
+             style={{ color: mainColor }}
+            >
               আপনার বন্ধুরা যখনই আমানত করে তখন আপনি তাদের কাছ থেকে 2% পর্যন্ত
               অতিরিক্ত আজীবন ডিপোজিট কমিশন অর্জন করতে পারবেন।
             </p>
           </div>
           <div className="ml-0 sm:ml-4 md:ml-10 pt-4 md:pt-8 space-y-4">
             <div className="flex gap-5">
-              <div className="p-4 px-5 text-yellow-400 bg-slate-800  rounded-full">
+              <div  style={{color: mainColor, backgroundColor: backgroundColor }} className="p-4 px-5 text-yellow-400 bg-slate-800  rounded-full">
                 <img
                   src="https://www.babu88.app/static/svg/tier-icon.svg"
                   alt=""
                 />
               </div>
-              <div className="p-3 md:p-4 w-48 text-center text-sm font-semibold text-yellow-400 bg-slate-800 rounded-md transition-all duration-300">
+              <div  style={{color: mainColor, backgroundColor: backgroundColor }} className="p-3 md:p-4 w-48 text-center text-sm font-semibold text-yellow-400 bg-slate-800 rounded-md transition-all duration-300">
                 আপনি
               </div>
-              <div className="p-3 md:p-4 w-32 text-center text-sm font-semibold text-yellow-400 bg-slate-800 rounded-md transition-all duration-300">
+              <div  style={{ color: mainColor, backgroundColor: backgroundColor }} className="p-3 md:p-4 w-32 text-center text-sm font-semibold text-yellow-400 bg-slate-800 rounded-md transition-all duration-300">
                 মোট
               </div>
             </div>
@@ -69,7 +79,9 @@ const Referral = () => {
                   alt=""
                 />
               </div>
-              <div className="p-3 md:p-4 w-48 text-center  text-sm font-semibold text-black bg-slate-300   rounded-md transition-all duration-300">
+              <div 
+              
+              className="p-3 md:p-4 w-48 text-center  text-sm font-semibold text-black bg-slate-300   rounded-md transition-all duration-300">
                 স্তর 1 (1%)
               </div>
               <div className="p-3 md:p-4 w-32 text-center text-sm font-semibold text-black bg-slate-300  rounded-md transition-all duration-300">

@@ -21,6 +21,14 @@ const paymentMethodApi = require("./apis/paymentMethodApi/paymentMethodApi");
 const depositPaymentMethodsApi = require("./apis/depositPaymentMethodsApi/depositPaymentMethodsApi");
 const depositPromotionsApi = require("./apis/depositPromotionApi/depositPromotionApi");
 const depositTransactionsApi = require("./apis/depositTransactionsApi/depositTransactionsApi"); // New router
+const adminDepositTransactionsApi = require("./apis/adminDepositTransactionsApi/adminDepositTransactionsApi");
+const withdrawPaymentMethodApi = require("./apis/withdrawPaymentMethodApi/withdrawPaymentMethodApi");
+const withdrawTransactionsApi = require("./apis/withdrawTransactionsApi/withdrawTransactionsApi");
+
+const gameApi = require("./apis/gameApi/gameApi");
+const adminDashboardApi = require("./apis/adminDashboardApi/adminDashboardApi");
+const featuresImageApi = require("./apis/featuresImageApi/featuresImageApi");
+const themeColorApi = require("./apis/themeColorApi/themeColorApi");
 
 const corsConfig = {
   origin: [
@@ -94,18 +102,51 @@ async function run() {
     const promotionCollection = client.db("babu88").collection("promotions");
     const categoriesCollection = client.db("babu88").collection("categories");
     const pagesCollection = client.db("babu88").collection("pages");
-    const homeControlsCollection = client.db("babu88").collection("homeControls");
+    const homeControlsCollection = client
+      .db("babu88")
+      .collection("homeControls");
     const kycCollection = client.db("babu88").collection("kyc");
-    const paymentNumberCollection = client.db("babu88").collection("payment-numbers");
-    const paymentMethodCollection = client.db("babu88").collection("payment-methods");
-    const depositPaymentMethodCollection = client.db("babu88").collection("deposit-payment-methods");
-    const depositPromotionsCollection = client.db("babu88").collection("depositPromotions");
-    const depositTransactionsCollection = client.db("babu88").collection("depositTransactions"); // New collection
+    const withdrawPaymentMethodCollection = client
+      .db("babu88")
+      .collection("withdraw-payment-methods");
+    const withdrawTransactionsCollection = client
+      .db("babu88")
+      .collection("withdrawTransactions");
+    const paymentNumberCollection = client
+      .db("babu88")
+      .collection("payment-numbers");
+    const paymentMethodCollection = client
+      .db("babu88")
+      .collection("payment-methods");
+    const depositPaymentMethodCollection = client
+      .db("babu88")
+      .collection("deposit-payment-methods");
+    const depositPromotionsCollection = client
+      .db("babu88")
+      .collection("depositPromotions");
+    const depositTransactionsCollection = client
+      .db("babu88")
+      .collection("depositTransactions");
+    const gamesCollection = client.db("babu88").collection("games");
+    const featuresImageCollection = client
+      .db("babu88")
+      .collection("FeaturesImage");
+    const themeColorCollection = client.db("babu88").collection("ThemeColor");
 
     // APIs
-    app.use("/users", usersApi(usersCollection, homeControlsCollection));
+    app.use(
+      "/users",
+      usersApi(
+        usersCollection,
+        homeControlsCollection,
+        withdrawTransactionsCollection
+      )
+    );
     app.use("/users", affiliatesApi(usersCollection, homeControlsCollection));
-    app.use("/deposits", depositsApi(depositsCollection, usersCollection, promotionCollection));
+    app.use(
+      "/deposits",
+      depositsApi(depositsCollection, usersCollection, promotionCollection)
+    );
     app.use("/withdraws", withdrawsApi(withdrawsCollection, usersCollection));
     app.use("/home-controls", homeControlApi(homeControlsCollection));
     app.use("/promotions", promotionApi(promotionCollection));
@@ -114,13 +155,67 @@ async function run() {
     app.use("/pages", pagesApi(pagesCollection));
     app.use("/paymentnumber", paymentNumberApi(paymentNumberCollection));
     app.use("/paymentmethod", paymentMethodApi(paymentMethodCollection));
-    app.use("/depositPaymentMethod", depositPaymentMethodsApi(depositPaymentMethodCollection));
-    app.use("/depositPromotions", depositPromotionsApi(depositPromotionsCollection, depositPaymentMethodCollection));
-    app.use("/depositTransactions", depositTransactionsApi(depositTransactionsCollection, usersCollection, depositPaymentMethodCollection, depositPromotionsCollection)); // New router
+
+    app.use(
+      "/admin/depositTransactions",
+      adminDepositTransactionsApi(
+        depositTransactionsCollection,
+        usersCollection,
+        depositPaymentMethodCollection,
+        depositPromotionsCollection
+      )
+    );
+
+    app.use(
+      "/depositPaymentMethod",
+      depositPaymentMethodsApi(depositPaymentMethodCollection)
+    );
+    app.use(
+      "/depositPromotions",
+      depositPromotionsApi(
+        depositPromotionsCollection,
+        depositPaymentMethodCollection
+      )
+    );
+    app.use(
+      "/depositTransactions",
+      depositTransactionsApi(
+        depositTransactionsCollection,
+        usersCollection,
+        depositPaymentMethodCollection,
+        depositPromotionsCollection
+      )
+    ); // আপডেটেড রাউট
+
+    app.use(
+      "/withdrawPaymentMethod",
+      withdrawPaymentMethodApi(withdrawPaymentMethodCollection)
+    );
+    app.use(
+      "/withdrawTransactions",
+      withdrawTransactionsApi(
+        withdrawTransactionsCollection,
+        usersCollection,
+        withdrawPaymentMethodCollection
+      )
+    );
+    app.use(
+      "/admin",
+      adminDashboardApi(
+        usersCollection,
+        gamesCollection,
+        depositTransactionsCollection,
+        withdrawTransactionsCollection
+      )
+    ); // New router
+    app.use("/features-image", featuresImageApi(featuresImageCollection));
+    app.use("/theme-color", themeColorApi(themeColorCollection));
+
+    app.use("/games", gameApi(gamesCollection));
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Connected to MongoDB!!!✅");
+  //  console.log("Connected to MongoDB!!!✅");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
